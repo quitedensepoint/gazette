@@ -3,7 +3,7 @@
 while :
 do
 	/usr/local/community/bin/kills.pl
-	sleep 1
+	sleep 5
 done
 
 

@@ -3,7 +3,7 @@
 while :
 do
 	/usr/local/community/bin/syncdbs.pl
-	sleep 3
+	sleep 30
 done
 
 
