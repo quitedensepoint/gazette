@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while :
+do
+	/usr/local/community/bin/scoring.pl
+	sleep 3
+done
+
+
+

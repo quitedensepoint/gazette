@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while :
+do
+	/usr/local/community/bin/kills.pl
+	sleep 1
+done
+
+
+

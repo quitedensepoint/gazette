@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while :
+do
+	/usr/local/community/bin/syncdbs.pl
+	sleep 3
+done
+
+
+

@@ -1,0 +1,18 @@
+#!/bin/bash 
+if [[ $# != 1 ]] ; then
+	echo "usage $0: campaign#"
+	exit 1
+fi
+
+CAMPAIGN=$1
+
+/usr/local/mysql/bin/mysqldump --opt -v -u root -pgravytrain community \
+scoring_career_awards \
+scoring_career_campaigns \
+scoring_career_history \
+scoring_career_mcversus \
+scoring_career_personas \
+scoring_career_spawns \
+scoring_career_streaks \
+scoring_career_versus \
+| gzip > /usr/local/community/dumps/career2_scoring_$CAMPAIGN.sql.gz&

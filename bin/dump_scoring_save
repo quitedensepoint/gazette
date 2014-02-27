@@ -1,0 +1,67 @@
+#!/bin/bash
+
+HERE=$(dirname $0)
+
+function move-aside() {
+for arg in "$@"	
+do
+    FILE="$arg"
+    if [[ "${FILE:0:1}" != "/" ]] ; then
+		FILE="$(pwd)/$FILE" # must be relative
+    fi
+
+	# add default
+	TRY="$FILE.1"
+	TRYAGAIN=1
+	while [ $TRYAGAIN == 1 ]; do
+	# now check if already exists
+		if [[ -e "$TRY" ]] ; then
+			EXT="${TRY#*.}"
+			NEW=$(expr $EXT + 1)
+			TRY="${TRY%.*}.$NEW"
+		else
+			TRYAGAIN=0
+		fi		
+	done
+
+	mv "$FILE" "$TRY"
+    if [[ $? != 0 ]] ; then
+		echo "$0: WARNING, error while executing"
+    fi
+done
+}
+
+if [[ $# != 1 ]] ; then 
+	echo "usage: $0 campaign#"
+	exit -1
+fi
+
+STARTED=$(date)
+
+# if [[ -e $HERE/dump_scoring_campaign ]] ; then 
+# 	echo $HERE/dump_scoring_campaign $1
+# 	$HERE/dump_scoring_campaign $1
+# fi
+# if [[ -e $HERE/dump_scoring_career1 ]] ; then
+# 	echo $HERE/dump_scoring_career1 $1
+# 	$HERE/dump_scoring_career1 $1
+# fi
+# if [[ -e $HERE/dump_scoring_career2 ]] ; then
+# 	echo $HERE/dump_scoring_career2 $1
+# 	$HERE/dump_scoring_career2 $1
+# fi
+# if [[ -e $HERE/dump_scoring.pl ]] ; then
+# 	echo $HERE/dump_scoring.pl $1
+# 	$HERE/dump_scoring.pl $1
+# fi
+if [[ -e $HERE/merge.pl ]] ; then 
+	echo $HERE/merge.pl $1
+	$HERE/merge.pl $1
+fi
+
+ENDED=$(date)
+
+echo "Started at: $STARTED"
+echo "Ended at: $ENDED"
+logger "Started at: $STARTED"
+logger "Ended at: $ENDED"
