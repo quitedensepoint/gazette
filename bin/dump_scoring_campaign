@@ -6,7 +6,7 @@ fi
 
 CAMPAIGN=$1
 
-/usr/local/mysql/bin/mysqldump --opt -v -u root -pgravytrain community \
+/usr/bin/mysqldump --opt -v -u root -pgravytrain community \
 scoring_activity_campaign \
 scoring_activity_hourly \
 scoring_award_rulesets \

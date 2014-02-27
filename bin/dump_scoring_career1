@@ -6,6 +6,6 @@ fi
 
 CAMPAIGN=$1
 
-/usr/local/mysql/bin/mysqldump --opt -v -u root -pgravytrain community \
+/usr/bin/mysqldump --opt -v -u root -pgravytrain community \
 scoring_career_adversaries \
 | gzip > /usr/local/community/dumps/career1_scoring_$CAMPAIGN.sql.gz &

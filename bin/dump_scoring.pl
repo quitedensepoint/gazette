@@ -36,7 +36,7 @@ sub dump_tables($$)
   my $filename = shift;
   my $tables = shift;
   my $list = join(" ", @{$tables});
-  my $cmd = "/usr/local/mysql/bin/mysqldump --opt -v -u root --password=gravytrain community $list | gzip > /usr/local/community/dumps/$filename.sql.gz";
+  my $cmd = "/usr/bin/mysqldump --opt -v -u root --password=gravytrain community $list | gzip > /usr/local/community/dumps/$filename.sql.gz";
   
   # run the command
   `$cmd`;

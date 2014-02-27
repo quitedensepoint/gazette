@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 HERE=$(dirname $0)
 
@@ -38,22 +38,22 @@ fi
 
 STARTED=$(date)
 
-# if [[ -e $HERE/dump_scoring_campaign ]] ; then 
-# 	echo $HERE/dump_scoring_campaign $1
-# 	$HERE/dump_scoring_campaign $1
-# fi
-# if [[ -e $HERE/dump_scoring_career1 ]] ; then
-# 	echo $HERE/dump_scoring_career1 $1
-# 	$HERE/dump_scoring_career1 $1
-# fi
-# if [[ -e $HERE/dump_scoring_career2 ]] ; then
-# 	echo $HERE/dump_scoring_career2 $1
-# 	$HERE/dump_scoring_career2 $1
-# fi
-# if [[ -e $HERE/dump_scoring.pl ]] ; then
-# 	echo $HERE/dump_scoring.pl $1
-# 	$HERE/dump_scoring.pl $1
-# fi
+if [[ -e $HERE/dump_scoring_campaign ]] ; then 
+	echo $HERE/dump_scoring_campaign $1
+	$HERE/dump_scoring_campaign $1
+fi
+if [[ -e $HERE/dump_scoring_career1 ]] ; then
+	echo $HERE/dump_scoring_career1 $1
+	$HERE/dump_scoring_career1 $1
+fi
+if [[ -e $HERE/dump_scoring_career2 ]] ; then
+	echo $HERE/dump_scoring_career2 $1
+	$HERE/dump_scoring_career2 $1
+fi
+if [[ -e $HERE/dump_scoring.pl ]] ; then
+	echo $HERE/dump_scoring.pl $1
+	$HERE/dump_scoring.pl $1
+fi
 if [[ -e $HERE/merge.pl ]] ; then 
 	echo $HERE/merge.pl $1
 	$HERE/merge.pl $1
