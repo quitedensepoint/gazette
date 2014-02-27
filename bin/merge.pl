@@ -11,7 +11,7 @@ INIT {
   my $num_args = $#ARGV + 1;
   die "Need to enter last campaign number" unless $num_args == 1;
 	
-	if(!&addDatabase('community_db',"dbi:mysql:database=csr_community;host=localhost",'community','fun4all')){
+	if(!&addDatabase('community_db',"dbi:mysql:database=csr_community;host=localhost",'community','fun4all')){ #CP111713 changed csr to localhost
 		die "Unable to connect to ScoringDB";
 	}
 	
