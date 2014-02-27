@@ -12,7 +12,7 @@ use constant MAX_FACTORY_DAMAGE => 0;
 
 INIT {
 	
-	&addDatabase('community_db',"dbi:mysql:database=community;host=csr.wwiionline.com",'community','fun4all');
+	&addDatabase('community_db',"dbi:mysql:database=csr_community;host=localhost",'community','fun4all'); #CP111713 changed csr to localhost
 	&addDatabase('game_db',"dbi:mysql:database=wwiionline;host=gamedbu.wwiionline.com",'wwiiol','freebird');
 
 	&addStatement('game_db','intermission_state_select',q{

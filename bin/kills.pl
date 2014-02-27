@@ -18,13 +18,13 @@ our $LOGFILE;
 
 INIT
 {
-  if (0)
+  if (1)
 	{ open(our $LOGFILE, ">&STDOUT"); }
   else
 	{ open(our $LOGFILE, '>>', "/usr/local/community/logs/killsd.log") || die "problem opening log file\n"; }
   &useLogFile($LOGFILE);
 
-  if(!&addDatabase('community_db',"dbi:mysql:database=community;host=csr.wwiionline.com",'community','fun4all'))
+  if(!&addDatabase('community_db',"dbi:mysql:database=csr_community;host=localhost",'community','fun4all')) #CP111713 changed csr to localhost
 	{
 		die "Unable to connect to ScoringDB";
 	}

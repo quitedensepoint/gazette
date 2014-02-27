@@ -13,7 +13,7 @@ use Playnet::Misc;
 BEGIN {
 	
 	## add the dbs here so that the content creation modules have access to them
-	&addDatabase('community_db',"dbi:mysql:database=community;host=csr.wwiionline.com",'community','fun4all');
+	&addDatabase('community_db',"dbi:mysql:database=csr_community;host=localhost",'community','fun4all'); #CP111713 changed csr to localhost
 	&addDatabase('game_db',"dbi:mysql:database=wwiionline;host=gamedbu.wwiionline.com",'wwiiol','freebird');
 	&addDatabase('map_db',"dbi:mysql:database=map;host=nagumo.playnet.com",'mapuser','drawpad');
 	&addDatabase('auth_db',"dbi:mysql:database=auth;host=auth.playnet.com",'syncuser','mortin00');
