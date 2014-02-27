@@ -246,31 +246,30 @@ INIT {
 my %sysvars = &startScoring();
 
 print "Dump current state (Y/n): ";
-
 my $answer = <STDIN>;
 
 if($answer =~ /y/i){
 	print "Dumping database...\n";
-	`/usr/local/mysql/bin/mysqldump --opt -ucommunity -pfun4all community | gzip > ./community.sql.gz`;
+	`/usr/bin/mysqldump --opt -ucommunity -pfun4all community | gzip > ./community.sql.gz`;
 }
 
-&doUpdate('lock_tables');
+#&doUpdate('lock_tables');
 
 &truncateTable('scoring_campaign_aars');
 
 &truncateTable('scoring_campaign_activity');
 
-#&mergeAdversaries();
+&mergeAdversaries();
 
 &truncateTable('scoring_campaign_captures');
 
 print "Add new campaign country inserts...";
 
 if(&doUpdate('campaign_countries_insert')){
-	print "campaign_countries_insert: SUCCESS\n";
+	print "SUCCESS\n";
 }
 else{
-	print "campaign_countries_insert: FAILURE\n";
+	print "FAILURE\n";
 }
 
 &truncateTable('scoring_campaign_crews');
@@ -306,7 +305,7 @@ else{
 
 &mergeVehicleVersus();
 
-#&doUpdate('unlock_tables');
+&doUpdate('unlock_tables');
 
 &freeDatabases();
 
@@ -633,4 +632,3 @@ sub mergeVehicleVersus(){
 	
 	&truncateTable('scoring_vehicle_versus_campaign');
 }
-
