@@ -8,7 +8,7 @@ use Playnet::Database;
 
 INIT
 {
-        &addDatabase('community_db',"dbi:mysql:database=csr_community;host=localhost",'community','fun4all'); #CP1111713 point to localhost rather than csr
+        &addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all'); #CP1111713 point to localhost rather than csr
 
         &addStatement('community_db','campaign_select',q{
                 select * from paper_campaigns where status = 'Running';
