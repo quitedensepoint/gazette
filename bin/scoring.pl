@@ -14,18 +14,9 @@ use Playnet::Spawns;
 use Playnet::CPStats;
 use Playnet::Streaks;
 
-our $LOGFILE;
-
 INIT
 {
-  if (0)
-	{ open(our $LOGFILE, ">&STDOUT"); }
-  else
-	{ open(our $LOGFILE, '>>', "/usr/local/community/logs/scoringd.log") || die "problem opening log file\n"; }
-
-  &useLogFile($LOGFILE);
-
-	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all')) #CP111713 changed csr to localhost
+	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all'))
 	{
 		die "Unable to connect to ScoringDB";
 	}
@@ -43,12 +34,12 @@ INIT
 	#########################################
 	# Services Queries
 	#########################################
-	# DAC-2013-06-29 Is DESC correct? this will go from highest to lowest campaign
+	
 	&addStatement('community_db','campaign_select',q{
 		SELECT campaign_id
 		FROM scoring_campaigns
 		WHERE ISNULL(stop_time)
-		ORDER BY start_time DESC 
+		ORDER BY start_time DESC
 		LIMIT 1
 	});
 	
@@ -116,9 +107,9 @@ INIT
 			UNIX_TIMESTAMP(s.added) as added_time,
 			p.*,
 			f.cp_oid
-		FROM wwii_sortie s
-			JOIN wwii_player p
-			JOIN strat_facility f
+		FROM wwii_sortie s,
+			wwii_player p,
+			strat_facility f
 		WHERE !ISNULL(s.return_time)
 			AND s.return_time >= ?
 			AND s.player_id = p.playerid
@@ -157,9 +148,9 @@ INIT
 			UNIX_TIMESTAMP(s.added) as added_time,
 			p.*,
 			f.cp_oid
-		FROM wwii_sortie s
-			JOIN wwii_player p
-			JOIN strat_facility f
+		FROM wwii_sortie s,
+			wwii_player p,
+			strat_facility f
 		WHERE s.added between ? and ?
 			AND !ISNULL(s.return_time)
 			AND s.player_id = p.playerid
@@ -173,9 +164,9 @@ INIT
 			c.facil_country,
 			f.cp_oid,
 			f.facility_oid
-		FROM strat_captures c
-			JOIN strat_facility f
-			JOIN strat_cp cp
+		FROM strat_captures c,
+			strat_facility f,
+			strat_cp cp
 		WHERE c.customerid = ?
 			AND c.started_at BETWEEN ? AND ?
 			AND c.facility_oid = f.facility_oid
@@ -185,10 +176,10 @@ INIT
 	
 	&addStatement('game_db','damages_select',q{
 		SELECT d.*, c.cp_oid, o.name as object
-		FROM strat_damage d
-			JOIN strat_facility f
-			JOIN strat_cp c
-			JOIN strat_object o
+		FROM strat_damage d,
+			strat_facility f,
+			strat_cp c,
+			strat_object o
 		WHERE d.sortie_id = ?
 			AND f.facility_oid = d.facility_oid
 			AND c.cp_oid = f.cp_oid
@@ -229,7 +220,7 @@ INIT
 
 my %sysvars = &startScoring();
 
-print $LOGFILE "Processing Sorties (NEW)...$sysvars{'last_check'}\n";
+print "Processing Sorties (NEW)...$sysvars{'last_check'}\n";
 
 chomp(@ARGV);
 
@@ -237,13 +228,13 @@ my $sorties = (defined($ARGV[0]) and defined($ARGV[1])) ? &doSelect('sorties_win
 
 foreach my $sortie (@{$sorties})
 {
-	#print $LOGFILE "Sortie ".$sortie->{'sortie_id'}.": ";
+	#print "Sortie ".$sortie->{'sortie_id'}.": ";
 	
-	#print $LOGFILE "VALID\n";
+	#print "VALID\n";
 	
 	if(&loadVehicle($sortie, $sortie->{'vcountry'}, $sortie->{'vcategory'}, $sortie->{'vclass'}, $sortie->{'vtype'}))
 	{
-		#print $LOGFILE "     Vehicle ".$sortie->{'vehicle'}->{'vehicle_id'}."\n";
+		#print "     Vehicle ".$sortie->{'vehicle'}->{'vehicle_id'}."\n";
 		
 		if(&loadPersonaByID($sortie, $sortie->{'persona_id'}))
 		{
@@ -251,7 +242,7 @@ foreach my $sortie (@{$sorties})
 			
 			if(!$invalid)
 			{
-				#print $LOGFILE "     Persona ".$sortie->{'persona'}->{'persona_id'}."\n";
+				#print "     Persona ".$sortie->{'persona'}->{'persona_id'}."\n";
 				
 				$sortie->{'tom'} 		= int(($sortie->{'stop_time'} - $sortie->{'start_time'}) / 60);
 				
@@ -271,11 +262,11 @@ foreach my $sortie (@{$sorties})
 				### add sortie
 				if(&doUpdate('campaign_sortie_insert',$sortie->{'sortie_id'},$sortie->{'persona'}->{'persona_id'},$sortie->{'vehicle'}->{'vehicle_id'},$sysvars{'campaign_id'},$sortie->{'vehicle'}->{'country_id'},$sortie->{'mission_id'},$sortie->{'mission_type'},$sortie->{'successful'},$sortie->{'score'},$sortie->{'cp_oid'},$sortie->{'facility_oid'},$sortie->{'kill_count'},$sortie->{'hit_count'},$sortie->{'capture_count'},$sortie->{'rtb'},$sortie->{'criticals'},$sortie->{'tom'},$sortie->{'kd'},$sortie->{'start_time'},$sortie->{'stop_time'},$sortie->{'added_time'}))
 				{
-					#print $LOGFILE "     Sortie inserted.\n";
+					#print "     Sortie inserted.\n";
 					
 					if($sortie->{'capture_count'} > 0)
 					{
-						#print $LOGFILE "     Processing Captures: ".$sortie->{'capture_count'}."\n";
+						#print "     Processing Captures: ".$sortie->{'capture_count'}."\n";
 						
 						$sortie->{'captures'} = &doSelect('captures_select','hashref_all',$sortie->{'playerid'},$sortie->{'start_time'},$sortie->{'stop_time'} + $sysvars{'cutoff'});
 						
@@ -285,11 +276,11 @@ foreach my $sortie (@{$sorties})
 						{
 							#if(!exists($used_captures{$capture->{'capture_id'}})){
 								
-								#print $LOGFILE "          Capture ".$capture->{'capture_id'}.": ";
+								#print "          Capture ".$capture->{'capture_id'}.": ";
 								
 								if(&doUpdate('campaign_capture_insert',$sortie->{'sortie_id'},$capture->{'capture_id'},$capture->{'cp_oid'},$capture->{'facility_oid'},$capture->{'facil_country'},$capture->{'capture_time'}))
 								{
-									#print $LOGFILE "INSERTED\n";
+									#print "INSERTED\n";
 									
 									#$used_captures{$capture->{'capture_id'}} = 1;
 									
@@ -304,7 +295,7 @@ foreach my $sortie (@{$sorties})
 								}
 								else
 								{
-									#print $LOGFILE "NOT INSERTED\n";
+									#print "NOT INSERTED\n";
 								}
 								
 								#&pauseForInput('In capture loop, pausing for error.');
@@ -313,14 +304,14 @@ foreach my $sortie (@{$sorties})
 						
 						if($ccount != $sortie->{'capture_count'})
 						{
-							#print $LOGFILE "          WARNING: $ccount captures found, ".$sortie->{'capture_count'}." captures expected.\n";
+							#print "          WARNING: $ccount captures found, ".$sortie->{'capture_count'}." captures expected.\n";
 							&pauseForInput('Not enough captures found');
 						}
 					}
 						
 					if($sortie->{'strat_hit_count'} > 0)
 					{
-						#print $LOGFILE "     Processing Damages: ".$sortie->{'strat_hit_count'}."\n";
+						#print "     Processing Damages: ".$sortie->{'strat_hit_count'}."\n";
 						
 						$sortie->{'damages'} = &doSelect('damages_select','hashref_all',$sortie->{'sortie_id'});
 						
@@ -328,11 +319,11 @@ foreach my $sortie (@{$sorties})
 						{
 							if(&doUpdate('campaign_damage_insert',$damage->{'event_id'},$sortie->{'sortie_id'},$damage->{'cp_oid'},$damage->{'facility_oid'},$damage->{'object'},$damage->{'object_type'},$damage->{'object_country'},$damage->{'object_maxdamage'},$damage->{'damage_joules'},$damage->{'applied_joules'},$damage->{'effect_level'},$damage->{'added'}))
 							{
-								#print $LOGFILE "INSERTED\n";
+								#print "INSERTED\n";
 							}
 							else
 							{
-								#print $LOGFILE "NOT INSERTED\n";
+								#print "NOT INSERTED\n";
 							}
 						}
 					}
@@ -347,19 +338,19 @@ foreach my $sortie (@{$sorties})
 			}
 			else
 			{
-				#print $LOGFILE "INVALID\n";
+				#print "INVALID\n";
 				#&pauseForInput('This sortie has already been scored');
 			}
 		}
 		else
 		{
-			#print $LOGFILE "     Persona: No Persona found (".$sortie->{'playerid'}."/".$sortie->{'vehicle'}->{'country_id'}."/".$sortie->{'vehicle'}->{'branch_id'}.")\n";
+			#print "     Persona: No Persona found (".$sortie->{'playerid'}."/".$sortie->{'vehicle'}->{'country_id'}."/".$sortie->{'vehicle'}->{'branch_id'}.")\n";
 			&pauseForInput('An incomplete sortie was found: Bad Persona');
 		}
 	}
 	else
 	{
-		#print $LOGFILE "     Vehicle: No vehicle found (".$sortie->{'vcountry'}."/".$sortie->{'vcategory'}."/".$sortie->{'vclass'}."/".$sortie->{'vtype'}.")\n";
+		#print "     Vehicle: No vehicle found (".$sortie->{'vcountry'}."/".$sortie->{'vcategory'}."/".$sortie->{'vclass'}."/".$sortie->{'vtype'}.")\n";
 		&pauseForInput('An incomplete sortie was found: Bad Vehicle');
 	}
 	
@@ -370,7 +361,7 @@ foreach my $sortie (@{$sorties})
 
 ## Lets add the collected stats
 
-print $LOGFILE "Saving Counters...\n";
+print "Saving Counters...\n";
 
 #&pauseForInput('Saving Persona Stats');
 &saveStats($sysvars{'campaign_id'});
@@ -384,7 +375,7 @@ print $LOGFILE "Saving Counters...\n";
 #&pauseForInput('Saving Spawn Stats');
 &saveSpawns();
 
-print $LOGFILE "Processed ".$sysvars{'processed'}." sorties this run for campaign ".$sysvars{'campaign_id'}.".\n";
+print "Processed ".$sysvars{'processed'}." sorties this run for campaign ".$sysvars{'campaign_id'}.".\n";
 
 &freeDatabases();
 

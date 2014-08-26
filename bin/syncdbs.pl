@@ -6,18 +6,9 @@ use strict;
 use lib ('/usr/local/community/scoring'); 
 use Playnet::Database;
 
-our $LOGFILE;
-
-INIT
-{
-
-  if (0)
-	{ open(our $LOGFILE, ">&STDOUT"); }
-  else
-	{ open(our $LOGFILE, '>>', "/usr/local/community/logs/syncd.log") || die "problem opening log file\n"; }
-  &useLogFile($LOGFILE);
+INIT {
 	
-	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all')){ #CP111713 changed csr to localhost
+	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all')){
 		die "Unable to connect to ServicesDB";
 	}
 	
@@ -30,7 +21,7 @@ INIT
 	#########################################
 	
 	&addStatement('community_db','last_modified_select',q{
-		SELECT max(pl.modified) as modified_player, max(pe.modified) as modified_persona FROM wwii_player pl JOIN wwii_persona pe
+		SELECT max(pl.modified) as modified_player, max(pe.modified) as modified_persona FROM wwii_player pl, wwii_persona pe
 	});
 	
 	&addStatement('game_db','modified_players_select',q{
@@ -67,7 +58,7 @@ my $players = &doSelect('modified_players_select','arrayref_all', $sysvars{'last
 my $total 	= scalar(@{$players});
 my $updated	= 0;
 
-print $LOGFILE "Processing $total Players from ".$sysvars{'last_check'}->{'modified_player'}."...";
+print "Processing $total Players from ".$sysvars{'last_check'}->{'modified_player'}."...";
 
 foreach my $player (@{$players}){
 	if(&doUpdate('player_replace', @{$player})){
@@ -75,14 +66,14 @@ foreach my $player (@{$players}){
 	}
 }
 
-print $LOGFILE "$updated updated.\n";
+print "$updated updated.\n";
 
 my $personas 	= &doSelect('modified_personas_select','arrayref_all', $sysvars{'last_check'}->{'modified_persona'});
 
 $total 			= scalar(@{$personas});
 $updated		= 0;
 
-print $LOGFILE "Processing $total Personas from ".$sysvars{'last_check'}->{'modified_persona'}."...";
+print "Processing $total Personas from ".$sysvars{'last_check'}->{'modified_persona'}."...";
 
 foreach my $persona (@{$personas}){
 	if(&doUpdate('persona_replace', @{$persona})){
@@ -90,7 +81,7 @@ foreach my $persona (@{$personas}){
 	}
 }
 
-print $LOGFILE "$updated updated.\n";
+print "$updated updated.\n";
 
 &freeDatabases();
 

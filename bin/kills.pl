@@ -14,17 +14,9 @@ use Playnet::Adversaries;
 use Playnet::Versus;
 use Playnet::MultiCrews;
 
-our $LOGFILE;
-
 INIT
 {
-  if (0)
-	{ open(our $LOGFILE, ">&STDOUT"); }
-  else
-	{ open(our $LOGFILE, '>>', "/usr/local/community/logs/killsd.log") || die "problem opening log file\n"; }
-  &useLogFile($LOGFILE);
-
-  if(!&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all')) #CP111713 changed csr to localhost
+	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all'))
 	{
 		die "Unable to connect to ScoringDB";
 	}
@@ -125,9 +117,9 @@ INIT
 			k.kill_time,
 			k.victim_sortie_id as opponent_sortie_id,
 			UNIX_TIMESTAMP(k.kill_time) as kill_stamp
-		FROM wwii.kills k
-			JOIN wwii.v_sortie_crew as kc
-			JOIN wwii.v_sortie_crew as kv
+		FROM wwii.kills k,
+			wwii.v_sortie_crew as kc,
+			wwii.v_sortie_crew as kv
 		WHERE k.kill_id > ?
 			AND kc.sortie_id = k.killer_sortie_id
 			AND kv.sortie_id = k.victim_sortie_id
@@ -138,7 +130,7 @@ INIT
 
 my %sysvars = &startScoring();
 
-print $LOGFILE "Processing Kills starting at $sysvars{'last_check'}...\n";
+print "Processing Kills starting at $sysvars{'last_check'}...\n";
 
 my $kills_awarded 	= 0;
 my $deaths_awarded 	= 0;
@@ -152,13 +144,13 @@ my $kills = &doSelect('kills_select','hashref_all', $sysvars{'last_check'});
 
 foreach my $k (@{$kills})
 {
-	#print $LOGFILE "Kill ".$k->{'kill_id'}." ...\n";
+	#print "Kill ".$k->{'kill_id'}." ...\n";
 	
 	#my $invalid = &doSelect('invalid_kill_select','array_row',$k->{'kill_id'});
 	
 	#if(!$invalid){
 		
-		#print $LOGFILE "VALID\n";
+		#print "VALID\n";
 		
 		# adjust kill_id
 		
@@ -330,7 +322,7 @@ foreach my $k (@{$kills})
 		
 	#}
 	#else{
-		#print $LOGFILE "INVALID\n";
+		#print "INVALID\n";
 		
 		#&pauseForInput('This sortie has already been scored');
 		
@@ -344,7 +336,7 @@ foreach my $k (@{$kills})
 
 ## Lets add the collected stats
 
-print $LOGFILE "Saving Counters...\n";
+print "Saving Counters...\n";
 
 #&pauseForInput('Saving Versus Stats');
 &saveKillStats($sysvars{'campaign_id'});
@@ -358,16 +350,15 @@ print $LOGFILE "Saving Counters...\n";
 #&pauseForInput('Saving Adversaries');
 &saveMultiCrews();
 
-print $LOGFILE "Processed ".$sysvars{'processed'}." kills this run.\n";
+print "Processed ".$sysvars{'processed'}." kills this run.\n";
 
-print $LOGFILE "$kills_awarded kills awarded.\n";
-print $LOGFILE "$deaths_awarded deaths awarded.\n";
-print $LOGFILE "$mckills_awarded MC kills awarded.\n";
-print $LOGFILE "$mcdeaths_awarded MC deaths awarded.\n";
-print $LOGFILE "$participants participants found.\n";
+print "$kills_awarded kills awarded.\n";
+print "$deaths_awarded deaths awarded.\n";
+print "$mckills_awarded MC kills awarded.\n";
+print "$mcdeaths_awarded MC deaths awarded.\n";
+print "$participants participants found.\n";
 
 &freeDatabases();
-close(LOGFILE);
 
 exit(0);
 

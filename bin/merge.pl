@@ -7,11 +7,8 @@ use lib ('/usr/local/community/scoring');
 use Playnet::Database;
 
 INIT {
-
-  my $num_args = $#ARGV + 1;
-  die "Need to enter last campaign number" unless $num_args == 1;
 	
-	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all')){ #CP111713 changed csr to localhost
+	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all')){
 		die "Unable to connect to ScoringDB";
 	}
 	
@@ -246,11 +243,12 @@ INIT {
 my %sysvars = &startScoring();
 
 print "Dump current state (Y/n): ";
+
 my $answer = <STDIN>;
 
 if($answer =~ /y/i){
 	print "Dumping database...\n";
-	`/usr/bin/mysqldump --opt -ucommunity -pfun4all community | gzip > ./community.sql.gz`;
+	#`/mysql/bin/mysqldump --opt -u community --password fun4all community | gzip > ./community.sql.gz`;
 }
 
 #&doUpdate('lock_tables');
@@ -305,7 +303,7 @@ else{
 
 &mergeVehicleVersus();
 
-&doUpdate('unlock_tables');
+#&doUpdate('unlock_tables');
 
 &freeDatabases();
 
@@ -313,7 +311,7 @@ exit(0);
 
 sub startScoring(){
 	
-  my %vars = ();
+	my %vars = ();
 	
 	$vars{'report'} 		= 0;
 	$vars{'processed'} 		= 0;
