@@ -8,7 +8,7 @@ use Playnet::Database;
 
 INIT
 {
-	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all')){ #CP1111713 point to localhost rather than csr
+	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all')){
 		die "Unable to connect to ScoringDB";
 	}
 	

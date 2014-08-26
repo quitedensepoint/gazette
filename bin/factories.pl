@@ -12,7 +12,7 @@ use constant MAX_FACTORY_DAMAGE => 0;
 
 INIT {
 	
-	&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all'); #CP111713 changed csr to localhost
+	&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all');
 	&addDatabase('game_db',"dbi:mysql:database=wwiionline;host=gamedbu.wwiionline.com",'wwiiol','freebird');
 
 	&addStatement('game_db','intermission_state_select',q{
@@ -68,9 +68,9 @@ INIT {
 			f.originalside,
 			c.name as chokepoint,
 			o.object_oid
-		from strat_facility f
-			JOIN strat_cp c
-			JOIN strat_object o
+		from strat_facility f,
+			strat_cp c,
+			strat_object o
 		where f.facility_type = 2
 			and f.facility_subtype = 7
 			and f.cp_oid = c.cp_oid

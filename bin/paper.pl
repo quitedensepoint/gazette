@@ -13,7 +13,7 @@ use Playnet::Misc;
 BEGIN {
 	
 	## add the dbs here so that the content creation modules have access to them
-	&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all'); #CP111713 changed csr to localhost
+	&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all');
 	&addDatabase('game_db',"dbi:mysql:database=wwiionline;host=gamedbu.wwiionline.com",'wwiiol','freebird');
 	&addDatabase('map_db',"dbi:mysql:database=map;host=nagumo.playnet.com",'mapuser','drawpad');
 	&addDatabase('auth_db',"dbi:mysql:database=auth;host=auth.playnet.com",'syncuser','mortin00');
@@ -84,7 +84,7 @@ foreach my $story (@{$stories})
 		system("/bin/echo \"&nbsp;\" > /usr/local/community/paper/includes/".$story->{'filename'});
 	}
 	
-	if(0){ #-s "/usr/local/community/paper/includes/".$story->{'filename'}){
+	if(-s "/usr/local/community/paper/includes/".$story->{'filename'}){
 		
 		#my $ftp = Net::FTP->new('marshall.playnet.com', Debug => 0);
 		my $ftp2 = Net::FTP->new('app1.wwiionline.com', Debug => 0);
@@ -141,10 +141,10 @@ sub scriptInit(){
 	&addStatement('community_db','rule_update',q{update paper_cycle_rules set storied = storied + 1 where rule_id = ? limit 1});
 	&addStatement('community_db','archive_update',q{insert into paper_cycle_archives values (?,?,?,NOW())});
 	&addStatement('community_db','story_update',q{update paper_stories set content = ?, used_id = ?, expire = 'False', expires = FROM_UNIXTIME(?) where story_id = ? limit 1});
-	&addStatement('community_db','type_select',q{select t.*,c.country_id,c.side_id,c.name as country,c.side,c.adjective as country_adj from paper_stories s JOIN paper_story_types st JOIN paper_types t JOIN paper_story_countries sc JOIN paper_countries c where s.story_id = ? and s.story_id = st.story_id and st.type_id = t.type_id and s.story_id = sc.story_id and sc.country_id = c.country_id order by RAND(?)});
+	&addStatement('community_db','type_select',q{select t.*,c.country_id,c.side_id,c.name as country,c.side,c.adjective as country_adj from paper_stories s, paper_story_types st, paper_types t, paper_story_countries sc, paper_countries c where s.story_id = ? and s.story_id = st.story_id and st.type_id = t.type_id and s.story_id = sc.story_id and sc.country_id = c.country_id order by RAND(?)});
 	#&addStatement('community_db','templates_select',q{SELECT s.source_id,s.weight,s.life,t.template_id,t.title,t.body,t.variety_1,t.variety_2,v.vehicle_id,v.name as vehicle,vcl.name as class,vct.name as category,b.name as branch FROM sources s, templates t,template_sources ts,template_countries tc,template_classes tcl,vehicles v,vehicle_classes vcl,vehicle_categories vct,branches b WHERE s.type_id = ? AND s.source_id = ts.source_id AND ts.template_id = t.template_id AND t.template_id = tc.template_id AND t.template_id = tcl.template_id AND tc.country_id = v.country_id AND tcl.class_id = v.class_id AND v.country_id = ? AND v.category_id = vct.category_id AND v.class_id = vcl.class_id AND v.branch_id = b.branch_id ORDER BY RAND()});
-	&addStatement('community_db','templates_select',q{SELECT s.source_id,s.weight,s.life,t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id FROM paper_sources s JOIN paper_templates t JOIN paper_template_sources ts JOIN paper_template_countries tc WHERE s.type_id = ? AND s.source_id = ts.source_id AND ts.template_id = t.template_id AND t.template_id = tc.template_id AND tc.country_id = ? ORDER BY RAND(?)});
-	&addStatement('community_db','vehicle_select',q{SELECT v.vehicle_id,v.name as vehicle,v.short_name as vehicle_short,vcl.name as class,vct.name as category,b.name as branch,tc.country_id,tcl.class_id FROM paper_templates t JOIN paper_template_countries tc JOIN paper_template_classes tcl JOIN paper_vehicles v JOIN paper_vehicle_classes vcl JOIN paper_vehicle_categories vct JOIN paper_branches b WHERE t.template_id = ? AND t.template_id = tc.template_id AND t.template_id = tcl.template_id AND tc.country_id = v.country_id AND v.country_id = ? AND tcl.class_id = v.class_id AND v.category_id = vct.category_id AND v.class_id = vcl.class_id AND v.branch_id = b.branch_id ORDER BY RAND(?) limit 1});
+	&addStatement('community_db','templates_select',q{SELECT s.source_id,s.weight,s.life,t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id FROM paper_sources s, paper_templates t,paper_template_sources ts,paper_template_countries tc WHERE s.type_id = ? AND s.source_id = ts.source_id AND ts.template_id = t.template_id AND t.template_id = tc.template_id AND tc.country_id = ? ORDER BY RAND(?)});
+	&addStatement('community_db','vehicle_select',q{SELECT v.vehicle_id,v.name as vehicle,v.short_name as vehicle_short,vcl.name as class,vct.name as category,b.name as branch,tc.country_id,tcl.class_id FROM paper_templates t,paper_template_countries tc,paper_template_classes tcl,paper_vehicles v,paper_vehicle_classes vcl,paper_vehicle_categories vct,paper_branches b WHERE t.template_id = ? AND t.template_id = tc.template_id AND t.template_id = tcl.template_id AND tc.country_id = v.country_id AND v.country_id = ? AND tcl.class_id = v.class_id AND v.category_id = vct.category_id AND v.class_id = vcl.class_id AND v.branch_id = b.branch_id ORDER BY RAND(?) limit 1});
 	#&addStatement('community_db','rdp_templates_select',q{SELECT s.source_id,s.weight,s.life,t.template_id,t.title,t.body,cy.cycle_id,cr.rule_id,cr.data,c.country_id,t.variety_1,t.variety_2,t.duplicates,v.vehicle_id,v.name as vehicle,v.short_name as vehicle_short,v.spawns,vcl.name as class,vct.name as category,b.name as branch FROM paper_story_countries sc,paper_countries c,paper_cycles cy,paper_cycle_rules cr,paper_sources s,paper_template_sources ts,paper_template_countries tc,paper_template_classes tcl,paper_templates t,paper_vehicles v,paper_vehicle_classes vcl,paper_vehicle_categories vct,paper_branches b WHERE sc.story_id = ? AND sc.country_id = c.country_id AND c.cycle_id = cy.cycle_id AND cy.cycle_id = cr.cycle_id AND cr.source_id = s.source_id AND s.weight <= ((cy.produced / cy.goal) * 100) AND s.source_id = ts.source_id AND ts.template_id = t.template_id AND t.template_id = tc.template_id AND tc.country_id = c.country_id AND t.template_id = tcl.template_id AND tcl.class_id = v.class_id AND v.vehicle_id = cr.vehicle_id AND v.category_id = vct.category_id AND v.class_id = vcl.class_id AND v.branch_id = b.branch_id ORDER BY RAND(?)});
 	&addStatement('community_db','rdp_templates_select',q{
 		SELECT DISTINCT s.source_id,
@@ -159,15 +159,15 @@ sub scriptInit(){
 			t.variety_1,
 			t.variety_2,
 			t.duplicates
-		FROM paper_story_countries sc
-			JOIN paper_countries c
-			JOIN paper_cycles cy
-			JOIN paper_story_types st
-			JOIN paper_sources s
-			JOIN paper_template_sources ts
-			JOIN paper_template_countries tc
-			JOIN paper_template_classes tcl
-			JOIN paper_templates t
+		FROM paper_story_countries sc,
+			paper_countries c,
+			paper_cycles cy,
+			paper_story_types st,
+			paper_sources s,
+			paper_template_sources ts,
+			paper_template_countries tc,
+			paper_template_classes tcl,
+			paper_templates t
 		WHERE sc.story_id = ?
 			AND sc.country_id = c.country_id
 			AND c.cycle_id = cy.cycle_id
@@ -187,12 +187,12 @@ sub scriptInit(){
 			vct.name as category,
 			vcl.name as class,
 			b.name as branch
-		FROM paper_vehicles v
-			JOIN paper_vehicle_categories vct
-			JOIN paper_vehicle_classes vcl
-			JOIN paper_branches b
-			JOIN paper_templates t
-			JOIN paper_template_classes tcl
+		FROM paper_vehicles v,
+			paper_vehicle_categories vct,
+			paper_vehicle_classes vcl,
+			paper_branches b,
+			paper_templates t,
+			paper_template_classes tcl
 		WHERE v.country_id = ?
 			AND v.category_id = ?
 			AND v.class_id = ?

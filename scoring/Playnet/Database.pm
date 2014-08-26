@@ -6,18 +6,12 @@ use DBI;
 require Exporter;
 
 use vars qw(@ISA @EXPORT);
-use Symbol qw(qualify_to_ref);
 
 @ISA 		= qw(Exporter);
-@EXPORT 	= qw(useLogFile addDatabase addStatement freeStatement freeDatabases doUpdate doSelect doQuery doNextRow);
+@EXPORT 	= qw(addDatabase addStatement freeStatement freeDatabases doUpdate doSelect doQuery doNextRow);
 
 my %databases		= ();
 my %statements		= ();
-our $LOGFILE ;
-
-sub useLogFile(*) {
-  our ($LOGFILE) = @_;
-}
 
 sub addDatabase(){
 	my $database_name	= shift(@_);
@@ -61,7 +55,7 @@ sub addStatement(){
 			$statements{$statement_name} = $databases{$database_name}->prepare($statement);	
 		};
 		if($@){
-			print $LOGFILE ("Unable to add $statement_name for $database_name: $@.");
+			warn("Unable to add $statement_name for $database_name: $@.");
 			return 0;
 		}
 	}
@@ -99,20 +93,15 @@ sub doUpdate(){
 	my $rv			= 0;
 	
 	my $start		= time;
-
-	# print $LOGFILE $handle;
-	# print $LOGFILE "\t";
-	# print $LOGFILE @arguments;
-	# print $LOGFILE "\n";
-
+	
 	eval{
 		$rv = $statements{$handle}->execute(@arguments);
 	};
 	if($@){
-		print $LOGFILE ("Update Error on $handle: $@");
+		warn("Update Error on $handle: $@");
 	}
 	
-	#print $LOGFILE ($$.") Update $handle took ".(time - $start)." seconds to complete.");
+	#warn($$.") Update $handle took ".(time - $start)." seconds to complete.");
 	
 	return ($rv ne '0E0' and $rv > 0) ? 1: 0;
 }
@@ -125,10 +114,10 @@ sub doSelect(){
 	eval{
 		my $start = time;
 		$statements{$handle}->execute(@arguments);
-		#print $LOGFILE ($$.") Select $handle took ".(time - $start)." seconds to complete.");
+		#warn($$.") Select $handle took ".(time - $start)." seconds to complete.");
 	};
 	if($@){
-		print $LOGFILE ("Select Error on $handle: $@");
+		warn("Select Error on $handle: $@");
 		return undef;
 	}
 	else{

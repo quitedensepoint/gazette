@@ -10,7 +10,7 @@ use Playnet::Database;
 
 INIT {
 	
-	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=db2.wwiionline.com",'community','fun4all')){
+	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all')){
 		die "Unable to connect to ScoringDB";
 	}
 	

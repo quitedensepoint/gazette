@@ -6,18 +6,9 @@ use strict;
 use lib ('/usr/local/community/scoring'); 
 use Playnet::Database;
 
-our $LOGFILE;
-
-INIT
-{
-
-  if (0)
-	{ open(our $LOGFILE, ">&STDOUT"); }
-  else
-	{ open(our $LOGFILE, '>>', "/usr/local/community/logs/tops.log") || die "problem opening log file\n"; }
-  &useLogFile($LOGFILE);
+INIT {
 	
-	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all')){ #CP111713 changed csr to localhost
+	if(!&addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all')){
 		die "Unable to connect to ScoringDB";
 	}
 	
@@ -52,7 +43,7 @@ my $do_list = (defined($ARGV[0])) ? $ARGV[0]: 0;
 
 chomp($do_list);
 
-print $LOGFILE "List is $do_list.\n";
+print "List is $do_list.\n";
 
 my %sysvars = &startScoring();
 
@@ -63,11 +54,11 @@ my $lists = &doSelect('lists_select','hashref_all');
 foreach my $list (@{$lists}){
 	
 	if($do_list > 0 and $list->{'list_id'} != $do_list){
-		print $LOGFILE "Skipping list ".$list->{'list_id'}.".\n";
+		print "Skipping list ".$list->{'list_id'}.".\n";
 		next;
 	}
 	
-	print $LOGFILE "Processing List ".$list->{'short_title'}." (".$list->{'list_id'}.") ...\n";
+	print "Processing List ".$list->{'short_title'}." (".$list->{'list_id'}.") ...\n";
 	
 	my $rank 	= 1;
 	my $mark	= time;
@@ -104,7 +95,7 @@ foreach my $list (@{$lists}){
 		
 		if($list->{'min_sorties'} == 0 or $top->{'value1'} >= $list->{'min_sorties'}){
 			if(&doUpdate('top_persona_insert', $list->{'list_id'}, $rank, $top->{'persona_id'}, $top->{'last_rank'}, $top->{'value1'}, $top->{'value2'}, $top->{'value3'}, $top->{'value4'}, $top->{'value5'}, $top->{'value6'})){
-				print $LOGFILE "     ".$rank.'. '.$top->{'persona_id'}.': '.$top->{'last_rank'}.' -> '.$rank."\n";
+				print "     ".$rank.'. '.$top->{'persona_id'}.': '.$top->{'last_rank'}.' -> '.$rank."\n";
 				$rank++;
 			}
 		}
@@ -124,7 +115,7 @@ foreach my $list (@{$lists}){
 }
 
 foreach my $mark (@{$sysvars{'times'}}){
-	print $LOGFILE $mark;
+	print $mark;
 }
 
 &freeDatabases();

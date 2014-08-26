@@ -200,7 +200,7 @@ sub initEvents()
 	### Init Database
 	
 	my $ah_connect_str 		= "dbi:mysql:database=$vars{'AUTHDB'};host=$vars{'AUTHHOST'}";
-	my $cm_connect_str 		= "dbi:mysql:database=community;host=db2.wwiionline.com";
+	my $cm_connect_str 		= "dbi:mysql:database=community;host=66.28.224.237";
 	my $evgm_connect_str 	= "dbi:mysql:database=$vars{'EVGMDB'};host=$vars{'EVGMHOST'}";
 	
 	if(!&addDatabase('auth_db',$ah_connect_str,$vars{'AUTHUSER'},$vars{'AUTHPASS'}))

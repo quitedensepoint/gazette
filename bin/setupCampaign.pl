@@ -8,10 +8,10 @@ use Playnet::Database;
 
 INIT
 {
-        &addDatabase('community_db',"dbi:mysql:database=community;host=localhost",'community','fun4all'); #CP1111713 point to localhost rather than csr
+        &addDatabase('community_db',"dbi:mysql:database=community;host=66.28.224.237",'community','fun4all');
 
         &addStatement('community_db','campaign_select',q{
-                select * from paper_campaigns where status = 'Running';
+                select * from paper_campaigns order by campaign_id desc limit 1
         });
 
         &addStatement('community_db','campaign_update',q{
@@ -31,24 +31,24 @@ if(scalar(@ARGV) == 0)
 
 my $winner = int(shift(@ARGV));
 
-my $currentCampaign = &doSelect("campaign_select",'hashref_row');
-my $nextCampaignID = ($currentCampaign->{'campaign_id'} + 1);
+my $nextCampaign = &doSelect("campaign_select",'hashref_row');
 
-if(!$currentCampaign)
+if(!$nextCampaign)
 {
-	print "Current campaign not found!\n";
+	print "New campaign not found!\n";
 	exit;
 }
 
-print "Closing campaign " .  $currentCampaign->{'campaign_id'} ." at " . $currentCampaign->{'start_time'} . " with a winner of $winner.\n";
-print "Starting campaign " .  $nextCampaignID . ".\n";
+print "Closing campaign " .  ($nextCampaign->{'campaign_id'} - 1) ." at " . $nextCampaign->{'start_time'} . " with a winner of $winner.\n";
+print "Starting campaign " .  $nextCampaign->{'campaign_id'} . ".\n";
 
-&doUpdate(
-		  'campaign_update',
-		  $winner,
-		  $currentCampaign->{'stop_time'},
-		  $currentCampaign->{'campaign_id'}
-		 );
+&doUpdate
+(
+	'campaign_update',
+	$winner,
+	$nextCampaign->{'start_time'},
+	$nextCampaign->{'campaign_id'} - 1
+);
 
 &freeDatabases();
 
