@@ -1,0 +1,86 @@
+.paperdefault {
+	font-family: Georgia, Times New Roman, Times, serif;
+	font-size: 8pt;
+	color: #000000;
+}
+.papertimessmall {
+	font-family: Times New Roman, Times, serif;
+	font-size: 8pt;
+	color: #000000;
+}
+
+.papertimesmedium {
+	font-family: Times New Roman, Times, serif;
+	font-size: 10pt;
+	color: #000000;
+}
+
+.papertimesbig {
+	font-family: Times New Roman, Times, serif;
+	font-size: 13pt;
+	color: #000000;
+}
+
+.papertimeshuge {
+	font-family: Times New Roman, Times, serif;
+	font-size: 16pt;
+	color: #000000;
+}
+
+.paperarialsmall {
+	font-family: Georgia, Times New Roman, Times, serif;
+	font-size: 7pt;
+	color: #000000;
+}
+
+.paperarialmedium {
+	font-family: Times New Roman, Times, serif;
+	font-size: 10pt;
+	color: #000000;
+}
+
+.paperarialbig {
+	font-family: Georgia, Times New Roman, Times, serif;
+	font-size: 13pt;
+	color: #000000;
+}
+
+.paperarialhuge {
+	font-family: Georgia, Times New Roman, Times, serif;
+	font-size: 16pt;
+	color: #000000;
+}
+
+.paperheadline {
+	font-family: Georgia, Times New Roman, Times, serif;
+	font-size: 35pt;
+	color: #000000;
+}
+
+.paperhidden {
+	font-family: Courier New, Courier, mono;
+	font-size: 8pt;
+	color: #000000;
+}
+
+.paperservernews {
+	font-family: Georgia, Times New Roman, Times, serif;
+	font-size: 12pt;
+	color: #CCCC00;
+}
+
+.paperserverheader {
+	font-family: Georgia, Times New Roman, Times, serif;
+	font-size: 8pt;
+	color: #CCCCCC;
+}
+
+.paperbarlink {
+	font-family: Times New Roman, Times, serif;
+	font-size: 8pt;
+	color: #000000;
+}
+
+.paperwhite {
+	color: #FFFFFF;
+}
