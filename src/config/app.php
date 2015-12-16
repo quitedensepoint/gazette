@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'America/Chicago',
 
     /*
     |--------------------------------------------------------------------------
@@ -141,7 +141,6 @@ return [
          * Application Service Providers...
          */
         Playnet\WwiiOnline\Gazette\Providers\AppServiceProvider::class,
-        Playnet\WwiiOnline\Gazette\Providers\AuthServiceProvider::class,
         Playnet\WwiiOnline\Gazette\Providers\EventServiceProvider::class,
         Playnet\WwiiOnline\Gazette\Providers\RouteServiceProvider::class,
         Playnet\WwiiOnline\Gazette\Providers\ComposerServiceProvider::class,
