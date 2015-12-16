@@ -2,29 +2,18 @@
 
 namespace Playnet\WwiiOnline\Gazette\Console;
 
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
     /**
-     * The Artisan commands provided by your application.
+     * These are the command files used by the application. If you create a new
+	 * command, add it here so it can be found
      *
      * @var array
      */
     protected $commands = [
-        \Playnet\WwiiOnline\Gazette\Console\Commands\Inspire::class,
+		\Playnet\WwiiOnline\Gazette\Console\Commands\CampaignStartCommand::class,	
     ];
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
-    protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('inspire')
-                 ->hourly();
-    }
 }
