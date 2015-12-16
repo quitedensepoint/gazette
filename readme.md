@@ -129,3 +129,16 @@ A migration represents the smallest possible change you can make. This doesn't m
 
 #### Important! Don't change old migrations!
 If you find that suddenly that email field you created 20 migrations ago actually needs more characters, don't change the old migration. Just create a new migration to modify the field again and change it to what you need.
+
+## Commands
+There are several command line calls you can make to preset data in the database, or run via a scheduled job
+
+> *php artisan gazette:campaign_start **campaign_id** **"date"***
+
+Where **campaign_id** is the literal designation of the campaign number (currently 120), and **"date"** is date of the campaign start. Format for the date is yyyy-mm-dd HH:mm:ss - be sure to use double quotes around the date due to the space.
+
+> *php artisan gazette:campaign_stop **"date"***
+
+Where **"date** is date of the campaign end. Campaign will be marked as completed.
+
+Both fucntions return 0 on success, 1 on failure, as per unix based scripts..

@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-		\Playnet\WwiiOnline\Gazette\Console\Commands\CampaignStartCommand::class,	
+		\Playnet\WwiiOnline\Gazette\Console\Commands\CampaignStartCommand::class,
+		\Playnet\WwiiOnline\Gazette\Console\Commands\CampaignStopCommand::class,	
     ];
 
 }
