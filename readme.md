@@ -67,6 +67,9 @@ the codebase to. This allows us to have be able to reference code that is outsid
 
 Save the file, restart Apache and your app should be good to go at http://gazette.localhost
 
+## Laravel Tutorials
+I'll be frank, the documentation at the laravel.com website is pretty ordinary. It tells you how to do things, without telling why you are doing it. Enter http://laracasts.com - this will give beginners plenty of guidance.
+
 ## Database
 The database configuration file at *config/database.php* contains an array of configuration that determine what databases we will be connecting to for the application. By default, the application will  use the default connection, which is the **gazette** connection. The array also contains other configurations for connecting to the **wwii** and **wwiionline** databases, which we will need to do.
 
