@@ -38,7 +38,7 @@ $app->singleton(
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    Playnet\WiiOnline\Gazette\Exceptions\Handler::class
+    Playnet\WwiiOnline\Gazette\Exceptions\Handler::class
 );
 
 /*

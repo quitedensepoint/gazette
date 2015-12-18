@@ -16,8 +16,8 @@
     ],    
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.11",
-        "doctrine/dbal": "2.5.2"
+        "laravel/framework": "5.1.*",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

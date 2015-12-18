@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'community'),
+    'default' => env('DB_CONNECTION', 'gazette'),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,17 +46,41 @@ return [
 
     'connections' => [
 
-        'community' => [
+        'gazette' => [
             'driver'    => 'mysql',
-            'host'      => env('COMMUNITY_DB_HOST', 'localhost'),
-            'database'  => env('COMMUNITY_DB_DATABASE', 'forge'),
-            'username'  => env('COMMUNITY_DB_USERNAME', 'forge'),
-            'password'  => env('COMMUNITY_DB_PASSWORD', ''),
+            'host'      => env('GAZETTE_DB_HOST', 'localhost'),
+            'database'  => env('GAZETTE_DB_DATABASE', 'forge'),
+            'username'  => env('GAZETTE_DB_USERNAME', 'forge'),
+            'password'  => env('GAZETTE_DB_PASSWORD', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
         ],
+        
+        'wwii' => [
+            'driver'    => 'mysql',
+            'host'      => env('WWII_DB_HOST', 'localhost'),
+            'database'  => env('WWII_DB_DATABASE', 'forge'),
+            'username'  => env('WWII_DB_USERNAME', 'forge'),
+            'password'  => env('WWII_DB_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+        
+        'wwiionline' => [
+            'driver'    => 'mysql',
+            'host'      => env('WWIIONLINE_DB_HOST', 'localhost'),
+            'database'  => env('WWIIONLINE_DB_DATABASE', 'forge'),
+            'username'  => env('WWIIONLINE_DB_USERNAME', 'forge'),
+            'password'  => env('WWIIONLINE_DB_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],        
 
     ],
 
@@ -79,7 +103,7 @@ return [
      * that may also use migrations
      */
 
-    'migrations' => 'paper_migrations',
+    'migrations' => 'migrations',
 
     /*
     |--------------------------------------------------------------------------
