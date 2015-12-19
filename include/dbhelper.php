@@ -16,6 +16,22 @@ class dbhelper {
 	}
 	
 	/**
+	 * Generate a new MySQL statement
+	 * 
+	 * @param string $sql
+	 * @return mysqli_stmt
+	 */
+	public function getStatement($sql)
+	{
+		/* @var $query mysqli_stmt */		
+		$query = $this->dbconn->stmt_init();
+
+		$query->prepare($sql);
+		
+		return $query;
+	}
+	
+	/**
 	 * Prepare a SQL statement
 	 * 
 	 * @param string $sql
@@ -24,10 +40,7 @@ class dbhelper {
 	 */
 	public function prepare($sql, array $params = [])
 	{
-		/* @var $query mysqli_stmt */		
-		$query = $this->dbconn->stmt_init();
-
-		$query->prepare($sql);
+		$query = $this->getStatement($sql);
 
 		if($query->param_count > 0)
 		{

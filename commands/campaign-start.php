@@ -3,16 +3,15 @@
  * Call this script from the command line in the application root (where
  * DBconn) lives
  *   
- *	php commands/campaign_start.php --campaign_id={id} --start={date}
+ *	php commands/campaign-start.php --campaign_id={id} --start={date}
  * 
  * where:
  *	{id} is the number of the campaign to start
  *	{start} is the start date and time (CST) in the format "yyyy-mm-dd HH:ii:ss"
  * 
  * You'll need to include the quotes on the date
- *  .e.g. php commands/campaign_start.php --campaign_id=120 --start="2015-12-12 15:30:35"
+ *  .e.g. php commands/campaign-start.php --campaign_id=120 --start="2015-12-12 15:30:35"
  * 
- * exit(1) tells the server that something failed in the script
  */
 
 require(__DIR__ . '/../DBconn.php');
