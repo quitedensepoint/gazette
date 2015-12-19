@@ -8,6 +8,16 @@ For reference also the data within those areas has been modified to show the old
 Map is aplaceholder image and the link to the full map page has been commented out pending restoration of the BE Map.   
 
 */
+
+require(__DIR__ . '/../DBconn.php');
+require(__DIR__ . '/../include/dbhelper.php');
+require(__DIR__ . '/../processors/casualty-processor.php');
+
+$casualtyProcessor = new CasualtyProcessor($dbconn);
+$casualtyData = $casualtyProcessor->process();
+
+var_dump($casualtyData);
+
  ?>
 <!DOCTYPE html>
 
@@ -28,9 +38,7 @@ Map is aplaceholder image and the link to the full map page has been commented o
                 <th bgcolor='#333333' class='paperdefault'><span class='paperwhite'>ALLIED CASUALTIES</span></th>
             </tr>
             <tr>
-            <!-- #include file='/home/bv55/scriptinc/paper/index_allied_casualties.html' -->
-                <td align='left' valign='top' class='paperarialsmall'>GROUND FORCES 3066<br />AIR FORCES 1407<br />SEA FORCES 112<br />Index_allied_casualties</td>
-            <!-- #include file='/home/bv55/scriptinc/paper/index_allied_casualties.html' -->
+                <td align='left' valign='top' class='paperarialsmall'>GROUND FORCES <?= $casualtyData['allied']['ground'];?><br />AIR FORCES <?= $casualtyData['allied']['air'];?><br />SEA FORCES <?= $casualtyData['allied']['sea'];?><br /></td>
             </tr>
         </table>
         <table id='axisDeaths'>
@@ -38,10 +46,7 @@ Map is aplaceholder image and the link to the full map page has been commented o
                     <th bgcolor='#333333' class='paperdefault'><span class='paperwhite'>AXIS CASUALTIES</span></th>
                 </tr>
                 <tr>
-                <!-- #include file='/home/bv55/scriptinc/paper/index_axis_casualties.html' -->
-                    <td align='right' valign='top' class='paperarialsmall'>GROUND FORCES 2231<br />AIR FORCES 1162<br />SEA FORCES 113<br />Index_Axis_caualties
-                <!-- #include file='/home/bv55/scriptinc/paper/index_axis_casualties.html' -->
-                    </td>
+                    <td align='right' valign='top' class='paperarialsmall'>GROUND FORCES <?= $casualtyData['axis']['ground'];?><br />AIR FORCES <?= $casualtyData['axis']['air'];?><br />SEA FORCES <?= $casualtyData['axis']['sea'];?><br /></td>
                 </tr>
          </table>
       </div>
