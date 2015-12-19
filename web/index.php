@@ -16,8 +16,6 @@ require(__DIR__ . '/../processors/casualty-processor.php');
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
 
-var_dump($casualtyData);
-
  ?>
 <!DOCTYPE html>
 
