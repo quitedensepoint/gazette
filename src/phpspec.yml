@@ -1,5 +1,0 @@
-suites:
-    main:
-        namespace: Playnet\WwiiOnline\Gazette
-        psr4_prefix: Playnet\WwiiOnline\Gazette
-        src_path: app
