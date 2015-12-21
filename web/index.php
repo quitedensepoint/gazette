@@ -9,9 +9,13 @@ Map is aplaceholder image and the link to the full map page has been commented o
 
 */
 
+
+
 require(__DIR__ . '/../DBconn.php');
 require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/casualty-processor.php');
+require(__DIR__ . '/../processors/campaign.php');
+
 
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
@@ -63,15 +67,17 @@ $casualtyData = $casualtyProcessor->process();
             <tr>
             <td>
                 <table width='100%' border='0' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- removes cell borders border from row-->
-                <tr>
-                    <td width='188'>
+                <tr align='center'>
+                    <td width='160'>
                         <a href='/web/20051201034059/http://forums.battlegroundeurope.com/forumdisplay.php?f=10' target='_blank' class='papertimessmall'>
                         <font color='#cc3333'>CURRENT VERSION 
-                            <!-- START index_version --> 1.34.12<!-- END index_version (LIVE) -->
+                            <!-- START index_version --><?= $ver['version'] ?><!-- END index_version (LIVE) -->
                         </font>
                         </a>
                     </td>
-                    <td>Day: </td><td> # </td><td> Of Campaign #:</td><td> (number)</td>
+                    <td class='papertimessmall' align='right'>Campaign <?= $row['id'] ?></td> 
+                    <td class='papertimessmall' align='left'>, Day: <?= $days ?> </td>
+                    
                     <td class='papertimessmall' align='right'>Coming Soon:</td>  
                     <td align='center'><a class='papertimessmall'>ALLIED Section</td>
                     <td align='center'><a class='papertimessmall'>AXIS Section</td>
@@ -89,7 +95,7 @@ $casualtyData = $casualtyProcessor->process();
             <tr valign='top' align='center'> 
                 <td> 
                     <font face='Arial, Helvetica, sans-serif' size='7' color='#666666'>
-                    <b><span class='paperheadline'>Guess Who's Back? (index_main_headline)</span></b>
+                    <b><span class='paperheadline'>Guess Who's Back ! (index_main_headline)</span></b>
                     </font>
                 </td>
             </tr>
@@ -222,24 +228,22 @@ $casualtyData = $casualtyProcessor->process();
                                     </tr>
                                 </table>
         </td>
-        <td colspan='2' valign='top'> <!-- Player Sortie Storie -->
+        <td colspan='3' valign='top' align='cetner'> <!-- Player Sortie Storie -->
         <!--Axis Player Story -->             
         <!-- #include file='/home/bv55/scriptinc/paper/index_axis_stats2.html' --> 
-                                                <table width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0'>
+                                                <table width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0' align='center'>
                                                             <tr align='left' valign='top'> 
-                                                                <td> 
+                                                                <td align='center'> 
                                                                     <font size='3' face='Times New Roman, Times, serif'>
-                                                                    <b><span class='papertimesbig'>Random Axis player stats generated Story 1</span>                                                               </b>
+                                                                    <b><span class='papertimesbig'>Future home of "news" feed.</span>                                                               </b>
                                                                     </font>
                                                                     <br>
                                                                     <font size='1' face='Arial, Helvetica, sans-serif'>
-                                                                    <span class='paperdefault'>May have to re-organize the page a bit as it wasn't built with 3 allied armies in mind.  And the Italians are also coming (eventually).  This entire little blurb is about 47 words total, as you can see plenty of room for additional stuff to be added. </span>
+                                                                    <span class='paperdefault'>Future home to RSS feed (or similar mechanism to show newest news.)</span>
                                                                     </font>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td><br /><a href='axis.php' class='paperdefault'>[more in Axis section]</a></td>
-                                                            </tr>
+
                                                 </table>
     <!-- #include file='/home/bv55/scriptinc/paper/index_axis_stats2.html' --> 
     <!-- end 1st story -->              
@@ -247,64 +251,10 @@ $casualtyData = $casualtyProcessor->process();
         
 
         </td>
-        <td align='center'>
-                        <a href='http://www.battlegroundeurope.com/index.php' target='_blank' class='papertimessmall'>LATEST DEVELOPER NEWS</a>
-                    </td>
-        <td height='30' valign='top'>
+
+        <td height='30' valign='top' align='center'>
         <!-- Forces in the field table -->
-            <table width='200'  border='0' cellpadding='0' cellspacing='0' id='forces_online'>
-                <tr>
-                    <td bgcolor='#333333'>
-                        <table width='100%' height='30'  border='0' align='center' cellpadding='0' cellspacing='0'>
-                            <tr align='left' valign='top'>
-                                <td valign='middle'><div align='center'><font size='3'><b><font color='#FFFFFF' face='Times New Roman, Times, serif'>ALLIES vs AXIS</font> </b></font></div></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-    <!-- Cell Icon Table -->
-                                                <table width='100%'  border='0' cellspacing='0' cellpadding='0'>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_blank.gif' width='16' height='16'></td>
-                                                      <td width='8' align='center' valign='top'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_blank.gif' width='16' height='16'></td>
-                                                      <td align='center' valign='top' width='8'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_blank.gif' width='16' height='16'></td>
-                                                      <td align='center' valign='top' width='8'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'></td>
-                                                      <td align='center' valign='top' width='8'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                </table>
-                    <!-- end of icons-->
-                    </td>
-                </tr>
-                <tr>
-                    <td bgcolor='#333333'>
-                        <table width='100%'  border='0' cellspacing='0' cellpadding='2'>
-                            <tr>
-                                <td><div align='center'> <b><font color='#FFFFFF'><font face='Arial, Helvetica, sans-serif'><i><font size='1'>combatants in the field (past 15 mins) </font></i></font></font></b></div></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+            Forces in the field temporarily removed while full page is developed.  
         </td> <!-- End of Forces in the field -->
     </tr>
  <?php /*   
@@ -473,7 +423,7 @@ $casualtyData = $casualtyProcessor->process();
       <table width='90%' border='0' cellspacing='0' cellpadding='5'>
         <tr>
           <td width='50%' align='right'>
-              <a href='http://www.wwiionline.com/scripts/wwiionline/tos.jsp' target='_blank' class='small'>Playnet Terms Of Service!</a>
+              <a href='http://www.battlegroundeurope.com/index.php/component/content/article/47' target='_blank' class='small'>Playnet Terms Of Service!</a>
             &nbsp;&nbsp;&nbsp;
           </td>
           <td width='50%'>
