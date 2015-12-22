@@ -67,13 +67,16 @@ $casualtyData = $casualtyProcessor->process();
             <tr>
             <td>
                 <table width='100%' border='0' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- removes cell borders border from row-->
-                <tr align='center'>
-                    <td width='160'>
-                        <a href='/web/20051201034059/http://forums.battlegroundeurope.com/forumdisplay.php?f=10' target='_blank' class='papertimessmall'>
-                        <font color='#cc3333'>CURRENT VERSION 
-                            <!-- START index_version --><?= $ver['version'] ?><!-- END index_version (LIVE) -->
-                        </font>
-                        </a>
+                <tr align='left'>
+                    <td>
+                        <table>
+                            <tr>
+                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'>
+                                <font color='#cc3333'>CURRENT VERSION:</font></a>
+                                </td>    
+                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'><!-- START index_version --><?= $ver['MAX(maxClientVersion)'] ?><!-- END index_version (LIVE) --></a></td>
+                            </tr>
+                        </table>
                     </td>
                     <td class='papertimessmall' align='right'>Campaign <?= $row['id'] ?></td> 
                     <td class='papertimessmall' align='left'>, Day: <?= $days ?> </td>
@@ -113,11 +116,11 @@ $casualtyData = $casualtyProcessor->process();
                                                 <tr align='center' valign='top'> 
                                                     <td> 
                                                     <font size='3' face='Times New Roman, Times, serif'>
-                                                    <b><span class='papertimesbig'>index_allied_stats2</span></b>
+                                                    <b><span class='papertimesbig'>Some map-wide stat:</span></b>
                                                     </font>
                                                     <br>
                                                     <font size='1' face='Arial, Helvetica, sans-serif'>
-                                                    <span class='paperdefault'>An independent analysis of military airfields controlled by the major combatants indicate that United Kingdom now controls 38% of the airfields (19 total), followed by Germany with 34% (17) and France with 26% (13). This article page has 40 words</span>
+                                                    <span class='paperdefault'>Not sure what yet, but something</span>
                                                     </font>
                                                     </td>
                                                 </tr>
@@ -156,14 +159,14 @@ $casualtyData = $casualtyProcessor->process();
                                         <font face='Arial, Helvetica, sans-serif' size='4'>
                                         <b>
                                         <span class='paperarialhuge'>
-                                        Index_Axis_rdp1
+                                        Most Recent Captures:
                                         </span>
                                         </b>
                                         </font>
                                         <br>
                                         <font face='Arial, Helvetica, sans-serif' size='1'>
                                         <span class='paperdefault'>
-                                        As German High Command is poised to unveil RDP plans, German industry is preparing to react to new vehicle and weapon orders.
+                                        This will list last 5(ish (depending on how the layoutlooks)) CP(citiy/town) captures(ownership change)
                                         </span>
                                         </font>
                                         </td>

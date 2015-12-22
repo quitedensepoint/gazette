@@ -15,3 +15,12 @@ if (mysqli_connect_errno()){
     echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
+$dbConnWWIIOL = mysqli_connect("localhost","root","","wwiionline");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+
+$dbconnAuth = mysqli_connect("localhost", "root", "", "auth");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
+}

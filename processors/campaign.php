@@ -13,9 +13,11 @@ require(__DIR__ . '/../DBconn.php');
 $currcamp=$dbconn->query("SELECT id, start_time FROM `campaigns` WHERE `status`='Running'");
 $row=$currcamp->fetch_assoc();
 
-// Find Current Version
-$vers=$dbConnWWIIOL->query("SELECT version, description FROM `wwii_checksums` WHERE `checksum_oid`='618'");
+// Find Current Version PC
+$vers=$dbconnAuth->query("SELECT MAX(maxClientVersion), platform FROM app_host_versions WHERE appID='1' AND platform='0' ");
 $ver=$vers->fetch_assoc();
+
+
 
 //get todays date and subtract start date to get number of days between the two.
 $today = time () ;
