@@ -9,13 +9,11 @@ Map is aplaceholder image and the link to the full map page has been commented o
 
 */
 
-
-
 require(__DIR__ . '/../DBconn.php');
 require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/casualty-processor.php');
 require(__DIR__ . '/../processors/campaign.php');
-
+require(__DIR__ . '/../processors/aocap.php');
 
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
@@ -151,36 +149,30 @@ $casualtyData = $casualtyProcessor->process();
     <!-- END MAP -->
         </td>
         <td> 
-        <!--Axis RDP Story #1 -->
-        <!-- #include file='/home/bv55/scriptinc/paper/index_axis_german_rdp1.html' -->
+        <!-- Attacks captures section -->
+        
                                 <table width='100%'border='0' cellspacing='0' cellpadding='5'>
-                                    <tr align='left' valign='top'> 
+                                    <tr align='center' valign='top'> 
                                         <td>
                                         <font face='Arial, Helvetica, sans-serif' size='4'>
-                                        <b>
                                         <span class='paperarialhuge'>
-                                        Most Recent Captures:
-                                        </span>
-                                        </b>
-                                        </font>
-                                        <br>
-                                        <font face='Arial, Helvetica, sans-serif' size='1'>
-                                        <span class='paperdefault'>
-                                        This will list last 5(ish (depending on how the layoutlooks)) CP(citiy/town) captures(ownership change)
+                                        Current Attacks:
                                         </span>
                                         </font>
                                         </td>
+                                    <tr>
+                                        <td class='paperdefault'>
+                                        Currently placed AO's
+                                        <?php //insert currend AO's here ?>
+                                      
+                                        </td>
                                     </tr>
                                 </table>
-        <!-- #include file='/home/bv55/scriptinc/paper/index_axis_german_rdp1.html' --> 
-            <table width='100%' border='0' cellspacing='0' cellpadding='5'>
-                <tr>
-                    <td align='center' valign='bottom'><a href='axis.php' class='paperdefault'>[more in Axis section]</a></td>
-                </tr>
-           </table>
+        <!-- END Attacks Captures --> 
+
         </td>
     </tr>
-    <tr>
+    <tr valign='top'>
         <td valign='top'><!-- Old Advertising spot Left in in case still wanted/needed could also be used for Propa-->
             <table width='100%' border='0' cellspacing='0' cellpadding='3' name='community_ad' align='center' height='230' bordercolor='#000000'>
                 <tr align='center' valign='middle'>
@@ -194,15 +186,33 @@ $casualtyData = $casualtyProcessor->process();
                                                                     ?>
                                                                     </script>
                 <!-- End rotation Code -->
-                                                                    <img src="<?php echo $selimage ?>" alt="Factory Image randomly selected" /> 
+                                                                    <img width='100%' src="<?php echo $selimage ?>" alt="Factory Image randomly selected" /> 
                    
 
                     </td>
                 </tr>
             </table>
         </td>
-        <td align='center' valign='middle'> <!-- Bottom Cell R side of map -->
-            This space is wide open for whatever
+        <td align='center' valign='middle' width='188'> 
+    <!-- Recent Captures -->
+            <table width='100%'border='0' cellspacing='0' cellpadding='5'>
+                <tr align='center'> 
+                    <td valign='top'>
+                        <font face='Arial, Helvetica, sans-serif' size='3'>
+                        <span class='paperarialhuge'>
+                        Recent Captures:
+                        </span>
+                        </font>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='paperdefault'>
+                    Will show last CP (towns) captured (5-10 depending on look)
+                    <?= $crow['id'] ?>
+                    </td>
+                </tr>
+            </table>
+    <!-- END Recent Captures -->
         </td>
     </tr>
     <tr><!-- Row Below Map -->
@@ -236,14 +246,12 @@ $casualtyData = $casualtyProcessor->process();
         <!-- #include file='/home/bv55/scriptinc/paper/index_axis_stats2.html' --> 
                                                 <table width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0' align='center'>
                                                             <tr align='left' valign='top'> 
-                                                                <td align='center'> 
-                                                                    <font size='3' face='Times New Roman, Times, serif'>
-                                                                    <b><span class='papertimesbig'>Future home of "news" feed.</span>                                                               </b>
-                                                                    </font>
-                                                                    <br>
-                                                                    <font size='1' face='Arial, Helvetica, sans-serif'>
-                                                                    <span class='paperdefault'>Future home to RSS feed (or similar mechanism to show newest news.)</span>
-                                                                    </font>
+                                                                <td align='center' class='paperdefault' bgcolor='#000000'> 
+                                                                   <?php
+                                                                   $newsPage = file_get_contents("http://www.battlegroundeurope.com/index.php");
+                                                                        preg_match('/<table class="contentpaneopen">(.+?)<span class="article_separator">/s',$newsPage,$firstArticle);
+                                                                    $firstArticle = str_replace('<span class="article_separator">', '', $firstArticle[0]);
+                                                                    echo $firstArticle;?>
                                                                 </td>
                                                             </tr>
 
