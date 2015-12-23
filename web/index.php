@@ -25,7 +25,7 @@ $casualtyData = $casualtyProcessor->process();
 <head>        
     <title>Battleground Europe Gazette</title>
             <link rel='stylesheet' href='assets/css/gazette.css'>
-            <link rel='stylesheet' href='assets/css/wwiiol.css'>
+            
 </head>
 
 <body background='assets/img/paper_tile_new.jpg'  leftmargin='0' topmargin='0' marginwidth='0' marginheight='0'>
@@ -56,15 +56,13 @@ $casualtyData = $casualtyProcessor->process();
 
 <!-- Start of re-imaged page 940px wide -->
 <div id='mainBody' >
-<table border='1'> <!-- Border currently on to show layout of frames -->
-
-
+<table border='0' cellpadding='0' cellspacing='0'> <!-- Border currently on to show layout of frames -->
     <tr align='center'> <!-- Version info and Navigation Section -->
-        <td colspan='5'>
-            <table width='100%' border='1' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- Sets outside border -->
+        <td colspan='5'class='story'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- Sets outside border -->
             <tr>
             <td>
-                <table width='100%' border='0' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- removes cell borders border from row-->
+                <table width='100%' border='0' cellspacing='0' cellpadding='0' align='center'><!-- removes cell borders border from row-->
                 <tr align='left'>
                     <td>
                         <table>
@@ -78,7 +76,6 @@ $casualtyData = $casualtyProcessor->process();
                     </td>
                     <td class='papertimessmall' align='right'>Campaign <?= $row['id'] ?></td> 
                     <td class='papertimessmall' align='left'>, Day: <?= $days ?> </td>
-                    
                     <td class='papertimessmall' align='right'>Coming Soon:</td>  
                     <td align='center'><a class='papertimessmall'>ALLIED Section</td>
                     <td align='center'><a class='papertimessmall'>AXIS Section</td>
@@ -90,7 +87,7 @@ $casualtyData = $casualtyProcessor->process();
         </td>
     </tr><!-- END Version info and Navigation Section -->
     <tr> <!-- MAIN HEADLINE --> 
-        <td colspan='5'>
+        <td colspan='5' class='story'>
         <!-- #include file='/home/bv55/scriptinc/paper/index_main_headline.html' -->
         <table width='100%' border='0' cellspacing='0' cellpadding='3' align='center'>
             <tr valign='top' align='center'> 
@@ -105,7 +102,7 @@ $casualtyData = $casualtyProcessor->process();
         </td><!-- END MAIN HEADLINE -->
     </tr>
     <tr valign='top'><!-- MAP and 1st Story Row-->
-        <td height='150' width='188'><!-- Allied Stats Story-->
+        <td height='175' width='188' class='story'><!-- Allied Stats Story-->
             <table width='100%' align ='center' border='0' cellspacing='0' cellpadding='0'>
             <tr>
             <td>
@@ -132,7 +129,7 @@ $casualtyData = $casualtyProcessor->process();
             </table>
         </td>
         <!-- Start map -->
-        <td rowspan='2' colspan='3'>
+        <td rowspan='2' colspan='3' class='story'>
     <!-- Front Line Map -->
             <table width='564' border='0' cellspacing='0' cellpadding='0' name='map_table'>
                 <tr>
@@ -148,10 +145,10 @@ $casualtyData = $casualtyProcessor->process();
             </table>
     <!-- END MAP -->
         </td>
-        <td> 
+        <td class='story'> 
         <!-- Attacks captures section -->
         
-                                <table width='100%'border='0' cellspacing='0' cellpadding='5'>
+                                <table width='100%'border='0' cellspacing='0' cellpadding='5' >
                                     <tr align='center' valign='top'> 
                                         <td>
                                         <font face='Arial, Helvetica, sans-serif' size='4'>
@@ -172,11 +169,11 @@ $casualtyData = $casualtyProcessor->process();
 
         </td>
     </tr>
-    <tr valign='top'>
+    <tr>
         <td valign='top'><!-- Old Advertising spot Left in in case still wanted/needed could also be used for Propa-->
-            <table width='100%' border='0' cellspacing='0' cellpadding='3' name='community_ad' align='center' height='230' bordercolor='#000000'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' name='community_ad' align='center' height='230' >
                 <tr align='center' valign='middle'>
-                    <td>
+                    <td class='story'>
                     <!-- Code for image rotation -->
                                                                     <script>
                                                                     <?php
@@ -186,14 +183,12 @@ $casualtyData = $casualtyProcessor->process();
                                                                     ?>
                                                                     </script>
                 <!-- End rotation Code -->
-                                                                    <img width='100%' src="<?php echo $selimage ?>" alt="Factory Image randomly selected" /> 
-                   
-
+                    <img width='100%' src="<?php echo $selimage ?>" alt="Factory Image randomly selected" /> 
                     </td>
                 </tr>
             </table>
         </td>
-        <td align='center' valign='middle' width='188'> 
+        <td align='center' valign='middle' width='188' class='story'> 
     <!-- Recent Captures -->
             <table width='100%'border='0' cellspacing='0' cellpadding='5'>
                 <tr align='center'> 
@@ -216,7 +211,7 @@ $casualtyData = $casualtyProcessor->process();
         </td>
     </tr>
     <tr><!-- Row Below Map -->
-        <td rowspan='1' valign='top'>
+        <td rowspan='1' valign='top' class='story'>
 <!--Allied Stats Story #1 -->
 <!-- #include file='/home/bv55/scriptinc/paper/index_allied_stats1.html' -->
                                 <table border='0' cellspacing='0' cellpadding='5'>
@@ -241,29 +236,22 @@ $casualtyData = $casualtyProcessor->process();
                                     </tr>
                                 </table>
         </td>
-        <td colspan='3' valign='top' align='cetner'> <!-- Player Sortie Storie -->
-        <!--Axis Player Story -->             
-        <!-- #include file='/home/bv55/scriptinc/paper/index_axis_stats2.html' --> 
-                                                <table width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0' align='center'>
-                                                            <tr align='left' valign='top'> 
-                                                                <td align='center' class='paperdefault' bgcolor='#000000'> 
-                                                                   <?php
-                                                                   $newsPage = file_get_contents("http://www.battlegroundeurope.com/index.php");
-                                                                        preg_match('/<table class="contentpaneopen">(.+?)<span class="article_separator">/s',$newsPage,$firstArticle);
-                                                                    $firstArticle = str_replace('<span class="article_separator">', '', $firstArticle[0]);
-                                                                    echo $firstArticle;?>
-                                                                </td>
-                                                            </tr>
-
-                                                </table>
-    <!-- #include file='/home/bv55/scriptinc/paper/index_axis_stats2.html' --> 
-    <!-- end 1st story -->              
-   
-        
-
+        <td colspan='3' valign='top' align='center'> 
+        <!-- Latest News -->
+            <table class='paperhidden' width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0' align='center'>
+                <tr align='left' valign='top'> 
+                    <td align='center' class='story'> 
+                        <?php
+                            $newsPage = file_get_contents("http://www.battlegroundeurope.com/index.php");
+                                    preg_match('/<table class="contentpaneopen">(.+?)<span class="article_separator">/s',$newsPage,$firstArticle);
+                            $firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
+                            echo "<span clas='paperhidden'>".$firstArticle."</span>";?>
+                    </td>
+                </tr>
+            </table>
+    <!-- End Latest news -->              
         </td>
-
-        <td height='30' valign='top' align='center'>
+        <td height='30' valign='top' align='center' class='story'>
         <!-- Forces in the field table -->
             Forces in the field temporarily removed while full page is developed.  
         </td> <!-- End of Forces in the field -->
@@ -407,50 +395,20 @@ $casualtyData = $casualtyProcessor->process();
 <! -- END of SHort Page Breakpoint -->
  */?>   
     <tr>
-        <td colspan='5'>
-
+        <td colspan='5' class='story'>
             <table width='100%' border='0' cellspacing='2' cellpadding='0'>
                 <tr>
-                    <td bgcolor='#000000' height='2'><img height='1'></td>
+                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'>Only the cool people know about this...... </td>
                 </tr>
                 <tr>
-                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'><div align='center'>
-                    <img height='7'> RIP Buckeyes! | WILLYTEE RAWKS | SNAKES ON A PLANE | BLANGETT IS SEXEH | CLINTNOMOD</div></td>
+                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'>RIP Buckeyes! | WILLYTEE RAWKS | SNAKES ON A PLANE | BLANGETT IS SEXEH | CLINTNOMOD</td>
                 </tr>
              </table>
          </td>
     </tr>
 
 </table>
-
-<!-- PAGE BOTTOM CONTENT -->
-
-<table align='center' >
-    <tr align='center' valign='top' bgcolor='#000000'> 
-        <td>
-            <div align='center'>
-            <span class='small'>© 2001-2016 Playnet, Inc. All Rights Reserved.<br> Playnet Inc., World War II Online<SUP>TM</SUP>, WWII Online<SUP>TM</SUP> Cornered Rat Software©, Unity 3D Engine<SUP>TM</SUP> are trademarks of Playnet Incorporated.<br> Other marks used herein are those of their respective owners.</span><br>
-      <br>
-      <table width='90%' border='0' cellspacing='0' cellpadding='5'>
-        <tr>
-          <td width='50%' align='right'>
-              <a href='http://www.battlegroundeurope.com/index.php/component/content/article/47' target='_blank' class='small'>Playnet Terms Of Service!</a>
-            &nbsp;&nbsp;&nbsp;
-          </td>
-          <td width='50%'>
-              &nbsp;&nbsp;&nbsp;
-            <a href='http://www.battlegroundeurope.com/index.php/component/content/article/48' target='_blank' class='small'>Forum Rules and Conduct</a>
-          </td>
-        </tr>
-      </table>
-     </div>
-    </td>
-</td>
-</tr>
-</table>
-</table>
 </div>
-</center>
 </body>
 </html>
  
