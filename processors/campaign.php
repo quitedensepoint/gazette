@@ -23,7 +23,7 @@ $ver=$vers->fetch_assoc();
 $today = time () ;
 $today=date("d-M-Y", $today);
 $start= date("d-M-Y", strtotime($row['start_time']))."<br>";
-$days= $today-$start;
+$days= $today-$start-1;
 
 
 

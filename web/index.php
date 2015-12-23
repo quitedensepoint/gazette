@@ -74,7 +74,7 @@ $casualtyData = $casualtyProcessor->process();
                                 <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'>
                                 <font color='#cc3333'>CURRENT VERSION:</font></a>
                                 </td>    
-                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'><!-- START index_version --><?= $ver['MAX(maxClientVersion)'] ?><!-- END index_version (LIVE) --></a></td>
+                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'><!-- START index_version -->1.34.13<!-- END index_version (LIVE) --></a></td>
                             </tr>
                         </table>
                     </td>
@@ -421,7 +421,7 @@ $casualtyData = $casualtyProcessor->process();
     <tr align='center' valign='top' bgcolor='#000000'> 
         <td>
             <div align='center'>
-            <span class='small'>© 2001-2015 Playnet, Inc. All Rights Reserved.<br> Playnet Inc., World War II Online<SUP>TM</SUP>, WWII Online<SUP>TM</SUP> Cornered Rat Software©, Unity 3D Engine<SUP>TM</SUP> are trademarks of Playnet Incorporated.<br> Other marks used herein are those of their respective owners.</span><br>
+            <span class='small'>© 2001-2016 Playnet, Inc. All Rights Reserved.<br> Playnet Inc., World War II Online<SUP>TM</SUP>, WWII Online<SUP>TM</SUP> Cornered Rat Software©, Unity 3D Engine<SUP>TM</SUP> are trademarks of Playnet Incorporated.<br> Other marks used herein are those of their respective owners.</span><br>
       <br>
       <table width='90%' border='0' cellspacing='0' cellpadding='5'>
         <tr>
