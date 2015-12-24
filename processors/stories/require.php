@@ -4,6 +4,7 @@
  * from one place
  */
 require(__DIR__ . "/story-interface.php");
+require(__DIR__ . "/StoryBase.php");
 require(__DIR__ . "/StoryCampaignStarted.php");
 require(__DIR__ . "/StoryCountryCaptured.php");
 require(__DIR__ . "/StoryCountryDiminished.php");

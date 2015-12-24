@@ -72,6 +72,10 @@ class StoryProcessor {
 		
 		$this->pushToFile($storyKey, $content);
 		echo sprintf("\tStory could be made for %s!\n", $storyKey);
+		
+		/**
+		 * Update the expiry date on the story
+		 */
 		return true;
 	}
 	
@@ -84,95 +88,131 @@ class StoryProcessor {
 	 */
 	private function checkStoryTypes($storyTypes, $sourceId = null)
 	{
+		
 		foreach($storyTypes as $storyType)
 		{
-			/**
-			 * Pull all the possible sources for a specific story type
-			 * 
-			 * e.g. for index_main_headline, the single story type is "Headline News" in the types table
-			 * We then look in the sources table for all sources of that type to get the weighting of that
-			 * story and how long it lasts
-			 */
-
-			$countryId = $storyType['country_id'];
-			$typeId = $storyType['type_id'];
-			$sideId = strtolower($storyType['side_id']);
-			
-			if($sourceId !== null)
+			if($content = $this->prepareStoryType($storyType, $sourceId))
 			{
-				$sourceData = $this->getStorySource($sourceId, $countryId);
-			}
-			else {
-				$sourceData = $this->getSourceData($typeId, $countryId);
-				$sourceId = $sourceData[0]['source_id'];			
-			}
-
-			/**
-			 * Here we group the templates by their weight. This allows to ensure the more
-			 * important stories float to the top of options available
-			 */
-			$organisedTemplates = $this->organiseTemplates($sourceData);
-			$weights = $this->getWeights($storyType['weighting'], array_keys($organisedTemplates));
-
-			/**
-			 * Go through each weight form most to least likely
-			 */
-			foreach($weights as $weight)
-			{
-				/**
-				 * Go through each possible source of a story of that weight and check to see
-				 * if the data that makes the story valid true. If so, we have
-				 * found our story - generate it and return
-				 */
-				foreach($organisedTemplates[$weight] as $template)
-				{
-					$sourceName = $template['name'];
-
-					$storyCreatorClass = "Story" . str_replace(" ", "", $sourceName);
-					
-					/**
-					 * If it doesn't exists as a story to generate, skip it
-					 */
-					if(!class_exists($storyCreatorClass))
-					{
-						echo "\tNo story class has been defined for $storyCreatorClass - skipping...\n";
-						continue;
-					}
-					
-					/** 
-					 * Bit of a hack - puts side into the template data
-					 * @todo Figure out a better data structure to passed into the
-					 */
-					$creatorData = [
-						'side_id'	=> $sideId,
-						'template' => $template
-					];
-
-					/* @var $storyCreator StoryInterface */
-					$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWIIOnline, $creatorData);
-					echo "\tChecking story $storyCreatorClass for country $countryId";
-					
-					if($storyCreator->isValid())
-					{
-						echo " -- valid\n";
-						$storyCreator->makeStory();
-						
-						return [
-							'title' => $storyCreator->title,
-							'body' => $storyCreator->body
-						];
-					}
-					else
-					{
-						echo "-- not valid\n";
-					}
-				}				
-			}
+				return $content;
+			}			
 		}
 		
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param type $storyType
+	 * @param type $sourceId
+	 * @return boolean
+	 */
+	private function prepareStoryType($storyType, $sourceId)
+	{
+		$creatorData = [
+			'template_vars' => [
+				'country' => $storyType['country'],
+				'side' => $storyType['side'],
+				'country_adjective' => $storyType['country_adj']
+			]
+		];			
+
+		/**
+		 * Pull all the possible sources for a specific story type
+		 * 
+		 * e.g. for index_main_headline, the single story type is "Headline News" in the types table
+		 * We then look in the sources table for all sources of that type to get the weighting of that
+		 * story and how long it lasts
+		 */
+		$countryId = $storyType['country_id'];
+		$typeId = $storyType['type_id'];
+
+		$creatorData['side_id'] = strtolower($storyType['side_id']);
+
+		if($sourceId !== null)
+		{
+			$sourceData = $this->getStorySource($sourceId, $countryId);
+		}
+		else {
+			$sourceData = $this->getSourceData($typeId, $countryId);
+			$sourceId = $sourceData[0]['source_id'];			
+		}
+
+		/**
+		 * Here we group the templates by their weight. This allows to ensure the more
+		 * important stories float to the top of options available
+		 */
+		$organisedSources = $this->organiseSources($sourceData);
+		$weights = $this->getWeights($storyType['weighting'], array_keys($organisedSources));
+
+		/**
+		 * Go through each weight form most to least likely
+		 */
+		foreach($weights as $weight)
+		{
+			/**
+			 * Go through each possible source of a story of that weight and check to see
+			 * if the data that makes the story valid true. If so, we have
+			 * found our story - generate it and return
+			 */
+			foreach($organisedSources[$weight] as $source)
+			{
+				if(($content = $this->processSource($source, $creatorData)) !== false) {
+					return $content;
+				}
+			}				
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Checks that the source template (see templates table) is valid
+	 * 
+	 * @param array $source
+	 * @param array $creatorData
+	 * @return array|false
+	 */
+	private function processSource($source, $creatorData) {
+
+		$sourceName = $source['name'];
+		$creatorData['title_template'] = $source['title'];
+		$creatorData['body_template'] = $source['body'];
+
+		$storyCreatorClass = "Story" . str_replace(" ", "", $sourceName);
+
+		/**
+		 * If it doesn't exists as a story to generate, skip it
+		 */
+		if(!class_exists($storyCreatorClass))
+		{
+			echo "\tNo story class has been defined for $storyCreatorClass - skipping...\n";
+			return false;
+		}
+
+		/* @var $storyCreator StoryInterface */
+		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWIIOnline, $creatorData);
+		echo "\tChecking story $storyCreatorClass for country " . $creatorData['template_vars']['country'];
+
+		if($storyCreator->isValid())
+		{
+			echo " -- valid\n";
+			return $storyCreator->makeStory();
+		}
+		else
+		{
+			echo "-- not valid\n";
+			return false;
+		}
+		
+	}
+	
+	/**
+	 * Retrieves the valid sources and their related templates for a story
+	 * 
+	 * @param type $sourceId
+	 * @param type $countryId
+	 * @return type
+	 */
 	private function getStorySource($sourceId, $countryId)
 	{
 		$query = $this->dbHelper
@@ -231,16 +271,16 @@ class StoryProcessor {
 	}
 	
 	/**
-	 * Sorts the templates into an array based on their weighting
-	 * @param array $templateData
+	 * Sorts the sources into an array based on their weighting
+	 * @param array $sourceData
 	 * @return array
 	 */
-	private function organiseTemplates($templateData)
+	private function organiseSources($sourceData)
 	{
 		$organised = [];
-		foreach($templateData as $template)
+		foreach($sourceData as $source)
 		{
-			$organised[$template['weight']][] = $template;
+			$organised[$source['weight']][] = $source;
 		}
 		return $organised;
 	}

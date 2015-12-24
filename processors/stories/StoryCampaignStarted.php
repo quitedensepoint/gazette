@@ -4,29 +4,10 @@
  * Executes the logic to generate a story from the 
  * "Latest Intel" source.
  */
-class StoryCampaignStarted implements StoryInterface {
-	
-	protected $dbConn;
-	protected $dbHelper;
-	
-	protected $dbConnWWIIOnline;
-	protected $creatorData;
-	
-	protected $cpOwnershipPercent;
-	
-	public $title;
-	
-	public $body;
-	
-	public function __construct($dbConn, $dbConnWWIIOnline, $creatorData) {
-		$this->dbConn = $dbConn;
-		$this->dbHelper = new dbhelper($dbConn);
-		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
-		$this->creatorData = $creatorData;
+class StoryCampaignStarted extends StoryBase implements StoryInterface {
 		
-	}
-	
-	
+
+		
 	public function isValid() {
 
 		/**
@@ -36,10 +17,11 @@ class StoryCampaignStarted implements StoryInterface {
 	}
 
 	public function makeStory() {
-		
 
-		$this->title = $this->creatorData['template']['title'];
-		$this->body = $this->creatorData['template']['body'];
+		/**
+		 * No variables in this story
+		 */
+		return $this->parseStory([]);
 		
 	}
 	

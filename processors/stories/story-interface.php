@@ -12,13 +12,15 @@ interface StoryInterface {
 	/**
 	 * Check to see if the data that makes up the story is valid
 	 * 
-	 * @return boolean Description
+	 * @return boolean true if the story rules evaluate to true
 	 */
 	public function isValid();
 	
 	/**
 	 * Generate the story text from the data pulled during the
 	 * validation checks
+	 * 
+	 * @return array
 	 */
 	public function makeStory();
 }
