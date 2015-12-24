@@ -1,8 +1,19 @@
+body, tr, td, p, li {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+	color: #000000;
+}
+
+
+.story {
+    border:1px solid ;
+    border-color: black;
+}
 
 .paperdefault {
 	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 8pt;
-	color: #000000;
+	color: #000000 !important;
 }
 
 .papertimessmall {
@@ -80,12 +91,13 @@
 .paperbarlink {
 	font-family: Times New Roman, Times, serif;
 	font-size: 8pt;
-	color: #000000;
+	color: #000000 !important;
 }
 
 .paperwhite {
 	color: #FFFFFF;
 }
+
 #bodyDiv {
 			position: absolute;
 			background-image: url("paper_tile_new.jpg");
@@ -93,11 +105,13 @@
 			width: 940px;
 
 		}
-		#headerMiddle {
+
+#headerMiddle {
 			display: block;
 			margin-left: auto;
 			margin-right: auto;
 		}
+
 #alliedDeaths {
 			position: absolute;
 			width: 150px;
@@ -107,6 +121,7 @@
 			font-family: Georgia, Times New Roman, Times, serif; 
 			font-size: 8pt;
 		}
+
 #axisDeaths {
     position: absolute;
     width: 150px;
@@ -116,11 +131,16 @@
     font-family: Georgia, Times New Roman, Times, serif;
     font-size: 8pt;
 }
+
 #mainBody {
 			position: absolute;
-			background-image: url("paper_tile_new.jpg");
+			background-image: url("paper_tile_new.jpg") !important;
 			top: 90px;
             height: 100%;
 			width: 940px;
+            color:black;
+            }
 
-		}
+#override {
+    color: black !important;
+}

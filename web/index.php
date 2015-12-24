@@ -12,11 +12,21 @@ Map is aplaceholder image and the link to the full map page has been commented o
 require(__DIR__ . '/../DBconn.php');
 require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/casualty-processor.php');
+require(__DIR__ . '/../processors/campaign.php');
+require(__DIR__ . '/../processors/aocap.php');
 
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
 
-$index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline.php');
+/**
+ * Pull the generated reports from the file system. They were stored here as the 
+ * easiest way to cache the story data until it is regenerated.
+ * 
+ * @todo Need a better caching system
+ */
+$indexMainHeadline = file_get_contents(__DIR__ .'/../cache/index_main_headline.php');
+$indexAlliedStats2 = file_get_contents(__DIR__ .'/../cache/index_allied_stats2.php');
+$indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.php');
 ?>
 <!DOCTYPE html>
 
@@ -24,7 +34,7 @@ $index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline
 <head>        
     <title>Battleground Europe Gazette</title>
             <link rel='stylesheet' href='assets/css/gazette.css'>
-            <link rel='stylesheet' href='assets/css/wwiiol.css'>
+            
 </head>
 
 <body background='assets/img/paper_tile_new.jpg'  leftmargin='0' topmargin='0' marginwidth='0' marginheight='0'>
@@ -55,24 +65,26 @@ $index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline
 
 <!-- Start of re-imaged page 940px wide -->
 <div id='mainBody' >
-<table border='1'> <!-- Border currently on to show layout of frames -->
-
-
+<table border='0' cellpadding='0' cellspacing='0'> <!-- Border currently on to show layout of frames -->
     <tr align='center'> <!-- Version info and Navigation Section -->
-        <td colspan='5'>
-            <table width='100%' border='1' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- Sets outside border -->
+        <td colspan='5'class='story'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- Sets outside border -->
             <tr>
             <td>
-                <table width='100%' border='0' cellspacing='0' cellpadding='0' bordercolor='#000000' align='center'><!-- removes cell borders border from row-->
-                <tr>
-                    <td width='188'>
-                        <a href='/web/20051201034059/http://forums.battlegroundeurope.com/forumdisplay.php?f=10' target='_blank' class='papertimessmall'>
-                        <font color='#cc3333'>CURRENT VERSION 
-                            <!-- START index_version --> 1.34.12<!-- END index_version (LIVE) -->
-                        </font>
-                        </a>
+                <table width='100%' border='0' cellspacing='0' cellpadding='0' align='center'><!-- removes cell borders border from row-->
+                <tr align='left'>
+                    <td>
+                        <table>
+                            <tr>
+                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'>
+                                <font color='#cc3333'>CURRENT VERSION:</font></a>
+                                </td>    
+                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'><!-- START index_version -->1.34.13<!-- END index_version (LIVE) --></a></td>
+                            </tr>
+                        </table>
                     </td>
-                    <td>Day: </td><td> # </td><td> Of Campaign #:</td><td> (number)</td>
+                    <td class='papertimessmall' align='right'>Campaign <?= $row['id'] ?></td> 
+                    <td class='papertimessmall' align='left'>, Day: <?= $days ?> </td>
                     <td class='papertimessmall' align='right'>Coming Soon:</td>  
                     <td align='center'><a class='papertimessmall'>ALLIED Section</td>
                     <td align='center'><a class='papertimessmall'>AXIS Section</td>
@@ -84,40 +96,24 @@ $index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline
         </td>
     </tr><!-- END Version info and Navigation Section -->
     <tr> <!-- MAIN HEADLINE --> 
-        <td colspan='5'>
-        <!-- #include file='/home/bv55/scriptinc/paper/index_main_headline.html' -->
+        <td colspan='5' class='story'>
         <table width='100%' border='0' cellspacing='0' cellpadding='3' align='center'>
             <tr valign='top' align='center'> 
                 <td> 
                     <font face='Arial, Helvetica, sans-serif' size='7' color='#666666'>
-                    <b><span class='paperheadline'><?= $index_main_headline ?></span></b>
+                    <b><span class='paperheadline'><?= $indexMainHeadline ?></span></b>
                     </font>
                 </td>
             </tr>
         </table>
-        <!-- #include file='/home/bv55/scriptinc/paper/index_main_headline.html' -->
         </td><!-- END MAIN HEADLINE -->
     </tr>
     <tr valign='top'><!-- MAP and 1st Story Row-->
-        <td height='150' width='188'><!-- Allied Stats Story-->
+        <td height='175' width='188' class='story'><!-- Allied Stats Story-->
             <table width='100%' align ='center' border='0' cellspacing='0' cellpadding='0'>
             <tr>
             <td>
-            <!-- #include file='/home/bv55/scriptinc/paper/index_allied_stats2.html' -->
-                                            <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-                                                <tr align='center' valign='top'> 
-                                                    <td> 
-                                                    <font size='3' face='Times New Roman, Times, serif'>
-                                                    <b><span class='papertimesbig'>index_allied_stats2</span></b>
-                                                    </font>
-                                                    <br>
-                                                    <font size='1' face='Arial, Helvetica, sans-serif'>
-                                                    <span class='paperdefault'>An independent analysis of military airfields controlled by the major combatants indicate that United Kingdom now controls 38% of the airfields (19 total), followed by Germany with 34% (17) and France with 26% (13). This article page has 40 words</span>
-                                                    </font>
-                                                    </td>
-                                                </tr>
-                                            </table>
-            <!-- #include file='/home/bv55/scriptinc/paper/index_allied_stats2.html' -->
+			<?= $indexAlliedStats2 ?>
             </td>
             </tr>
             <tr>
@@ -126,7 +122,7 @@ $index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline
             </table>
         </td>
         <!-- Start map -->
-        <td rowspan='2' colspan='3'>
+        <td rowspan='2' colspan='3' class='story'>
     <!-- Front Line Map -->
             <table width='564' border='0' cellspacing='0' cellpadding='0' name='map_table'>
                 <tr>
@@ -142,41 +138,35 @@ $index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline
             </table>
     <!-- END MAP -->
         </td>
-        <td> 
-        <!--Axis RDP Story #1 -->
-        <!-- #include file='/home/bv55/scriptinc/paper/index_axis_german_rdp1.html' -->
-                                <table width='100%'border='0' cellspacing='0' cellpadding='5'>
-                                    <tr align='left' valign='top'> 
+        <td class='story'> 
+        <!-- Attacks captures section -->
+        
+                                <table width='100%'border='0' cellspacing='0' cellpadding='5' >
+                                    <tr align='center' valign='top'> 
                                         <td>
                                         <font face='Arial, Helvetica, sans-serif' size='4'>
-                                        <b>
                                         <span class='paperarialhuge'>
-                                        Index_Axis_rdp1
-                                        </span>
-                                        </b>
-                                        </font>
-                                        <br>
-                                        <font face='Arial, Helvetica, sans-serif' size='1'>
-                                        <span class='paperdefault'>
-                                        As German High Command is poised to unveil RDP plans, German industry is preparing to react to new vehicle and weapon orders.
+                                        Current Attacks:
                                         </span>
                                         </font>
                                         </td>
+                                    <tr>
+                                        <td class='paperdefault'>
+                                        Currently placed AO's
+                                        <?php //insert currend AO's here ?>
+                                      
+                                        </td>
                                     </tr>
                                 </table>
-        <!-- #include file='/home/bv55/scriptinc/paper/index_axis_german_rdp1.html' --> 
-            <table width='100%' border='0' cellspacing='0' cellpadding='5'>
-                <tr>
-                    <td align='center' valign='bottom'><a href='axis.php' class='paperdefault'>[more in Axis section]</a></td>
-                </tr>
-           </table>
+        <!-- END Attacks Captures --> 
+
         </td>
     </tr>
     <tr>
         <td valign='top'><!-- Old Advertising spot Left in in case still wanted/needed could also be used for Propa-->
-            <table width='100%' border='0' cellspacing='0' cellpadding='3' name='community_ad' align='center' height='230' bordercolor='#000000'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' name='community_ad' align='center' height='230' >
                 <tr align='center' valign='middle'>
-                    <td>
+                    <td class='story'>
                     <!-- Code for image rotation -->
                                                                     <script>
                                                                     <?php
@@ -186,126 +176,61 @@ $index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline
                                                                     ?>
                                                                     </script>
                 <!-- End rotation Code -->
-                                                                    <img src="<?php echo $selimage ?>" alt="Factory Image randomly selected" /> 
-                   
-
+                    <img width='100%' src="<?php echo $selimage ?>" alt="Factory Image randomly selected" /> 
                     </td>
                 </tr>
             </table>
         </td>
-        <td align='center' valign='middle'> <!-- Bottom Cell R side of map -->
-            This space is wide open for whatever
+        <td align='center' valign='middle' width='188' class='story'> 
+    <!-- Recent Captures -->
+            <table width='100%'border='0' cellspacing='0' cellpadding='5'>
+                <tr align='center'> 
+                    <td valign='top'>
+                        <font face='Arial, Helvetica, sans-serif' size='3'>
+                        <span class='paperarialhuge'>
+                        Recent Captures:
+                        </span>
+                        </font>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='paperdefault'>
+                    Will show last CP (towns) captured (5-10 depending on look)
+                    <?= $crow['id'] ?>
+                    </td>
+                </tr>
+            </table>
+    <!-- END Recent Captures -->
         </td>
     </tr>
     <tr><!-- Row Below Map -->
-        <td rowspan='1' valign='top'>
-<!--Allied Stats Story #1 -->
-<!-- #include file='/home/bv55/scriptinc/paper/index_allied_stats1.html' -->
-                                <table border='0' cellspacing='0' cellpadding='5'>
-                                    <tr align='left' valign='top'> 
-                                        <td> 
-                                        <font size='4' face='Arial, Helvetica, sans-serif'>
-                                        <b>      <span class='paperarialhuge'>Index_allied _stats1</span>
-                                        </b>
-                                        </font>
-                                        <br>
-                                        <font size='1' face='Arial, Helvetica, sans-serif'>
-                                        <span class='paperdefault'>The latest moderate attacks by Axis bomber formations over Abbeville has caused  Production output to drop to 46% at that city.
-                                        </span>
-                                        </font>
-                                        </td>
-                                    </tr>
-                                </table>
-<!-- #include file='/home/bv55/scriptinc/paper/index_allied_stats1.html' -->                            
-                                <table width='100%' border='0' cellspacing='0' cellpadding='5'>
-                                    <tr>
-                                        <td align='center'><a href='allied.php' class='paperdefault'>[more in Allied section]</a></td>
-                                    </tr>
-                                </table>
+        <td rowspan='1' valign='top' class='story'>
+			<?= $indexAlliedStats1 ?>
+                           
+			<table width='100%' border='0' cellspacing='0' cellpadding='5'>
+				<tr>
+					<td align='center'><a href='allied.php' class='paperdefault'>[more in Allied section]</a></td>
+				</tr>
+			</table>
         </td>
-        <td colspan='2' valign='top'> <!-- Player Sortie Storie -->
-        <!--Axis Player Story -->             
-        <!-- #include file='/home/bv55/scriptinc/paper/index_axis_stats2.html' --> 
-                                                <table width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0'>
-                                                            <tr align='left' valign='top'> 
-                                                                <td> 
-                                                                    <font size='3' face='Times New Roman, Times, serif'>
-                                                                    <b><span class='papertimesbig'>Random Axis player stats generated Story 1</span>                                                               </b>
-                                                                    </font>
-                                                                    <br>
-                                                                    <font size='1' face='Arial, Helvetica, sans-serif'>
-                                                                    <span class='paperdefault'>May have to re-organize the page a bit as it wasn't built with 3 allied armies in mind.  And the Italians are also coming (eventually).  This entire little blurb is about 47 words total, as you can see plenty of room for additional stuff to be added. </span>
-                                                                    </font>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><br /><a href='axis.php' class='paperdefault'>[more in Axis section]</a></td>
-                                                            </tr>
-                                                </table>
-    <!-- #include file='/home/bv55/scriptinc/paper/index_axis_stats2.html' --> 
-    <!-- end 1st story -->              
-   
-        
-
-        </td>
-        <td align='center'>
-                        <a href='http://www.battlegroundeurope.com/index.php' target='_blank' class='papertimessmall'>LATEST DEVELOPER NEWS</a>
-                    </td>
-        <td height='30' valign='top'>
-        <!-- Forces in the field table -->
-            <table width='200'  border='0' cellpadding='0' cellspacing='0' id='forces_online'>
-                <tr>
-                    <td bgcolor='#333333'>
-                        <table width='100%' height='30'  border='0' align='center' cellpadding='0' cellspacing='0'>
-                            <tr align='left' valign='top'>
-                                <td valign='middle'><div align='center'><font size='3'><b><font color='#FFFFFF' face='Times New Roman, Times, serif'>ALLIES vs AXIS</font> </b></font></div></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-    <!-- Cell Icon Table -->
-                                                <table width='100%'  border='0' cellspacing='0' cellpadding='0'>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_allied.gif' width='16' height='16'><img src='assets/img/forces/infantry_blank.gif' width='16' height='16'></td>
-                                                      <td width='8' align='center' valign='top'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'><img src='assets/img/forces/infantry_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_allied.gif' width='16' height='16'><img src='assets/img/forces/armour_blank.gif' width='16' height='16'></td>
-                                                      <td align='center' valign='top' width='8'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'><img src='assets/img/forces/armour_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_allied.gif' width='16' height='16'><img src='assets/img/forces/air_blank.gif' width='16' height='16'></td>
-                                                      <td align='center' valign='top' width='8'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'><img src='assets/img/forces/air_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                    <tr>
-                                                      <td align='left' valign='top'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'><img src='assets/img/forces/navy_allied.gif' width='16' height='16'></td>
-                                                      <td align='center' valign='top' width='8'><img width='8' height='1'></td>
-                                                      <td align='right' valign='top'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_blank.gif' width='16' height='16'><img src='assets/img/forces/navy_axis.gif' width='16' height='16'></td>
-                                                    </tr>
-
-                                                </table>
-                    <!-- end of icons-->
-                    </td>
-                </tr>
-                <tr>
-                    <td bgcolor='#333333'>
-                        <table width='100%'  border='0' cellspacing='0' cellpadding='2'>
-                            <tr>
-                                <td><div align='center'> <b><font color='#FFFFFF'><font face='Arial, Helvetica, sans-serif'><i><font size='1'>combatants in the field (past 15 mins) </font></i></font></font></b></div></td>
-                            </tr>
-                        </table>
+        <td colspan='3' valign='top' align='center'> 
+        <!-- Latest News -->
+            <table class='paperhidden' width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0' align='center'>
+                <tr align='left' valign='top'> 
+                    <td align='center' class='story'> 
+                        <?php
+                            $newsPage = file_get_contents("http://www.battlegroundeurope.com/index.php");
+                                    preg_match('/<table class="contentpaneopen">(.+?)<span class="article_separator">/s',$newsPage,$firstArticle);
+                            $firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
+                            echo "<span clas='paperhidden'>".$firstArticle."</span>";?>
                     </td>
                 </tr>
             </table>
+    <!-- End Latest news -->              
+        </td>
+        <td height='30' valign='top' align='center' class='story'>
+        <!-- Forces in the field table -->
+            Forces in the field temporarily removed while full page is developed.  
         </td> <!-- End of Forces in the field -->
     </tr>
  <?php /*   
@@ -447,50 +372,20 @@ $index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline
 <! -- END of SHort Page Breakpoint -->
  */?>   
     <tr>
-        <td colspan='5'>
-
+        <td colspan='5' class='story'>
             <table width='100%' border='0' cellspacing='2' cellpadding='0'>
                 <tr>
-                    <td bgcolor='#000000' height='2'><img height='1'></td>
+                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'>Only the cool people know about this...... </td>
                 </tr>
                 <tr>
-                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'><div align='center'>
-                    <img height='7'> RIP Buckeyes! | WILLYTEE RAWKS | SNAKES ON A PLANE | BLANGETT IS SEXEH | CLINTNOMOD</div></td>
+                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'>RIP Buckeyes! | WILLYTEE RAWKS | SNAKES ON A PLANE | BLANGETT IS SEXEH | CLINTNOMOD</td>
                 </tr>
              </table>
          </td>
     </tr>
 
 </table>
-
-<!-- PAGE BOTTOM CONTENT -->
-
-<table align='center' >
-    <tr align='center' valign='top' bgcolor='#000000'> 
-        <td>
-            <div align='center'>
-            <span class='small'>© 2001-2015 Playnet, Inc. All Rights Reserved.<br> Playnet Inc., World War II Online<SUP>TM</SUP>, WWII Online<SUP>TM</SUP> Cornered Rat Software©, Unity 3D Engine<SUP>TM</SUP> are trademarks of Playnet Incorporated.<br> Other marks used herein are those of their respective owners.</span><br>
-      <br>
-      <table width='90%' border='0' cellspacing='0' cellpadding='5'>
-        <tr>
-          <td width='50%' align='right'>
-              <a href='http://www.wwiionline.com/scripts/wwiionline/tos.jsp' target='_blank' class='small'>Playnet Terms Of Service!</a>
-            &nbsp;&nbsp;&nbsp;
-          </td>
-          <td width='50%'>
-              &nbsp;&nbsp;&nbsp;
-            <a href='http://www.battlegroundeurope.com/index.php/component/content/article/48' target='_blank' class='small'>Forum Rules and Conduct</a>
-          </td>
-        </tr>
-      </table>
-     </div>
-    </td>
-</td>
-</tr>
-</table>
-</table>
 </div>
-</center>
 </body>
 </html>
  
