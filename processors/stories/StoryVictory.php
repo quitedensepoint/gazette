@@ -2,11 +2,16 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "Victory Immiment" source.
+ * "Victory" source.
  */
-class StoryVictoryImminent extends StoryBase implements StoryInterface {
-			
+class StoryVictory extends StoryBase implements StoryInterface {
+	
 	public function isValid() {
+		
+		/**
+		 * Needs more thinky time to work out what victory means
+		 */
+		return false;
 
 		/**
 		 * Retrieve the strat_cp data from the current game database
@@ -27,7 +32,7 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
 		
-		return ($totalCps > 0 && ($cpOwnershipPercent > 90 and $cpOwnershipPercent < 94));
+		return ($totalCps > 0 && ($cpOwnershipPercent > 87 and $cpOwnershipPercent < 91));
 		
 	}
 
@@ -73,6 +78,26 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		
 		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
 	}
+	
+	public function getControl($name)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("select value from control where name = ? limit 1", [$name]);	
+		
+		return $dbHelper->getAsArray($query)[0]['value'];					
+	}
+	
+	public function setControl($name, $value)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("replace into control (name,value) values(?,?)", [$name, $value]);	
+		
+		return $dbHelper->getAsArray($query)[0]['value'];					
+	}	
 
 
 }

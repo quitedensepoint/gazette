@@ -2,10 +2,10 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "Victory Immiment" source.
+ * "Country Diminished" source.
  */
-class StoryVictoryImminent extends StoryBase implements StoryInterface {
-			
+class StoryCountryDiminished extends StoryBase implements StoryInterface {
+	
 	public function isValid() {
 
 		/**
@@ -13,7 +13,7 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		 */
 		$totalCps = $this->getTotalGameCPCount();
 
-		$ownedCps = $this->getOwnedGameCPCount($this->creatorData['side_id']);	
+		$ownedCps = $this->getOwnedGameCPCount($this->creatorData['country_id']);	
 		
 		/**
 		 * This is some calculation that manually adjusts the CP count
@@ -27,16 +27,13 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
 		
-		return ($totalCps > 0 && ($cpOwnershipPercent > 90 and $cpOwnershipPercent < 94));
+		return ($totalCps > 0 && ($cpOwnershipPercent < 10));
 		
 	}
 
 	public function makeStory() {
 
 		$template_vars = $this->creatorData['template_vars'];
-		
-		$template_vars['side_adj'] = strtolower($template_vars['side']) == 'allied' ? 'Allied' : 'Axis';
-		$template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 'axis' ? 'Axis' : 'Allied';
 		
 		return $this->parseStory($template_vars);
 
@@ -52,27 +49,27 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $gameDbHelper
-			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5 and country in (1,3,4)");	
+			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5");	
 		
 		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
 	}
 	
 	/**
-	 * Get the total number of CPs owned by a nominated side
+	 * Get the total number of CPs owned by a nominated country
 	 * 
-	 * @param integer $sideId
+	 * @param integer $countryId
 	 * @return type
 	 */
-	public function getOwnedGameCPCount($sideId)
+	public function getOwnedGameCPCount($countryId)
 	{
 		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $gameDbHelper
-			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5"
-				. " and country in (1,3,4) and side = ?", [$sideId]);	
+			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5 and country = ?", [$countryId]);	
 		
 		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
 	}
+
 
 
 }

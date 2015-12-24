@@ -127,7 +127,12 @@ class StoryProcessor {
 		$typeId = $storyType['type_id'];
 
 		$creatorData['side_id'] = strtolower($storyType['side_id']);
+		$creatorData['country_id'] = $countryId;
 
+		/**
+		 * If source ID is not null, we have asked for specific source of 
+		 * the story, which narrows the templates down
+		 */
 		if($sourceId !== null)
 		{
 			$sourceData = $this->getStorySource($sourceId, $countryId);
@@ -191,7 +196,7 @@ class StoryProcessor {
 
 		/* @var $storyCreator StoryInterface */
 		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWIIOnline, $creatorData);
-		echo "\tChecking story $storyCreatorClass for country " . $creatorData['template_vars']['country'];
+		echo sprintf("\tChecking story %s for country %s with template %d" , $storyCreatorClass, $creatorData['template_vars']['country'], $source['template_id']);
 
 		if($storyCreator->isValid())
 		{

@@ -19,7 +19,7 @@ class dbhelper {
 	 * Generate a new MySQL statement
 	 * 
 	 * @param string $sql
-	 * @return mysqli_stmt
+	 * @return mysqli_stmt|false returns a new myql_stmt or false if an error occurred
 	 */
 	public function getStatement($sql)
 	{
@@ -27,6 +27,12 @@ class dbhelper {
 		$query = $this->dbconn->stmt_init();
 
 		$query->prepare($sql);
+		
+		if($query->errno !== 0)
+		{
+			echo($query->error);
+			return false;
+		}
 		
 		return $query;
 	}
@@ -36,11 +42,16 @@ class dbhelper {
 	 * 
 	 * @param string $sql
 	 * @param array $params Parameters for the prepared statement
-	 * @return mysqli_stmt
+	 * @return mysqli_stmt|false returns an executal prepared query, or false if an error occurred
 	 */
 	public function prepare($sql, array $params = [])
 	{
 		$query = $this->getStatement($sql);
+		
+		if($query === false)
+		{
+			return false;
+		}
 
 		if($query->param_count > 0)
 		{
@@ -63,6 +74,7 @@ class dbhelper {
 	 */
 	public function getAsArray(mysqli_stmt $query)
 	{
+		
 		if($query->execute())
 		{
 			$meta = $query->result_metadata();

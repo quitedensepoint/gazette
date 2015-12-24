@@ -2,10 +2,10 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "Victory Immiment" source.
+ * "Victory Near" source.
  */
-class StoryVictoryImminent extends StoryBase implements StoryInterface {
-			
+class StoryVictoryNear extends StoryBase implements StoryInterface {
+	
 	public function isValid() {
 
 		/**
@@ -27,7 +27,7 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
 		
-		return ($totalCps > 0 && ($cpOwnershipPercent > 90 and $cpOwnershipPercent < 94));
+		return ($totalCps > 0 && ($cpOwnershipPercent > 87 and $cpOwnershipPercent < 91));
 		
 	}
 
@@ -73,6 +73,5 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		
 		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
 	}
-
 
 }

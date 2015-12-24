@@ -2,9 +2,9 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "Victory Immiment" source.
+ * "Victory Possible" source.
  */
-class StoryVictoryImminent extends StoryBase implements StoryInterface {
+class StoryVictoryPossible extends StoryBase implements StoryInterface {
 			
 	public function isValid() {
 
@@ -27,7 +27,7 @@ class StoryVictoryImminent extends StoryBase implements StoryInterface {
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
 		
-		return ($totalCps > 0 && ($cpOwnershipPercent > 90 and $cpOwnershipPercent < 94));
+		return ($totalCps > 0 && ($cpOwnershipPercent > 84 and $cpOwnershipPercent < 88));
 		
 	}
 
