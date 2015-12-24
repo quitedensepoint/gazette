@@ -46,7 +46,8 @@ class StoryProcessor {
 			return false;
 		}
 		
-		$storyId = $storyData[0]['story_id'];
+		$storyData = $storyData[0];
+		$storyId = $storyData['story_id'];
 
 		$storyTypes = $this->getTypeData($storyId);
 		if(count($storyTypes) == 0)
@@ -56,12 +57,20 @@ class StoryProcessor {
 		}
 
 		if(($story = $this->checkStoryTypes($storyTypes, $sourceId)) === false)
-		{
-			echo sprintf("\tNo stories could be made for %s!\n", $storyKey);
+		{		
+			/**
+			 * No valid story could be found for this section of the page, so use
+			 * the "alt" value instead
+			 */
+			$this->pushToFile($storyKey, $storyData['alt']);
+			
+			echo sprintf("\tNo stories could be made for %s! - using story alt\n", $storyKey);
 			return false;
 		}
 		
-		$this->pushToFile($storyKey, $story);
+		$content = $this->parseTemplate($storyData['template'], $story);
+		
+		$this->pushToFile($storyKey, $content);
 		echo sprintf("\tStory could be made for %s!\n", $storyKey);
 		return true;
 	}
@@ -104,7 +113,7 @@ class StoryProcessor {
 			 */
 			$organisedTemplates = $this->organiseTemplates($sourceData);
 			$weights = $this->getWeights($storyType['weighting'], array_keys($organisedTemplates));
-			
+
 			/**
 			 * Go through each weight form most to least likely
 			 */
@@ -120,6 +129,15 @@ class StoryProcessor {
 					$sourceName = $template['name'];
 
 					$storyCreatorClass = "Story" . str_replace(" ", "", $sourceName);
+					
+					/**
+					 * If it doesn't exists as a story to generate, skip it
+					 */
+					if(!class_exists($storyCreatorClass))
+					{
+						echo "\tNo story class has been defined for $storyCreatorClass - skipping...\n";
+						continue;
+					}
 					
 					/** 
 					 * Bit of a hack - puts side into the template data
@@ -151,11 +169,6 @@ class StoryProcessor {
 				}				
 			}
 		}
-		
-		/**
-		 * No valid story could be found for this section of the page, so use
-		 * the "alt" value instead
-		 */
 		
 		return false;
 	}
@@ -239,6 +252,10 @@ class StoryProcessor {
 	 */
 	private function modifyWeightings($weights)
 	{
+		shuffle($weights);
+		
+		return $weights;
+		/*
 		$sorted = [];
 		
 		foreach($weights as $weight ) {
@@ -248,12 +265,14 @@ class StoryProcessor {
 				$random = rand(1, 100);
 			}
 		
-			$sorted[$key] = $random;
+			$sorted[$weight] = $random;
 		
 		}
 		asort($sorted);
 		return $sorted;
-		//return sort {$sorted{$b} <=> $sorted{$a}} (keys(%sorted));		
+		//return sort {$sorted{$b} <=> $sorted{$a}} (keys(%sorted));	
+		 * 
+		 */	
 	}
 	
 	/**
@@ -284,10 +303,20 @@ class StoryProcessor {
 		return $weights;
 	}
 	
+	private function parseTemplate($template, $data)
+	{
+		foreach($data as $key => $value)
+		{
+			$template = str_replace('%' . strtoupper($key) . '%', $value, $template);
+		}
+		
+		return $template;
+	}
+	
 	private function pushToFile($storyKey, $storyData)
 	{
 		$cacheFile = __DIR__ . '/../cache/' . $storyKey . '.php';
 		
-		file_put_contents($cacheFile,"<?php\r\n\r\n return " . var_export($storyData, true) . ";");
+		file_put_contents($cacheFile, $storyData);
 	}
 }

@@ -34,8 +34,8 @@ $options = getopt('', ['list:', 'expire:', 'help:', 'generate:','sourceid:']);
 if(count($options) == 0 || isset($options['help']))
 {
 	exit("\nusage: php command/stories.php [--help] [--list] [--expire=story-key] [--generate] [--sourceid=]"
-		. "\n\n  --expire=key\tWill expire the story with the specified key and generate a new story."
-		. "\n  --generate\tWill generate new stories for all stories that have expired."
+		. "\n\n  --expire=key\tWill expire the story with the specified key which will be processed on the next call."
+		. "\n  --generate=all|expired|story_name\tWill generate a new story for the option providede, or new stories for all stories that have expired if no option given."
 		. "\n  --sourceid\tForces a specific story of the id passed in to be generated.\n"
 		);
 }
@@ -44,8 +44,34 @@ $storyProcessor = new StoryProcessor($dbconn, $dbConnWWIIOnline);
 
 $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
 
-if(isset($options['expire'])) {
-	$storyProcessor->process($options['expire'], $sourceId);
+if(isset($options['generate'])) {
+	
+	if(trim($options['generate']) !== 'expired') {
+		/**
+		 * Generate a new story for the entry provided
+		 */
+		$storyProcessor->process($options['generate'], $sourceId);
+	}
+	else
+	{
+		/**
+		 * Load in all the expired stories and generate new ones
+		 */
+		$query = 'SELECT `story_key` FROM `stories`';
+		if($options['generate'] == 'expired')
+		{
+			$query .= 'WHERE expire = 1 OR expires <= NOW()';
+		}
+		
+		$storyKeysQuery = $gazetteDbHelper->prepare($query);
+		$storyKeysData = $gazetteDbHelper->getAsArray($storyKeysQuery);
+		
+		foreach ($storyKeysData as $storyKey)
+		{
+			$storyProcessor->process($storyKey['story_key']);
+		}
+	}
+	
 }
 
 

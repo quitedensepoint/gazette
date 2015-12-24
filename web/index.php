@@ -16,7 +16,8 @@ require(__DIR__ . '/../processors/casualty-processor.php');
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
 
- ?>
+$index_main_headline = file_get_contents(__DIR__ .'/../cache/index_main_headline.php');
+?>
 <!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -89,7 +90,7 @@ $casualtyData = $casualtyProcessor->process();
             <tr valign='top' align='center'> 
                 <td> 
                     <font face='Arial, Helvetica, sans-serif' size='7' color='#666666'>
-                    <b><span class='paperheadline'>Guess Who's Back? (index_main_headline)</span></b>
+                    <b><span class='paperheadline'><?= $index_main_headline ?></span></b>
                     </font>
                 </td>
             </tr>
