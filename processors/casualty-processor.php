@@ -23,9 +23,23 @@ class CasualtyProcessor {
 	{
 		$dbHelper = new dbhelper($this->dbConn);
 		
+		/**
+		 * Loop through the database records and built a structure to display
+		 */		
+		$casualties = [
+			'allied'	=>	['ground' => 0, 'air' => 0, 'sea' => 0],
+			'axis'		=>	['ground' => 0, 'air' => 0, 'sea' => 0]
+		];			
+		
 		$campaignQuery = $dbHelper
 			->prepare("SELECT id FROM `campaigns` WHERE `status` = 'Running' LIMIT 1");
 		$campaignData = $dbHelper->getAsArray($campaignQuery);
+			
+		if(count($campaignData) == 0)
+		{
+			/** No campaign running, jut return an empty set **/
+			return $casualties;
+		}
 		
 		$campaignId = $campaignData[0]['id'];
 		
@@ -40,13 +54,7 @@ class CasualtyProcessor {
 		
 		$casualtyData = $dbHelper->getAsArray($casualtyQuery);
 
-		/**
-		 * Loop through the database records and built a structure to display
-		 */		
-		$casualties = [
-			'allied'	=>	['ground' => 0, 'air' => 0, 'sea' => 0],
-			'axis'		=>	['ground' => 0, 'air' => 0, 'sea' => 0]
-		];
+
 
 		foreach($casualtyData as $casualty)
 		{
