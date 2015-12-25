@@ -222,7 +222,9 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                             $newsPage = file_get_contents("http://www.battlegroundeurope.com/index.php");
                                     preg_match('/<table class="contentpaneopen">(.+?)<span class="article_separator">/s',$newsPage,$firstArticle);
                             $firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
-                            echo "<span clas='paperhidden'>".$firstArticle."</span>";?>
+							$firstArticle = str_replace('<a href="/index.php', '<a href="http://www.battlegroundeurope.com/index.php', $firstArticle);
+                            echo "<span clas='paperhidden'>".$firstArticle."</span>";
+						?>
                     </td>
                 </tr>
             </table>
