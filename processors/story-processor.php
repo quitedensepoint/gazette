@@ -13,10 +13,22 @@ require_once(__DIR__ . "/stories/require.php");
 
 class StoryProcessor {
 	
+	/**
+	 * Regular connection to the gazette DB
+	 * @var resource 
+	 */
 	protected $dbConn;
+	
+	/**
+	 * Connection ot the wwiionline db (game db)
+	 * @var resource 
+	 */
 	protected $dbConnWWIIOnline;
 
-
+	/**
+	 * Database helper
+	 * @var dbhelper 
+	 */
 	protected $dbHelper;
 	
 	public function __construct($dbConn, $dbConnWWIIOnline) {

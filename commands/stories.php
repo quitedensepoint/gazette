@@ -46,7 +46,11 @@ $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ?
 
 if(isset($options['generate'])) {
 	
-	if(trim($options['generate']) !== 'expired') {
+    /**
+     * Any provided key that isn't "expired" or "all" will look
+     * for a story of that key
+     */
+    if(!in_array(trim($options['generate']), ['expired', 'all'])) {
 		/**
 		 * Generate a new story for the entry provided
 		 */
@@ -55,9 +59,13 @@ if(isset($options['generate'])) {
 	else
 	{
 		/**
-		 * Load in all the expired stories and generate new ones
+         * Load in all the stories and generate new ones
 		 */
 		$query = 'SELECT `story_key` FROM `stories`';
+		   
+        /**
+         * If we nominated expired, we'll only update the expired stories
+         */		
 		if($options['generate'] == 'expired')
 		{
 			$query .= 'WHERE expire = 1 OR expires <= NOW()';
@@ -68,7 +76,7 @@ if(isset($options['generate'])) {
 		
 		foreach ($storyKeysData as $storyKey)
 		{
-			$storyProcessor->process($storyKey['story_key']);
+			$storyProcessor->process($storyKey['story_key'], $sourceId);
 		}
 	}
 	
