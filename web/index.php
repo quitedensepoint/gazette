@@ -127,13 +127,13 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
             <table width='564' border='0' cellspacing='0' cellpadding='0' name='map_table'>
                 <tr>
                     <td><!-- Placeholder image -->
-                        <div align='center'><a href='http://map.wwiionline.com/belgium_front.html')>
-                            <img src='assets/img/belgium_long_front.jpg' width='564' align='middle' border=0 alt='This is the map'></a>
+                        <div align='center'><a href='http://snipets.net/WebMap/2.0/WebMap.php')>
+                            <img src='http://snipets.net/WebMap/2.0/GazetteFrontPage.png' width='564' align='middle' border=0 alt='This is the map'></a>
                         </div>
                    </td>
                 </tr>
                 <tr bgcolor='#000000'>
-                    <td align='center' class='paperdefault'> <span class='paperwhite'>GAME MAP UPDATED EVERY 5 MINUTES - <a href=http://map.wwiionline.com/belgium_front.html'>CLICK FOR FULL SIZE</a></span> </td>
+                    <td align='center' class='paperdefault'> <span class='paperwhite'>GAME MAP UPDATED EVERY 15 MINUTES - <a href='http://snipets.net/WebMap/2.0/WebMap.php'>CLICK FOR FULL SIZE</a></span> </td>
                 </tr>
             </table>
     <!-- END MAP -->
