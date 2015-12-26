@@ -80,5 +80,16 @@ abstract class StoryBase
 
 		return $data;		
 	}
+	
+	/**
+	 * Get the name of the rank for a position
+	 * 
+	 * @param integer $rank
+	 * @return string
+	 */
+	protected function getPlace($rank)
+	{
+		return $rank == 1 ? '1st' : ($rank == 2 ? '2nd' : '3rd');
+	}	
 }
 

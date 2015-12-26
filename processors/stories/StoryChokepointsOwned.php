@@ -2,9 +2,9 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "Airfields Owned" source.
+ * "Chokepoints Owned" source.
  */
-class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
+class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 	
 	public function isValid() {
 
@@ -13,21 +13,21 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 		 */
 		$countries = $this->getCountries();
 		
-		$airfieldCounts =[];
-		$total = 0;
+		$chokepointCounts =[];
+		$total = $this->getTotalChokepointCount();
 		$rank = 1;
 
 		foreach($countries as $country)
 		{
-			$airfieldCounts[$country['country_id']] =  $this->getAirfieldsCount($country['country_id']);
+			$chokepointCounts[$country['country_id']] =  $this->getChokepointsCount($country['country_id']);
 			
-			$total += $airfieldCounts[$country['country_id']];
+			$total += $chokepointCounts[$country['country_id']];
 		}
 		
 		// Rank the airfields from most to least
-		sort($airfieldCounts);
+		sort($chokepointCounts);
 		
-		foreach($airfieldCounts as $key => $count)
+		foreach($chokepointCounts as $key => $count)
 		{
 			$country = $countries[$key];
 			$name = $country['name'];
@@ -55,6 +55,10 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 			$this->creatorData['template_vars'][$place . '_percent'] = $percent;
 			$this->creatorData['template_vars'][$place . '_country'] = $name;
 		
+			if($country['country_id'] == $this->creatorData['country_id'])
+			{
+				$this->creatorData['template_vars']['country_adj'] = $country['adjective'];
+			}
 			/**
 			 * The next piece of code is the old Perl code. Not sure what it does yet
 			 * 
@@ -94,15 +98,29 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 	 * @param integer $countryId
 	 * @return integer
 	 */
-	public function getAirfieldsCount($countryId)
+	public function getChokepointsCount($countryId)
 	{
 		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $gameDbHelper
-			->prepare("SELECT count(facility_oid) as airbase_count FROM strat_facility "
-				. "where facility_type = 8 and open = 1 and country = ?", [$countryId]);	
+			->prepare("SELECT count(*) as chokepoint_count FROM strat_cp WHERE country = ? and cp_type != 5", [$countryId]);	
 		
-		return $gameDbHelper->getAsArray($query)[0]['airbase_count'];					
+		return $gameDbHelper->getAsArray($query)[0]['chokepoint_count'];					
+	}
+	
+	/**
+	 * Get the total number of chokepoints
+	 * 
+	 * @return integer
+	 */
+	public function getTotalChokepointCount() {
+		
+		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $gameDbHelper
+			->prepare("select count(*) as chokepoint_count from strat_cp where cp_type != 5");	
+		
+		return $gameDbHelper->getAsArray($query)[0]['chokepoint_count'];
 	}
 
 }
