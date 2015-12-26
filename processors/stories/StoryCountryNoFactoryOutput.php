@@ -14,11 +14,6 @@ class StoryCountryNoFactoryOutput extends StoryBase implements StoryInterface {
 		return $this->getProductionCount($this->creatorData['country_id']) == 0;
 
 	}
-
-	public function makeStory() {
-		
-		return $this->parseStory($this->creatorData['template_vars']);
-	}
 	
 	/**
 	 * Get the number of factories producing for the country

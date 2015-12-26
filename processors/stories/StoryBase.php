@@ -34,6 +34,27 @@ abstract class StoryBase
 		$this->dbHelper = new dbhelper($dbConn);
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
 		$this->creatorData = $creatorData;		
+	}
+	
+	public function makeStory($template) {
+
+		$result = $this->parseStory($this->creatorData['template_vars'], $template['title'], $template['body']);
+		
+		/**
+		 * Randomise some of the text in the template based on the variety_1 field in the templates table
+		 */
+		$varieties1 = explode(";", trim($template['variety_1']));
+		
+		$result = str_replace('%VARIETY1%', $varieties1[rand(0, count($varieties1) - 1)], $result);
+		
+		/**
+		 * Do the same for the varieties2 column
+		 */
+		$varieties2 = explode(";", trim($template['variety_2']));
+		
+		$result = str_replace('%VARIETY2%', $varieties2[rand(0, count($varieties2) - 1)], $result);		
+		
+		return $result;
 	}	
 	
 	/**
@@ -43,12 +64,12 @@ abstract class StoryBase
 	 * @param array $template_vars
 	 * @return array	An array of [title, body] which is used in the template, in the stories table
 	 */
-	public function parseStory($template_vars)
+	public function parseStory($template_vars, $title, $body)
 	{
 		
 		$data = [
-			'title' => $this->creatorData['title_template'],
-			'body' => $this->creatorData['body_template']
+			'title' => $title,
+			'body' => $body
 		];
 
 		foreach ($template_vars as $key => $value)

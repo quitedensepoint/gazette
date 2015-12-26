@@ -42,7 +42,7 @@ class StoryProcessor {
 		$storyData = $this->dbHelper->getAsArray($storyQuery);
 		if(count($storyData) !== 1)
 		{
-			echo sprintf('Could not find a story with key %s - skipping', $storyKey);
+			echo sprintf("Could not find a story with key %s - skipping\n", $storyKey);
 			return false;
 		}
 		
@@ -52,7 +52,7 @@ class StoryProcessor {
 		$storyTypes = $this->getTypeData($storyId);
 		if(count($storyTypes) == 0)
 		{
-			echo sprintf('There are no story types for key %s - skipping', $storyKey);
+			echo sprintf("'There are no story types for key %s - skipping\n", $storyKey);
 			return false;			
 		}
 
@@ -88,9 +88,12 @@ class StoryProcessor {
 	 */
 	private function checkStoryTypes($storyTypes, $sourceId = null)
 	{
+		echo sprintf("  Story has %d storytypes\n", count($storyTypes));
 		
 		foreach($storyTypes as $storyType)
 		{
+			echo sprintf("    Checking StoryType %s for %s\n", $storyType['name'], $storyType['country']);
+			
 			if($content = $this->prepareStoryType($storyType, $sourceId))
 			{
 				return $content;
@@ -138,7 +141,7 @@ class StoryProcessor {
 			$sourceData = $this->getStorySource($sourceId, $countryId);
 		}
 		else {
-			$sourceData = $this->getSourceData($typeId, $countryId);
+			$sourceData = $this->getSourcesForType($typeId);
 			$sourceId = $sourceData[0]['source_id'];			
 		}
 
@@ -180,8 +183,7 @@ class StoryProcessor {
 	private function processSource($source, $creatorData) {
 
 		$sourceName = $source['name'];
-		$creatorData['title_template'] = $source['title'];
-		$creatorData['body_template'] = $source['body'];
+
 
 		$storyCreatorClass = "Story" . str_replace(" ", "", $sourceName);
 
@@ -196,12 +198,21 @@ class StoryProcessor {
 
 		/* @var $storyCreator StoryInterface */
 		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWIIOnline, $creatorData);
-		echo sprintf("\tChecking story %s for country %s with template %d" , $storyCreatorClass, $creatorData['template_vars']['country'], $source['template_id']);
+		echo sprintf("\tChecking story %s" , $storyCreatorClass);
 
 		if($storyCreator->isValid())
 		{
+			$template = $this->getRandomTemplateForSource($source['source_id'], $creatorData['country_id']);
+
+			if(count($template) !== 1)
+			{
+				echo sprintf("\t** No valid templates for source %s**\n" , $sourceName);
+				return false;
+			}
+			
 			echo " -- valid\n";
-			return $storyCreator->makeStory();
+			echo sprintf("\tUsing Template %s\n" , $template[0]['template_id']);
+			return $storyCreator->makeStory($template[0]);
 		}
 		else
 		{
@@ -218,15 +229,29 @@ class StoryProcessor {
 	 * @param type $countryId
 	 * @return type
 	 */
-	private function getStorySource($sourceId, $countryId)
+	private function getStorySource($sourceId)
 	{
 		$query = $this->dbHelper
-		->prepare("SELECT s.source_id,s.name, s.weight,s.life,t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
-			." FROM sources AS s "
-			." INNER JOIN template_sources AS ts ON s.source_id = ts.source_id"
+		->prepare("SELECT s.source_id,s.name, s.weight,s.life WHERE s.source_id = ?", [$sourceId]);
+
+		return $this->dbHelper->getAsArray($query);		
+	}
+	
+	/**
+	 * Retrieves a random template for a specific story source, relative to the country
+	 * 
+	 * @param integer $sourceId
+	 * @param integer $countryId
+	 * @return array
+	 */
+	private function getRandomTemplateForSource($sourceId, $countryId)
+	{
+		$query = $this->dbHelper
+		->prepare("SELECT t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
+			." FROM template_sources AS ts"
 			." INNER JOIN templates AS t ON ts.template_id = t.template_id "
 			." INNER JOIN template_countries AS tc ON t.template_id = tc.template_id"
-			." WHERE s.source_id = ? AND tc.country_id = ? LIMIT 1", [$sourceId, $countryId]);
+			." WHERE ts.source_id = ? AND tc.country_id = ? ORDER BY RAND() LIMIT 1", [$sourceId, $countryId]);
 
 		return $this->dbHelper->getAsArray($query);		
 	}	
@@ -256,11 +281,23 @@ class StoryProcessor {
 		return $this->dbHelper->getAsArray($query);
 	}
 	
+	private function getSourcesForType($typeId)
+	{
+		$query = $this->dbHelper
+		->prepare("SELECT s.source_id,s.name, s.weight,s.life "
+			." FROM sources AS s "
+			." WHERE s.type_id = ? ORDER BY RAND()", [$typeId]);
+
+		return $this->dbHelper->getAsArray($query);		
+	}	
+	
 	/**
 	 * Retrieves the sources for all the story types used by a story filtered by the country
 	 * @param integer $storyId
 	 * @param integer $countryId
 	 * @return array
+	 * 
+	 * @deprecated since version 1.0.0
 	 */
 	private function getSourceData($storyId, $countryId)
 	{

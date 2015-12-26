@@ -16,14 +16,6 @@ class StoryCampaignStarted extends StoryBase implements StoryInterface {
 		 return $this->getCampaignStartedLessThanOneDayAgo();		
 	}
 
-	public function makeStory() {
-
-		/**
-		 * No variables in this story
-		 */
-		return $this->parseStory([]);
-		
-	}
 	
 	/**
 	 * Check if there are any campaigns started less than a day ago

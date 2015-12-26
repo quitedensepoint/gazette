@@ -14,11 +14,6 @@ class StoryCountryCaptured extends StoryBase implements StoryInterface {
 		return $this->isCountryOwnedBy($this->creatorData['country_id']);
 		
 	}
-
-	public function makeStory() {
-
-		return $this->parseStory($this->creatorData['template_vars']);
-	}
 	
 	/**
 	 * Check to see if a country has any CPs left

@@ -31,13 +31,6 @@ class StoryCountryDiminished extends StoryBase implements StoryInterface {
 		
 	}
 
-	public function makeStory() {
-
-		$template_vars = $this->creatorData['template_vars'];
-		
-		return $this->parseStory($template_vars);
-
-	}
 	
 	/**
 	 * Get the total number of capturable CPs in the campaign
