@@ -79,7 +79,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                                 <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'>
                                 <font color='#cc3333'>CURRENT VERSION:</font></a>
                                 </td>    
-                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'><!-- START index_version -->1.34.13<!-- END index_version (LIVE) --></a></td>
+                                <td><!-- START index_version -->1.34.15<!-- END index_version (LIVE) --></td>
                             </tr>
                         </table>
                     </td>
@@ -145,16 +145,21 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                                     <tr align='center' valign='top'> 
                                         <td>
                                         <font face='Arial, Helvetica, sans-serif' size='4'>
-                                        <span class='paperarialhuge'>
+                                        <span class='paperarialhuge'><b>
                                         Current Attacks:
-                                        </span>
+                                        </b></span>
                                         </font>
                                         </td>
                                     <tr>
                                         <td class='paperdefault'>
-                                        Currently placed AO's
-                                        <?php //insert currend AO's here ?>
-                                      
+                                            <table>
+                                            <tr align='center'>
+                                                <td width='100%'><?php
+                                                while($row=$aos->fetch_assoc())
+                                                { echo ("<tr><td align='center'>".$row['name']."</td><td></td></tr>"); } 
+                                                ?></td>
+                                            </tr>
+                                            </table>
                                         </td>
                                     </tr>
                                 </table>
@@ -182,22 +187,31 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
             </table>
         </td>
         <td align='center' valign='middle' width='188' class='story'> 
-    <!-- Recent Captures -->
+ <!-- Recent Captures -->
             <table width='100%'border='0' cellspacing='0' cellpadding='5'>
                 <tr align='center'> 
                     <td valign='top'>
                         <font face='Arial, Helvetica, sans-serif' size='3'>
                         <span class='paperarialhuge'>
-                        Recent Captures:
+                        <b>Most Recent Captures:</b>
                         </span>
                         </font>
                     </td>
                 </tr>
                 <tr>
-                    <td class='paperdefault'>
-                    Will show last CP (towns) captured (5-10 depending on look)
-                    <?= $crow['id'] ?>
-                    </td>
+                    <td class='paperdefault' width='100%'>
+                        <table>
+                        <tr align='center'>
+                            <td>City</td><td>Country</td>
+                        <tr>
+                        <td>
+                    <?php while($row=$caps->fetch_assoc())
+                        { echo ("<tr><td>".$row['name']."</td><td>".$row['fullName']."</td></tr>"); } ?>
+                        <?php //town name for after join .$row['facility_oid']. ?>
+                        </td>
+                        </tr>
+                        </table>
+                     </td>
                 </tr>
             </table>
     <!-- END Recent Captures -->
@@ -232,7 +246,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
         </td>
         <td height='30' valign='top' align='center' class='story'>
         <!-- Forces in the field table -->
-            Forces in the field temporarily removed while full page is developed.  
+            Need something for this spot 
         </td> <!-- End of Forces in the field -->
     </tr>
  <?php /*   
