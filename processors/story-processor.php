@@ -115,7 +115,7 @@ class StoryProcessor {
 			'template_vars' => [
 				'country' => $storyType['country'],
 				'side' => $storyType['side'],
-				'country_adjective' => $storyType['country_adj']
+				'country_adj' => $storyType['country_adj']
 			]
 		];			
 
