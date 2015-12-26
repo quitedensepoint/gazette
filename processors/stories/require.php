@@ -18,3 +18,4 @@ require(__DIR__ . "/StoryVictoryImminent.php");
 require(__DIR__ . "/StoryVictoryNear.php");
 require(__DIR__ . "/StoryVictoryPossible.php");
 require(__DIR__ . "/StoryOffensiveCountry.php");
+require(__DIR__ . "/StoryAirfieldsOwned.php");
