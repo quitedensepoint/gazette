@@ -24,3 +24,18 @@ $dbconnAuth = mysqli_connect("localhost", "root", "", "auth");
 if (mysqli_connect_errno()){
     echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
 }
+
+/**
+ * IF you are running on a development system outside of the CST timezone,
+ * you'll need to be sure you are doing queries against that timezone as
+ * the core wwiionline game data is CST based
+ * 
+ * Uncomment the next section to address this issue
+ */
+/*
+$dbconn->query("SET SESSION time_zone = 'America/Chicago'");
+$dbConnWWII->query("SET SESSION time_zone = 'America/Chicago'");
+$dbConnWWIIOnline->query("SET SESSION time_zone = 'America/Chicago'");
+$dbconnAuth->query("SET SESSION time_zone = 'America/Chicago'");
+ * 
+ */

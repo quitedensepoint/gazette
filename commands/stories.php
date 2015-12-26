@@ -74,5 +74,12 @@ if(isset($options['generate'])) {
 	
 }
 
+/**
+ * If we have asked for a specific area to be expired, it will regenerate on
+ * the next run
+ */
+if(isset($options['expire'])) {
+	$storyProcessor->forceStoryExpiry($options['expire']);
+}
 
 exit(0);
