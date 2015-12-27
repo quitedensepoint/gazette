@@ -79,7 +79,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                                 <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'>
                                 <font color='#cc3333'>CURRENT VERSION:</font></a>
                                 </td>    
-                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'><!-- START index_version -->1.34.13<!-- END index_version (LIVE) --></a></td>
+                                <td class='papertimessmall'><!-- START index_version -->1.34.15<!-- END index_version (LIVE) --></td>
                             </tr>
                         </table>
                     </td>
@@ -116,9 +116,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 			<?= $indexAlliedStats2 ?>
             </td>
             </tr>
-            <tr>
-                <td align='center' valign='bottom'><br /><a href='allied.php' class='paperdefault'>[more in Allied section]</a></td>
-            </tr>
+
             </table>
         </td>
         <!-- Start map -->
@@ -126,14 +124,14 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
     <!-- Front Line Map -->
             <table width='564' border='0' cellspacing='0' cellpadding='0' name='map_table'>
                 <tr>
-                    <td><!-- Placeholder image -->
+                    <td><!-- Map -->
                         <div align='center'><a href='http://snipets.net/WebMap/2.0/WebMap.php')>
                             <img src='http://snipets.net/WebMap/2.0/GazetteFrontPage.png' width='564' align='middle' border=0 alt='This is the map'></a>
                         </div>
                    </td>
                 </tr>
                 <tr bgcolor='#000000'>
-                    <td align='center' class='paperdefault'> <span class='paperwhite'>GAME MAP UPDATED EVERY 15 MINUTES - <a href='http://snipets.net/WebMap/2.0/WebMap.php'>CLICK FOR FULL SIZE</a></span> </td>
+                    <td align='center' class='paperdefault'><span class='paperwhite'>GAME MAP UPDATED EVERY 15 MINUTES - <a href='http://snipets.net/WebMap/2.0/WebMap.php' style="color: yellow" >CLICK FOR FULL SIZE</a></span> </td>
                 </tr>
             </table>
     <!-- END MAP -->
@@ -145,16 +143,21 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                                     <tr align='center' valign='top'> 
                                         <td>
                                         <font face='Arial, Helvetica, sans-serif' size='4'>
-                                        <span class='paperarialhuge'>
+                                        <span class='paperarialhuge'><b>
                                         Current Attacks:
-                                        </span>
+                                        </b></span>
                                         </font>
                                         </td>
                                     <tr>
                                         <td class='paperdefault'>
-                                        Currently placed AO's
-                                        <?php //insert currend AO's here ?>
-                                      
+                                            <table>
+                                            <tr align='center'>
+                                                <td width='100%'><?php
+                                                while($row=$aos->fetch_assoc())
+                                                { echo ("<tr><td align='center'>".$row['name']."</td><td></td></tr>"); } 
+                                                ?></td>
+                                            </tr>
+                                            </table>
                                         </td>
                                     </tr>
                                 </table>
@@ -182,22 +185,31 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
             </table>
         </td>
         <td align='center' valign='middle' width='188' class='story'> 
-    <!-- Recent Captures -->
+ <!-- Recent Captures -->
             <table width='100%'border='0' cellspacing='0' cellpadding='5'>
                 <tr align='center'> 
                     <td valign='top'>
                         <font face='Arial, Helvetica, sans-serif' size='3'>
                         <span class='paperarialhuge'>
-                        Recent Captures:
+                        <b>Most Recent Captures:</b>
                         </span>
                         </font>
                     </td>
                 </tr>
                 <tr>
-                    <td class='paperdefault'>
-                    Will show last CP (towns) captured (5-10 depending on look)
-                    <?= $crow['id'] ?>
-                    </td>
+                    <td class='paperdefault' width='100%'>
+                        <table>
+                        <tr align='center'>
+                            <td>City</td><td>Country</td>
+                        <tr>
+                        <td>
+                    <?php while($row=$caps->fetch_assoc())
+                        { echo ("<tr><td>".$row['name']."</td><td>".$row['fullName']."</td></tr>"); } ?>
+                        <?php //town name for after join .$row['facility_oid']. ?>
+                        </td>
+                        </tr>
+                        </table>
+                     </td>
                 </tr>
             </table>
     <!-- END Recent Captures -->
@@ -206,16 +218,11 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
     <tr><!-- Row Below Map -->
         <td rowspan='1' valign='top' class='story'>
 			<?= $indexAlliedStats1 ?>
-                           
-			<table width='100%' border='0' cellspacing='0' cellpadding='5'>
-				<tr>
-					<td align='center'><a href='allied.php' class='paperdefault'>[more in Allied section]</a></td>
-				</tr>
-			</table>
+
         </td>
         <td colspan='3' valign='top' align='center'> 
         <!-- Latest News -->
-            <table class='paperhidden' width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0' align='center'>
+            <table width='100%' height='100' valign='top' border='0' cellspacing='0' cellpadding='0' align='center'>
                 <tr align='left' valign='top'> 
                     <td align='center' class='story'> 
                         <?php
@@ -232,7 +239,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
         </td>
         <td height='30' valign='top' align='center' class='story'>
         <!-- Forces in the field table -->
-            Forces in the field temporarily removed while full page is developed.  
+            Need something for this spot 
         </td> <!-- End of Forces in the field -->
     </tr>
  <?php /*   
@@ -377,7 +384,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
         <td colspan='5' class='story'>
             <table width='100%' border='0' cellspacing='2' cellpadding='0'>
                 <tr>
-                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'>Only the cool people know about this...... </td>
+                    <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'>Admit it, you missed this ...... </td>
                 </tr>
                 <tr>
                     <td align='center' valign='middle' bgcolor='#000000' class='paperhidden'>RIP Buckeyes! | WILLYTEE RAWKS | SNAKES ON A PLANE | BLANGETT IS SEXEH | CLINTNOMOD</td>
