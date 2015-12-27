@@ -21,10 +21,10 @@ class StoryMajorCityThreatened extends StoryBase implements StoryInterface {
 			/**
 			 * Ten CPs or more appears to be "A Major City"
 			 */
-			if($contestedFacility['facilities'] > -1)
+			if($contestedFacility['facilities'] > 10)
 			{
 				/**
-				* Randomly decide 50% of the time to skip this city
+				* Randomly decide 50% of the time to skip this city. This may prevent any story at all from being generated
 				*/				
 				if(rand(1, 100) > 50)
 				{
@@ -55,11 +55,6 @@ class StoryMajorCityThreatened extends StoryBase implements StoryInterface {
 		}
 		
 		return false;
-	}
-
-	public function makeStory() {
-		
-		return $this->parseStory($this->creatorData['template_vars']);
 	}
 	
 	/**

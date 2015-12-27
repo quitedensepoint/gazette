@@ -25,11 +25,6 @@ class StoryMajorCityContested extends StoryBase implements StoryInterface {
 		
 		return false;
 	}
-
-	public function makeStory() {
-
-		return $this->parseStory($this->creatorData['template_vars']);
-	}
 	
 	/**
 	 * Retrieve the enemy side

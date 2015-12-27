@@ -40,7 +40,7 @@ if(count($options) == 0 || isset($options['help']))
 		);
 }
 
-$storyProcessor = new StoryProcessor($dbconn, $dbConnWWIIOnline);
+$storyProcessor = new StoryProcessor($dbconn, $dbConnWWIIOL);
 
 $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
 

@@ -31,14 +31,14 @@ class StoryVictoryNear extends StoryBase implements StoryInterface {
 		
 	}
 
-	public function makeStory() {
-
+	public function makeStory($template) {
+		
 		$template_vars = $this->creatorData['template_vars'];
 		
 		$template_vars['side_adj'] = strtolower($template_vars['side']) == 'allied' ? 'Allied' : 'Axis';
 		$template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 'axis' ? 'Axis' : 'Allied';
 		
-		return $this->parseStory($template_vars);
+		return $this->parseStory($template_vars, $template['title'], $template['body'] );
 
 	}
 	

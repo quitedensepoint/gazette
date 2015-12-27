@@ -20,8 +20,9 @@ interface StoryInterface {
 	 * Generate the story text from the data pulled during the
 	 * validation checks
 	 * 
+	 * @param string $template The string representing the template story
 	 * @return array
 	 */
-	public function makeStory();
+	public function makeStory($template);
 }
 

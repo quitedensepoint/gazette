@@ -14,11 +14,6 @@ class StoryCycleStarted extends StoryBase implements StoryInterface {
 		return $this->getCycleCount($this->creatorData['country_id']) > 0;
 
 	}
-
-	public function makeStory() {
-		
-		return $this->parseStory($this->creatorData['template_vars']);
-	}
 	
 	/**
 	 * Get the current cycle count
