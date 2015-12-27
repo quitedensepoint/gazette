@@ -5,6 +5,7 @@ body, tr, td, p, li {
 }
 
 
+
 .story {
     border:1px solid ;
     border-color: black;
@@ -15,6 +16,7 @@ body, tr, td, p, li {
 	font-size: 8pt;
 	color: #000000 !important;
 }
+
 
 .papertimessmall {
 	font-family: Times New Roman, Times, serif;
@@ -97,6 +99,11 @@ body, tr, td, p, li {
 .paperwhite {
 	color: #FFFFFF;
 }
+
+
+
+
+
 
 #bodyDiv {
 			position: absolute;
