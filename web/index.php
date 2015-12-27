@@ -76,18 +76,18 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                     <td>
                         <table>
                             <tr>
-                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimessmall'>
+                                <td><a href='http://www.battlegroundeurope.net/getting-started' target='_blank' class='papertimesmedium'>
                                 <font color='#cc3333'>CURRENT VERSION:</font></a>
                                 </td>    
-                                <td class='papertimessmall'><!-- START index_version -->1.34.15<!-- END index_version (LIVE) --></td>
+                                <td class='papertimesmedium'><!-- START index_version -->1.34.15<!-- END index_version (LIVE) --></td>
                             </tr>
                         </table>
                     </td>
-                    <td class='papertimessmall' align='right'>Campaign <?= $row['id'] ?></td> 
-                    <td class='papertimessmall' align='left'>, Day: <?= $days ?> </td>
-                    <td class='papertimessmall' align='right'>Coming Soon:</td>  
-                    <td align='center'><a class='papertimessmall'>ALLIED Section</td>
-                    <td align='center'><a class='papertimessmall'>AXIS Section</td>
+                    <td class='papertimesmedium' align='right'>Campaign <?= $row['id'] ?></td> 
+                    <td class='papertimesmedium' align='left'>, Day: <?= $days ?> </td>
+                    <td class='papertimesmedium' align='right'>Coming Soon:</td>  
+                    <td align='center'><a class='papertimesmedium'>ALLIED Section</td>
+                    <td align='center'><a class='papertimesmedium'>AXIS Section</td>
                 </tr>
                 </table>
             </td>
