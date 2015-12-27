@@ -40,13 +40,17 @@ if(count($options) == 0 || isset($options['help']))
 		);
 }
 
-$storyProcessor = new StoryProcessor($dbconn, $dbConnWWIIOnline);
+$storyProcessor = new StoryProcessor($dbconn, $dbConnWWIIOL);
 
 $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
 
 if(isset($options['generate'])) {
 	
-	if(trim($options['generate']) !== 'expired') {
+    /**
+     * Any provided key that isn't "expired" or "all" will look
+     * for a story of that key
+     */
+    if(!in_array(trim($options['generate']), ['expired', 'all'])) {
 		/**
 		 * Generate a new story for the entry provided
 		 */
@@ -55,9 +59,13 @@ if(isset($options['generate'])) {
 	else
 	{
 		/**
-		 * Load in all the expired stories and generate new ones
+         * Load in all the stories and generate new ones
 		 */
 		$query = 'SELECT `story_key` FROM `stories`';
+		   
+        /**
+         * If we nominated expired, we'll only update the expired stories
+         */		
 		if($options['generate'] == 'expired')
 		{
 			$query .= 'WHERE expire = 1 OR expires <= NOW()';
@@ -68,11 +76,18 @@ if(isset($options['generate'])) {
 		
 		foreach ($storyKeysData as $storyKey)
 		{
-			$storyProcessor->process($storyKey['story_key']);
+			$storyProcessor->process($storyKey['story_key'], $sourceId);
 		}
 	}
 	
 }
 
+/**
+ * If we have asked for a specific area to be expired, it will regenerate on
+ * the next run
+ */
+if(isset($options['expire'])) {
+	$storyProcessor->forceStoryExpiry($options['expire']);
+}
 
 exit(0);

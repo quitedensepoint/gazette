@@ -13,10 +13,22 @@ require_once(__DIR__ . "/stories/require.php");
 
 class StoryProcessor {
 	
+	/**
+	 * Regular connection to the gazette DB
+	 * @var resource 
+	 */
 	protected $dbConn;
+	
+	/**
+	 * Connection ot the wwiionline db (game db)
+	 * @var resource 
+	 */
 	protected $dbConnWWIIOnline;
 
-
+	/**
+	 * Database helper
+	 * @var dbhelper 
+	 */
 	protected $dbHelper;
 	
 	public function __construct($dbConn, $dbConnWWIIOnline) {
@@ -47,16 +59,8 @@ class StoryProcessor {
 		}
 		
 		$storyData = $storyData[0];
-		$storyId = $storyData['story_id'];
 
-		$storyTypes = $this->getTypeData($storyId);
-		if(count($storyTypes) == 0)
-		{
-			echo sprintf("'There are no story types for key %s - skipping\n", $storyKey);
-			return false;			
-		}
-
-		if(($story = $this->checkStoryTypes($storyTypes, $sourceId)) === false)
+		if(($story = $this->checkStory($storyData, $sourceId)) === false)
 		{		
 			/**
 			 * No valid story could be found for this section of the page, so use
@@ -80,13 +84,35 @@ class StoryProcessor {
 	}
 	
 	/**
+	 * 
+	 * @param arra $storyData
+	 * @param integer $sourceId
+	 * @return array
+	 */
+	private function checkStory($storyData, $sourceId)
+	{
+		$storyKey = $storyData['story_key'];
+		$storyId= $storyData['story_id'];
+		
+		$storyTypes = $this->getTypeData($storyId);
+		if(count($storyTypes) == 0)
+		{
+			echo sprintf('There are no story types for key %s - skipping', $storyKey);
+			return false;			
+		}
+		
+		return $this->checkStoryTypes($storyData, $storyTypes, $sourceId);
+	}
+	
+	/**
 	 * Check each story type and see if a story can be generated for that country
 	 * 
+	 * @param array $storyData
 	 * @param array $storyTypes
 	 * @param integer $sourceId
-	 * @return array|false	Returns title and body of the story, or false if no story found
+	 * @return string|false	Returns the content of the story, or false if no story found
 	 */
-	private function checkStoryTypes($storyTypes, $sourceId = null)
+	private function checkStoryTypes($storyData, $storyTypes, $sourceId = null)
 	{
 		echo sprintf("  Story has %d storytypes\n", count($storyTypes));
 		
@@ -94,7 +120,7 @@ class StoryProcessor {
 		{
 			echo sprintf("    Checking StoryType %s for %s\n", $storyType['name'], $storyType['country']);
 			
-			if($content = $this->prepareStoryType($storyType, $sourceId))
+			if(($content = $this->prepareStoryType($storyData, $storyType, $sourceId)))
 			{
 				return $content;
 			}			
@@ -109,7 +135,7 @@ class StoryProcessor {
 	 * @param type $sourceId
 	 * @return boolean
 	 */
-	private function prepareStoryType($storyType, $sourceId)
+	private function prepareStoryType($storyData, $storyType, $sourceId)
 	{
 		$creatorData = [
 			'template_vars' => [
@@ -164,7 +190,7 @@ class StoryProcessor {
 			 */
 			foreach($organisedSources[$weight] as $source)
 			{
-				if(($content = $this->processSource($source, $creatorData)) !== false) {
+				if(($content = $this->processSource($storyData, $source, $creatorData)) !== false) {
 					return $content;
 				}
 			}				
@@ -176,11 +202,12 @@ class StoryProcessor {
 	/**
 	 * Checks that the source template (see templates table) is valid
 	 * 
+	 * @param array $storyData
 	 * @param array $source
 	 * @param array $creatorData
 	 * @return array|false
 	 */
-	private function processSource($source, $creatorData) {
+	private function processSource($storyData, $source, $creatorData) {
 
 		$sourceName = $source['name'];
 
@@ -212,7 +239,12 @@ class StoryProcessor {
 			
 			echo " -- valid\n";
 			echo sprintf("\tUsing Template %s\n" , $template[0]['template_id']);
-			return $storyCreator->makeStory($template[0]);
+			
+			$content =  $storyCreator->makeStory($template[0]);
+			
+			$this->updateStoryExpiry($storyData['story_key'], $source['life']);
+			
+			return $content;
 		}
 		else
 		{
@@ -221,6 +253,33 @@ class StoryProcessor {
 		}
 		
 	}
+	
+	/**
+	 * Updates the story to set the expiry date
+	 * 
+	 * @param string $storyKey the story_key in the stories table
+	 * @param integer $lifetime the number of minutes to add to NOW for expiry date of this story. 
+	 */
+	public function updateStoryExpiry($storyKey, $lifetime)
+	{
+		$query = $this->dbHelper
+		->prepare("UPDATE `stories` SET `expire` = 0, `expires` = DATE_ADD(NOW(), INTERVAL ? second) WHERE `story_key` = ? LIMIT 1", [$lifetime * 60, $storyKey]);
+		
+		$query->execute();
+	}
+	
+	/**
+	 * Forces the story to be expired so it is regenerated next run
+	 * 
+	 * @param string $storyKey the story_key in the stories table
+	 */
+	public function forceStoryExpiry($storyKey)
+	{
+		$query = $this->dbHelper
+		->prepare("UPDATE `stories` SET `expire` = 1, `expires` = NOW() WHERE `story_key` = ? LIMIT 1", [$storyKey]);
+		
+		$query->execute();
+	}	
 	
 	/**
 	 * Retrieves the valid sources and their related templates for a story

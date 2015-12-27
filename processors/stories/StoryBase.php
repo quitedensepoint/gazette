@@ -90,6 +90,39 @@ abstract class StoryBase
 	protected function getPlace($rank)
 	{
 		return $rank == 1 ? '1st' : ($rank == 2 ? '2nd' : '3rd');
-	}	
+	}
+	
+	/**
+	 * Gets the text description of an RTB status
+	 * 
+	 * @param integer $statusId
+	 * @return string
+	 */
+	public function getRTBStatus($statusId)
+	{
+		$status = "Killed in Action";
+		
+		switch(intval($statusId))
+		{
+			case 1: {
+				$status = 'Returned to Base';
+				break;
+			}
+			case 2: {
+				$status = 'Rescued';
+				break;
+			}
+			case 3: {
+				$status = 'Missing in Action';
+				break;
+			}
+			default:
+			{
+				// Do nothing
+			}
+		}
+		
+		return $status;
+	}
 }
 
