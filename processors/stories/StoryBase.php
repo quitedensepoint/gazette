@@ -132,5 +132,21 @@ abstract class StoryBase
 		
 		return $status;
 	}
+	
+	/**
+	 * Retrieve the record of a single player, or an empty array if no record
+	 * 
+	 * @param integer $playerId The ID of the record
+	 * @return array
+	 */
+	public function getPlayerById($playerId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_player WHERE playerid = ? LIMIT 1", [$playerId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}
 }
 
