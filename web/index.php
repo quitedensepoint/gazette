@@ -93,9 +93,9 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 <!-- Attacks Captures Top Right Story -->
 				<td id='topRightStory'> 
 					<span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
-					<br><br><b>Allied</b><br>
+					<br><br><br>
+					<b>Allied</b><br>
                     <table style="width: 100%; align: center">
-						
 						<?php 
 							while($row=$aoals->fetch_assoc())
                                 {{echo "<tr><td style='width:50%; text-align:left;'>".$row['name']."</td>";}
@@ -105,9 +105,9 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                                
 						?>
                     </table>
-                    <br><b>Axis</b><br>
+                    <br>
+					<b>Axis</b><br>
                     <table style="width: 100%; align: center">
-						
 						<?php 
 							while($row=$aoaxs->fetch_assoc())
                                 {{echo "<tr><td style='width:50%; text-align:left;'>".$row['name']."</td>";} 
