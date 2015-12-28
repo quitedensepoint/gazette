@@ -17,6 +17,13 @@ abstract class StoryBase
 	 */
 	protected $dbHelper;
 	
+	
+	/**
+	 * Connection to the wwii DB
+	 * @var resource 
+	 */
+	protected $dbConnWWII;
+	
 	/**
 	 * Connection to the wwiionline DB
 	 * @var resource 
@@ -29,8 +36,9 @@ abstract class StoryBase
 	 */
 	protected $creatorData;	
 	
-	public function __construct($dbConn, $dbConnWWIIOnline, $creatorData) {
+	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $creatorData) {
 		$this->dbConn = $dbConn;
+		$this->dbConnWWII = $dbConnWWII;
 		$this->dbHelper = new dbhelper($dbConn);
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
 		$this->creatorData = $creatorData;		
