@@ -98,10 +98,10 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                     <table style="width: 100%; align: center">
 						<?php 
 							while($row=$aoals->fetch_assoc())
-                                {{echo "<tr><td style='width:50%; text-align:left;'>".$row['name']."</td>";}
+                                {{echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";}
                                 if (isset($row['alcon']) && $row['alcon']=='1') 
-                                {echo "<td style='width: 50%; text-align: right;'><b>Contested</b></td></tr>";} 
-                                else {echo "<td style='width: 50%; text-align: right;'><br></td></tr>";}}
+                                {echo "<td style='width: 50%; text-align: center;color:red'><i>Contested</i></td></tr>";} 
+                                else {echo "<td style='width: 50%; text-align: center;'><br></td></tr>";}}
                                
 						?>
                     </table>
@@ -110,10 +110,10 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
                     <table style="width: 100%; align: center">
 						<?php 
 							while($row=$aoaxs->fetch_assoc())
-                                {{echo "<tr><td style='width:50%; text-align:left;'>".$row['name']."</td>";} 
+                                {{echo "<tr><td style='width:50%; text-align:center; '>".$row['name']."</td>";} 
                                 if (isset($row['axcon']) && $row['axcon']=='1')
-                                {echo "<td style='width: 50%; text-align: right;'><b>Contested</b></td></tr>";}
-                                else {echo "<td style='width: 50%; text-align: right;'><br></td></tr>";}}
+                                {echo "<td style='width: 50%; text-align: center; color:red'><i>Contested</i></td></tr>";}
+                                else {echo "<td style='width: 50%; text-align: center;'><br></td></tr>";}}
 						?>
                     </table>
 
@@ -142,9 +142,14 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 						<th>City</th>
 						<th>By</th>
 						<?php 
-							while($row=$caps->fetch_assoc()){ 
-								echo "<tr><td>".$row['name']."</td><td>".$row['fullName']."</td></tr>"; 
+							while($row=$caps->fetch_assoc())
+                             
+                            If (($row['fullName'])=='GERMANY')
+                            {
+								echo "<tr style='text-align: center;'><td>".$row['name']."</td><td style='color: red; text-align: center'><i>".$row['fullName']."</i></td></tr>"; 
 							}
+                            else
+                            {   echo "<tr><td style='text-align: center;'>".$row['name']."</td><td style='color: blue; text-align: center'><i>".$row['fullName']."</i></td></tr>";}
 						?>
 					</table>
 				</td>
