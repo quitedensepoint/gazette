@@ -1,11 +1,7 @@
 <?php
 /* 
 This page is the index (main) page for the Gazette
-It has the layout and look of the original page.  The data feeds are not yet in place.  
-Where the feed should be, the area his marked at both top and bottom of where the includes should go.  Table information within these comments may not align with the code outside. 
-as the queries place data in, it appears to all be placed L aligned.  
-For reference also the data within those areas has been modified to show the old data source.
-Map is aplaceholder image and the link to the full map page has been commented out pending restoration of the BE Map.   
+It has the layout and look of the original page.    
 
 */
 
@@ -96,13 +92,31 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 				</td>
 <!-- Attacks Captures Top Right Story -->
 				<td id='topRightStory'> 
-					<span class='paperarialbig'><b>Current<br>Attacks Objectives:</b></span>
-					<br><br>
-					<?php
-						while($row=$aos->fetch_assoc()){ 
-							echo $row['name']."<br>";
-						} 
-					?>
+					<span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
+					<br><br><b>Allied</b><br>
+                    <table style="width: 100%; align: center">
+						
+						<?php 
+							while($row=$aoals->fetch_assoc())
+                                {{echo "<tr><td style='width:50%; text-align:left;'>".$row['name']."</td>";}
+                                if (isset($row['alcon']) && $row['alcon']=='1') 
+                                {echo "<td style='width: 50%; text-align: right;'><b>Contested</b></td></tr>";} 
+                                else {echo "<td style='width: 50%; text-align: right;'><br></td></tr>";}}
+                               
+						?>
+                    </table>
+                    <br><b>Axis</b><br>
+                    <table style="width: 100%; align: center">
+						
+						<?php 
+							while($row=$aoaxs->fetch_assoc())
+                                {{echo "<tr><td style='width:50%; text-align:left;'>".$row['name']."</td>";} 
+                                if (isset($row['axcon']) && $row['axcon']=='1')
+                                {echo "<td style='width: 50%; text-align: right;'><b>Contested</b></td></tr>";}
+                                else {echo "<td style='width: 50%; text-align: right;'><br></td></tr>";}}
+						?>
+                    </table>
+
 				</td>
 			</tr>
 <!-- Middle Top Left | Map | Middle Top Right Row -->
@@ -112,7 +126,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 					<hr style="width: 90%;">
 					<!-- Code for image rotation -->
 					<?php
-						$iDir='assets/img/ads/';
+						$iDir='assets/img/post/';
 						$image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
 						$selImage = $image[array_rand($image)];
 					?>
@@ -157,7 +171,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 					<hr style="width: 90%;">
 					<!-- Code for image rotation -->
 					<?php
-						$iDir='assets/img/ads/';
+						$iDir='assets/img/post/';
 						$image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
 						$selImage = $image[array_rand($image)];
 					?>
@@ -321,5 +335,4 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 </body>
 </html>
  
-
 
