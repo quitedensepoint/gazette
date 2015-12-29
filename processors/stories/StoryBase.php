@@ -179,6 +179,43 @@ abstract class StoryBase
 			->prepare("SELECT * from strat_facility WHERE facility_oid = ? LIMIT 1", [$facilityId]);	
 
 		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieve the record for a single vehicle
+	 * 
+	 * @param integer $vehicleId
+	 * @return array
+	 */
+	public function getVehicleById($vehicleId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_vehtype WHERE vehtype_oid = ? LIMIT 1", [$vehicleId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieve a vehicle by its classificaiton. This can be used to find a vehicle from a sortie
+	 * (where the vehicle id is not directly referenced)
+	 * 
+	 * @param integer $countryId
+	 * @param integer $categoryId
+	 * @param integer $classId
+	 * @param integer $typeId
+	 * @return array
+	 */
+	public function getVehicleByClassification($countryId, $categoryId, $classId, $typeId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_vehtype WHERE countryID = ? AND categoryID = ? "
+				. "AND classID = ? AND typeID = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
+
+		return $dbHelper->getAsArray($query);					
 	}	
 }
 
