@@ -148,5 +148,21 @@ abstract class StoryBase
 
 		return $dbHelper->getAsArray($query);					
 	}
+	
+	/**
+	 * Retrieve the record of a single sortie, or an empty array if no record
+	 * 
+	 * @param integer $playerId The ID of the record
+	 * @return array
+	 */
+	public function getSortieById($sortieId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}	
 }
 
