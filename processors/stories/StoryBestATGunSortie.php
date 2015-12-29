@@ -13,7 +13,7 @@
  *  TARGET_KILLS
  *  RTB
  */
-class StoryBestAirNavalAttack extends StoryBase implements StoryInterface {
+class StoryBestATGunSortie extends StoryBase implements StoryInterface {
 	
 	public function isValid() {
 
@@ -88,7 +88,7 @@ class StoryBestAirNavalAttack extends StoryBase implements StoryInterface {
 		}
 		$this->creatorData['template_vars']['list'] = join(", ", $killList);
 		$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
-		
+	
 		
 		return true;
 
@@ -107,10 +107,8 @@ class StoryBestAirNavalAttack extends StoryBase implements StoryInterface {
 		$query = $wwiiHelper
 			->prepare("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
 				. "FROM kills "
-				. "WHERE killer_country = ? AND killer_category = 1 AND victim_category  IN (3) "
-				. "GROUP by killer_sortie_id, killer_player_0, killer_vehtype_oid "
-				. "HAVING count(kill_id) > 0 "
-				. "ORDER BY kill_time DESC "
+				. "WHERE killer_class = 7 AND victim_class IN (6,4)"
+				. "ORDER BY kill_time DESC , kill_count DESC "
 				. "LIMIT 1", [$countryId]);	
 
 		return $wwiiHelper->getAsArray($query);					

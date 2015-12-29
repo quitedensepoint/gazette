@@ -109,7 +109,7 @@ class StoryBestAirGroundAttack extends StoryBase implements StoryInterface {
 				. "FROM kills "
 				. "WHERE killer_country = ? AND killer_category = 1 AND victim_category  IN (2,4) "
 				. "GROUP by killer_sortie_id, killer_player_0, killer_vehtype_oid "
-				. "HAVING count(kill_id) > 3 "
+				. "HAVING count(kill_id) >= 3 "
 				. "ORDER BY kill_time DESC "
 				. "LIMIT 1", [$countryId]);	
 

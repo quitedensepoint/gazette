@@ -23,3 +23,4 @@ require(__DIR__ . "/StoryChokepointsOwned.php");
 require(__DIR__ . "/StoryBestRecentSortie.php");
 require(__DIR__ . "/StoryBestAirGroundAttack.php");
 require(__DIR__ . "/StoryBestAirNavalAttack.php");
+require(__DIR__ . "/StoryBestATGunSortie.php");
