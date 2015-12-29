@@ -163,6 +163,22 @@ abstract class StoryBase
 			->prepare("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
 
 		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieve the record for a single facility
+	 * 
+	 * @param integer $facilityId
+	 * @return array
+	 */
+	public function getFacilityById($facilityId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from strat_facility WHERE facility_oid = ? LIMIT 1", [$facilityId]);	
+
+		return $dbHelper->getAsArray($query);					
 	}	
 }
 
