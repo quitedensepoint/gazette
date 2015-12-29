@@ -291,14 +291,13 @@ class StoryProcessor {
 	/**
 	 * Retrieves the valid sources and their related templates for a story
 	 * 
-	 * @param type $sourceId
-	 * @param type $countryId
-	 * @return type
+	 * @param integer $sourceId
+	 * @return array
 	 */
 	private function getStorySource($sourceId)
 	{
 		$query = $this->dbHelper
-		->prepare("SELECT s.source_id,s.name, s.weight,s.life WHERE s.source_id = ?", [$sourceId]);
+			->prepare("SELECT s.source_id, s.name, s.weight, s.life FROM `sources` as s WHERE s.source_id = ? limit 1", [$sourceId]);
 
 		return $this->dbHelper->getAsArray($query);		
 	}
