@@ -216,6 +216,58 @@ abstract class StoryBase
 				. "AND classID = ? AND typeID = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
 
 		return $dbHelper->getAsArray($query);					
-	}	
+	}
+	
+	/**
+	 * Get a list and count of enemy vehicles killed in a sortie
+	 * 
+	 * @param integer $sortieId
+	 * @return array
+	 * 
+	 */
+	public function getVehicleKillCountsForSortie($sortieId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWII);
+		
+		$query = $dbHelper
+			->prepare("SELECT victim_vehtype_oid, count(kill_id) as kill_count from kills WHERE killer_sortie_id = ?"
+				, [$sortieId]);	
+
+		$kills = $dbHelper->getAsArray($query);
+		
+		if(count($kills) == 0)
+		{
+			return [];
+		}
+		$keys = [];
+		foreach($kills as $kill)
+		{
+			$keys[] = $kill['victim_vehtype_oid'];
+		}
+		
+		$wwiiolHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query2 = $wwiiolHelper
+			->prepare("SELECT vehtype_oid, fullName FROM wwii_vehtype WHERE vehtype_oid IN (?)"
+				, [join(",", $keys)]);	
+
+		$vehicles = $wwiiolHelper->getAsArray($query2);
+		
+		/**
+		 * Add the names of the items killed to the list
+		 */
+		array_walk($kills, function(&$kill) use($vehicles) {
+			foreach($vehicles as $vehicle)
+			{
+				if($vehicle['vehtype_oid'] == $kill['victim_vehtype_oid'])
+				{
+					$kill['name'] = $vehicle['fullName'];
+				}
+			}
+		});
+		
+		return $kills;
+
+	}
 }
 
