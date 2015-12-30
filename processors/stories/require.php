@@ -25,3 +25,4 @@ require(__DIR__ . "/StoryBestAirGroundAttack.php");
 require(__DIR__ . "/StoryBestAirNavalAttack.php");
 require(__DIR__ . "/StoryBestATGunSortie.php");
 require(__DIR__ . "/StoryBestATRSortie.php");
+require(__DIR__ . "/StoryBestDestroyerSortie.php");
