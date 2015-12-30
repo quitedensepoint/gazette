@@ -51,7 +51,7 @@ if(!isset($dbConnWWIIOL)) {
 if(!isset($dbConnToe)) {
 	throw new Exception('Please ensure you have defined a connection "$dbConnToe" to toe DB in the DBConn file');
 }
-var_dump($dbConnToe);
+
 $storyProcessor = new StoryProcessor($dbconn, $dbConnWWIIOL, $dbConnToe);
 
 $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
