@@ -132,5 +132,21 @@ abstract class StoryBase
 		return $status;
 	}
 	
+	/**
+	 * Get RDP Action data
+	 * 
+	 * @param string $action An RDP action of either +, <, >, =, -
+	 * @return array
+
+	 */
+	public function getRDPActionData($action)
+	{
+		$dbHelper = new dbhelper($this->dbConnToe);
+		
+		$query = $dbHelper
+			->prepare("SELECT * FROM v_rdp_in_progress_2 WHERE action = ? ORDER BY RAND() LIMIT 1",[$action]);	
+		
+		return $dbHelper->getAsArray($query);					
+	}	
 }
 
