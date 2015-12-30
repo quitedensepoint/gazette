@@ -25,6 +25,10 @@ class StoryProcessor {
 	 */
 	protected $dbConnWWIIOnline;
 	
+	/**
+	 * Connection to the TOE database
+	 * @var resource 
+	 */
 	protected $dbConnToe;
 
 	/**
@@ -76,6 +80,7 @@ class StoryProcessor {
 		}
 		
 		$content = $this->parseTemplate($storyData['template'], $story);
+		$content .= "<!-- " . $storyKey . "-->"; 
 		
 		$this->pushToFile($storyKey, $content);
 		echo sprintf("\tStory could be made for %s!\n", $storyKey);
@@ -457,6 +462,12 @@ class StoryProcessor {
 		return $template;
 	}
 	
+	/**
+	 * Push a file to the cache directory in the file system
+	 * 
+	 * @param string $storyKey The key name(see storyKey in stories table) where to save the cache file
+	 * @param stringe $storyData The string to record to the file
+	 */
 	private function pushToFile($storyKey, $storyData)
 	{
 		$cacheFile = __DIR__ . '/../cache/' . $storyKey . '.php';
