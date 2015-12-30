@@ -22,3 +22,8 @@ require(__DIR__ . "/StoryAirfieldsOwned.php");
 require(__DIR__ . "/StoryChokepointsOwned.php");
 require(__DIR__ . "/StoryBestRecentSortie.php");
 require(__DIR__ . "/StoryRDPBase.php");
+require(__DIR__ . "/StoryRDPIntro.php");
+require(__DIR__ . "/StoryRDPIncrease.php");
+require(__DIR__ . "/StoryRDPDecrease.php");
+require(__DIR__ . "/StoryRDPPhaseOut.php");
+require(__DIR__ . "/StoryRDPRemoval.php");

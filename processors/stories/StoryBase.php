@@ -162,6 +162,30 @@ abstract class StoryBase
 			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
 		
 		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieves an adjective describing the rate of change in RDP
+	 * 
+	 * @param integer $change
+	 * @return string
+	 */
+	public function getRDPChangeAdjective($change) {
+
+		if($change < 3){
+			return 'small';
+		}
+		else if($change < 5){
+			return 'noticable';
+		}
+		else if($change < 10){
+			return 'sizable';
+		}
+		else if($change < 20){
+			return 'significant';
+		}
+
+		return 'huge';
 	}	
 
 }

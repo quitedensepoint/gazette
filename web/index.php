@@ -27,6 +27,8 @@ $casualtyData = $casualtyProcessor->process();
 $indexMainHeadline = file_get_contents(__DIR__ .'/../cache/index_main_headline.php');
 $indexAlliedStats2 = file_get_contents(__DIR__ .'/../cache/index_allied_stats2.php');
 $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.php');
+$indexAlliedBritishRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_british_rdp1.php');
+$indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_french_rdp1.php');
 ?>
 <!DOCTYPE html>
 
@@ -151,6 +153,36 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 						$firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
 						echo $firstArticle;
 					?>
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tbody>
+							<tr>
+                                <td align="left" valign="top">
+                                    <!--Allied British RDP Story #1 -->
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="5">
+										<tbody>
+											<tr valign="top" align="left"> 
+												<td> 
+													<span class="paperdefault"><?= $indexAlliedBritishRDP1 ?></span>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+                                  </td>
+                                <td align="left" valign="top">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="5">
+										<tbody>
+											<tr align="left" valign="top"> 
+												<td> 
+													<span class="paperdefault"><?= $indexAlliedFrenchRDP1 ?></span>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+                                    <!-- #include file="/home/bv55/scriptinc/paper/index_allied_french_rdp1.html" -->
+                                </td>
+                            </tr>
+                        </tbody>
+					</table>					
 				</td>
 <!-- Old Advertising spot Right in in case still wanted/needed could also be used for Propa-->
 				<td id="middleBottomRightStory">
