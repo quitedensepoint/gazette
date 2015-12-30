@@ -148,6 +148,7 @@ class StoryProcessor {
 			'template_vars' => [
 				'country' => $storyType['country'],
 				'side' => $storyType['side'],
+				'enemy_side' => strtolower($storyType['side']) == 'allied' ? 'axis' : 'allied',
 				'country_adj' => $storyType['country_adj']
 			]
 		];			
