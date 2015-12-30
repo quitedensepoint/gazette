@@ -106,11 +106,4 @@ class StoryBestRecentSortie extends StoryBase implements StoryInterface {
 		return count($result) == 1 ? $result[0]['name'] : 'an enemy facility';			
 	}
 
-	/***
-	 * Placeholder function until ticket #1118 is merged
-	 */
-	public function getRTBStatus($rtb)
-	{
-		return 'TODO';
-	}
 }
