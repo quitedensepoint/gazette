@@ -24,6 +24,8 @@ class StoryProcessor {
 	 * @var resource 
 	 */
 	protected $dbConnWWIIOnline;
+	
+	protected $dbConnToe;
 
 	/**
 	 * Database helper
@@ -31,10 +33,11 @@ class StoryProcessor {
 	 */
 	protected $dbHelper;
 	
-	public function __construct($dbConn, $dbConnWWIIOnline) {
+	public function __construct($dbConn, $dbConnWWIIOnline, $dbConnToe) {
 	
 		$this->dbConn = $dbConn;
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
+		$this->dbConnToe = $dbConnToe;
 		$this->dbHelper = new dbhelper($this->dbConn);
 	}
 	
@@ -224,7 +227,7 @@ class StoryProcessor {
 		}
 
 		/* @var $storyCreator StoryInterface */
-		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWIIOnline, $creatorData);
+		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWIIOnline, $this->dbConnToe, $creatorData);
 		echo sprintf("\tChecking story %s" , $storyCreatorClass);
 
 		if($storyCreator->isValid())

@@ -15,14 +15,19 @@ if (mysqli_connect_errno()){
     echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-$dbConnWWIIOL = mysqli_connect("localhost","root","","wwiionline");
+$dbConnWWIIOL = mysqli_connect("p:localhost","root","","wwiionline");
 if (mysqli_connect_errno()){
     echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 
-$dbconnAuth = mysqli_connect("localhost", "root", "", "auth");
+$dbconnAuth = mysqli_connect("p:localhost", "root", "", "auth");
 if (mysqli_connect_errno()){
     echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
+}
+
+$dbConnToe = mysqli_connect("p:localhost", "root", "", "toe");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Toe database: " . mysqli_connect_error();
 }
 
 /**
@@ -32,10 +37,12 @@ if (mysqli_connect_errno()){
  * 
  * Uncomment the next section to address this issue
  */
+
 /*
 $dbconn->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnWWII->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnWWIIOnline->query("SET SESSION time_zone = 'America/Chicago'");
 $dbconnAuth->query("SET SESSION time_zone = 'America/Chicago'");
+$dbConnToe->query("SET SESSION time_zone = 'America/Chicago'");
  * 
  */

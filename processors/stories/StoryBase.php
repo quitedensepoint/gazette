@@ -24,15 +24,22 @@ abstract class StoryBase
 	protected $dbConnWWIIOnline;
 	
 	/**
+	 * Connection to the toe DB
+	 * @var resource 
+	 */	
+	protected $dbConnToe;
+		
+	/**
 	 * An array of data used to populate the stories
 	 * @var array
 	 */
 	protected $creatorData;	
 	
-	public function __construct($dbConn, $dbConnWWIIOnline, $creatorData) {
+	public function __construct($dbConn, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
 		$this->dbConn = $dbConn;
 		$this->dbHelper = new dbhelper($dbConn);
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
+		$this->dbConnToe = $dbConnToe;
 		$this->creatorData = $creatorData;		
 	}
 	
@@ -124,5 +131,6 @@ abstract class StoryBase
 		
 		return $status;
 	}
+	
 }
 
