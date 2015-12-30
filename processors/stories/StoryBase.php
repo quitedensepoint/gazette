@@ -133,20 +133,36 @@ abstract class StoryBase
 	}
 	
 	/**
-	 * Get RDP Action data
+	 * Retrieves a random city for a specified country
 	 * 
-	 * @param string $action An RDP action of either +, <, >, =, -
+	 * @param integer $countryId
 	 * @return array
-
 	 */
-	public function getRDPActionData($action)
+	public function getRandomCityForCountry($countryId)
 	{
-		$dbHelper = new dbhelper($this->dbConnToe);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("SELECT * FROM v_rdp_in_progress_2 WHERE action = ? ORDER BY RAND() LIMIT 1",[$action]);	
+			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
+		
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieves a random factory city for a specified country
+	 * 
+	 * @param integer $countryId
+	 * @return array
+	 */
+	public function getRandomFactoryCityForCountry($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
 		
 		return $dbHelper->getAsArray($query);					
 	}	
+
 }
 
