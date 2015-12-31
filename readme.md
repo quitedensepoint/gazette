@@ -46,6 +46,16 @@ To regenerate all expired stories and reset their lifetimes
 
 To regenerate a story for single slot on a page
 
-> *php commands/stories.php --generate={story_key}
+> *php commands/stories.php --generate={story_key}*
 
 Where *story_key* is the value in the story_key column in the stories table
+
+For the purposes of debugging, you can also perform the following options after the generate option
+
+> *php commands/stories.php --generate={story_key} --sourceid={sourcenum} --templateid={templatenum}*
+
+Where {sourcenum} is the id of the row in the sources table in the gazette. This will be forced to be the text of the story for areas that are being generated.
+If you do an "all", all areas will hold this story, which will make it look weord
+
+{templatenum} will force the system to use the story template located in templates table. Be warned that this will produced stories with weird results if
+the template is not normally used against the source (see the template_sources table)

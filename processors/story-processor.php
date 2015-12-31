@@ -58,9 +58,8 @@ class StoryProcessor {
 	 * @param integer $sourceId The ID of a specific source to draw from
 	 * @return boolean true if a story could be made
 	 */
-	public function process($storyKey, $sourceId = null)
+	public function process($storyKey, $sourceId = null, $templateId = null)
 	{
-		
 		$storyQuery = $this->dbHelper
 			->prepare("SELECT * FROM `stories` WHERE `story_key` = ?", [$storyKey]);
 		
@@ -73,7 +72,7 @@ class StoryProcessor {
 		
 		$storyData = $storyData[0];
 
-		if(($story = $this->checkStory($storyData, $sourceId)) === false)
+		if(($story = $this->checkStory($storyData, $sourceId, $templateId)) === false)
 		{		
 			/**
 			 * No valid story could be found for this section of the page, so use
@@ -101,9 +100,10 @@ class StoryProcessor {
 	 * 
 	 * @param arra $storyData
 	 * @param integer $sourceId
+	 * @param integer $templateId
 	 * @return array
 	 */
-	private function checkStory($storyData, $sourceId)
+	private function checkStory($storyData, $sourceId, $templateId)
 	{
 		$storyKey = $storyData['story_key'];
 		$storyId= $storyData['story_id'];
@@ -115,7 +115,7 @@ class StoryProcessor {
 			return false;			
 		}
 		
-		return $this->checkStoryTypes($storyData, $storyTypes, $sourceId);
+		return $this->checkStoryTypes($storyData, $storyTypes, $sourceId, $templateId);
 	}
 	
 	/**
@@ -124,9 +124,10 @@ class StoryProcessor {
 	 * @param array $storyData
 	 * @param array $storyTypes
 	 * @param integer $sourceId
+	 * @param integer $templateId
 	 * @return string|false	Returns the content of the story, or false if no story found
 	 */
-	private function checkStoryTypes($storyData, $storyTypes, $sourceId = null)
+	private function checkStoryTypes($storyData, $storyTypes, $sourceId = null, $templateId = null)
 	{
 		echo sprintf("  Story has %d storytypes\n", count($storyTypes));
 		
@@ -134,7 +135,7 @@ class StoryProcessor {
 		{
 			echo sprintf("    Checking StoryType %s for %s\n", $storyType['name'], $storyType['country']);
 			
-			if(($content = $this->prepareStoryType($storyData, $storyType, $sourceId)))
+			if(($content = $this->prepareStoryType($storyData, $storyType, $sourceId, $templateId)))
 			{
 				return $content;
 			}			
@@ -149,7 +150,7 @@ class StoryProcessor {
 	 * @param type $sourceId
 	 * @return boolean
 	 */
-	private function prepareStoryType($storyData, $storyType, $sourceId)
+	private function prepareStoryType($storyData, $storyType, $sourceId, $templateId)
 	{
 		$creatorData = [
 			'template_vars' => [
@@ -205,7 +206,7 @@ class StoryProcessor {
 			 */
 			foreach($organisedSources[$weight] as $source)
 			{
-				if(($content = $this->processSource($storyData, $source, $creatorData)) !== false) {
+				if(($content = $this->processSource($storyData, $source, $creatorData, $templateId)) !== false) {
 					return $content;
 				}
 			}				
@@ -220,9 +221,10 @@ class StoryProcessor {
 	 * @param array $storyData
 	 * @param array $source
 	 * @param array $creatorData
+	 * @param integer $templateId
 	 * @return array|false
 	 */
-	private function processSource($storyData, $source, $creatorData) {
+	private function processSource($storyData, $source, $creatorData, $templateId) {
 
 		$sourceName = $source['name'];
 
@@ -244,7 +246,14 @@ class StoryProcessor {
 
 		if($storyCreator->isValid())
 		{
-			$template = $this->getRandomTemplateForSource($source['source_id'], $creatorData['country_id']);
+			if($templateId !== null)
+			{
+				$template = $this->getTemplateById($templateId);
+			}
+			else
+			{
+				$template = $this->getRandomTemplateForSource($source['source_id'], $creatorData['country_id']);
+			}
 
 			if(count($template) !== 1)
 			{
@@ -329,6 +338,23 @@ class StoryProcessor {
 		return $this->dbHelper->getAsArray($query);		
 	}	
 
+	/**
+	 * Retrieves a specific template by Id
+	 * 
+	 * @param integer $templateId
+	 * @return array
+	 */
+	private function getTemplateById($templateId)
+	{
+		$query = $this->dbHelper
+		->prepare("SELECT t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
+			." FROM template_sources AS ts"
+			." INNER JOIN templates AS t ON ts.template_id = t.template_id "
+			." INNER JOIN template_countries AS tc ON t.template_id = tc.template_id"
+			." WHERE t.template_id = ? LIMIT 1", [$templateId]);
+
+		return $this->dbHelper->getAsArray($query);		
+	}	
 	
 	/**
 	 * Retrieves all the story types associated with story
