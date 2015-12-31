@@ -91,7 +91,7 @@ $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.p
 					</td>
 <!-- Front Line Map -->
 					<td rowspan='2' colspan='3'>
-						<a href='https://webmap.wwiionline.com'><img src='https://webmap.wwiionline.com/Lirary/images/GazetteFrontPage.png'></a>
+						<a href='https://webmap.wwiionline.com'><img src='https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png'></a>
 						<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' style="color: yellow;">CLICK FOR FULL SIZE</a></span>
 					</td>
 <!-- Attacks Captures Top Right Story -->
