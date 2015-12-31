@@ -12,17 +12,17 @@ if (mysqli_connect_errno()){
 
 $dbConnWWII = mysqli_connect("p:db_host","db_user","db_password","wwii");
 if (mysqli_connect_errno()){
-    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    echo "Failed to connect to WWII database: " . mysqli_connect_error();
 }
 
 $dbConnWWIIOL = mysqli_connect("p:localhost","root","","wwiionline");
 if (mysqli_connect_errno()){
-    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    echo "Failed to connect to WWIIOnline database: " . mysqli_connect_error();
 }
 
 $dbconnAuth = mysqli_connect("p:localhost", "root", "", "auth");
 if (mysqli_connect_errno()){
-    echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
+    echo "Failed to connect to the Auth database: " . mysqli_connect_error();
 }
 
 $dbConnToe = mysqli_connect("p:localhost", "root", "", "toe");
