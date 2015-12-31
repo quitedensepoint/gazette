@@ -16,6 +16,12 @@ abstract class StoryBase
 	 * @var dbhelper
 	 */
 	protected $dbHelper;
+
+	/**
+	 * Connection to the wwii DB
+	 * @var resource 
+	 */
+	protected $dbConnWWII;	
 	
 	/**
 	 * Connection to the wwiionline DB
@@ -35,9 +41,10 @@ abstract class StoryBase
 	 */
 	protected $creatorData;	
 	
-	public function __construct($dbConn, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
+	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
 		$this->dbConn = $dbConn;
 		$this->dbHelper = new dbhelper($dbConn);
+		$this->dbConnWWII = $dbConnWWII;
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
 		$this->dbConnToe = $dbConnToe;
 		$this->creatorData = $creatorData;		
@@ -131,38 +138,142 @@ abstract class StoryBase
 		
 		return $status;
 	}
-	
+
 	/**
-	 * Retrieves a random city for a specified country
+	 * Retrieve the record of a single player, or an empty array if no record
 	 * 
-	 * @param integer $countryId
+	 * @param integer $playerId The ID of the record
 	 * @return array
 	 */
-	public function getRandomCityForCountry($countryId)
+	public function getPlayerById($playerId)
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
-		
+			->prepare("SELECT * from wwii_player WHERE playerid = ? LIMIT 1", [$playerId]);	
+
 		return $dbHelper->getAsArray($query);					
 	}
 	
 	/**
-	 * Retrieves a random factory city for a specified country
+	 * Retrieve the record of a single sortie, or an empty array if no record
 	 * 
-	 * @param integer $countryId
+	 * @param integer $playerId The ID of the record
 	 * @return array
 	 */
-	public function getRandomFactoryCityForCountry($countryId)
+	public function getSortieById($sortieId)
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
-		
+			->prepare("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
+
 		return $dbHelper->getAsArray($query);					
 	}
+	
+	/**
+	 * Retrieve the record for a single facility
+	 * 
+	 * @param integer $facilityId
+	 * @return array
+	 */
+	public function getFacilityById($facilityId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from strat_facility WHERE facility_oid = ? LIMIT 1", [$facilityId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieve the record for a single vehicle
+	 * 
+	 * @param integer $vehicleId
+	 * @return array
+	 */
+	public function getVehicleById($vehicleId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_vehtype WHERE vehtype_oid = ? LIMIT 1", [$vehicleId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieve a vehicle by its classificaiton. This can be used to find a vehicle from a sortie
+	 * (where the vehicle id is not directly referenced)
+	 * 
+	 * @param integer $countryId
+	 * @param integer $categoryId
+	 * @param integer $classId
+	 * @param integer $typeId
+	 * @return array
+	 */
+	public function getVehicleByClassification($countryId, $categoryId, $classId, $typeId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_vehtype WHERE countryID = ? AND categoryID = ? "
+				. "AND classID = ? AND typeID = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Get a list and count of enemy vehicles killed in a sortie
+	 * 
+	 * @param integer $sortieId
+	 * @return array
+	 * 
+	 */
+	public function getVehicleKillCountsForSortie($sortieId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWII);
+		
+		$query = $dbHelper
+			->prepare("SELECT victim_vehtype_oid, count(kill_id) as kill_count from kills WHERE killer_sortie_id = ?"
+				, [$sortieId]);	
+
+		$kills = $dbHelper->getAsArray($query);
+		
+		if(count($kills) == 0)
+		{
+			return [];
+		}
+		$keys = [];
+		foreach($kills as $kill)
+		{
+			$keys[] = $kill['victim_vehtype_oid'];
+		}
+		
+		$wwiiolHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query2 = $wwiiolHelper
+			->prepare("SELECT vehtype_oid, fullName FROM wwii_vehtype WHERE vehtype_oid IN (?)"
+				, [join(",", $keys)]);	
+
+		$vehicles = $wwiiolHelper->getAsArray($query2);
+		
+		/**
+		 * Add the names of the items killed to the list
+		 */
+		array_walk($kills, function(&$kill) use($vehicles) {
+			foreach($vehicles as $vehicle)
+			{
+				if($vehicle['vehtype_oid'] == $kill['victim_vehtype_oid'])
+				{
+					$kill['name'] = $vehicle['fullName'];
+				}
+			}
+		});
+		
+		return $kills;
+	}	
 	
 	/**
 	 * Retrieves an adjective describing the rate of change in RDP
@@ -186,7 +297,6 @@ abstract class StoryBase
 		}
 
 		return 'huge';
+		
 	}	
-
 }
-

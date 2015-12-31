@@ -44,6 +44,10 @@ if(!isset($dbconn)) {
 	throw new Exception('Please ensure you have defined a connection "$dbconn" to gazette DB in the DBConn file');
 }
 
+if(!isset($dbConnWWII)) {
+	throw new Exception('Please ensure you have defined a connection "$dbConnWWII" to wwii DB in the DBConn file');
+}
+
 if(!isset($dbConnWWIIOL)) {
 	throw new Exception('Please ensure you have defined a connection "$dbConnWWIIOL" to wwiionline DB in the DBConn file');
 }
@@ -52,7 +56,7 @@ if(!isset($dbConnToe)) {
 	throw new Exception('Please ensure you have defined a connection "$dbConnToe" to toe DB in the DBConn file');
 }
 
-$storyProcessor = new StoryProcessor($dbconn, $dbConnWWIIOL, $dbConnToe);
+$storyProcessor = new StoryProcessor($dbconn, $dbConnWWII, $dbConnWWIIOL, $dbConnToe);
 
 $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
 

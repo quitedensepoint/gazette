@@ -7,7 +7,7 @@ require(__DIR__ . '/../DBconn.php');
 $cap=("SELECT *
         FROM `strat_captures` AS s 
         LEFT JOIN `wwii_country` AS w
-            ON s.facil_country=w.countryID
+            ON s.cust_country=w.countryID
         LEFT JOIN `strat_facility` as i
             ON s.facility_oid=i.facility_oid
 
@@ -26,12 +26,26 @@ if (!$caps) {
  ?>
 <?php
  
-// generic start query for AO's ownership.
+// query for Allied AO's 
 
-$ao = "SELECT name FROM strat_cp WHERE is_objective>='1'";
-$aos = $dbConnWWIIOL->query($ao) or die ($dbConnWWIIOL->error._LINE_);
-if (!$aos) {
-    throw new Exception("Database Error [{$dbConnWWIIOL->query($ao)->errno}] {$dbConnWWIIOL->query($ao)->error}");
+$aoal = "SELECT name, contention as alcon FROM strat_cp WHERE is_objective>='1' AND conside='2'";
+$aoals = $dbConnWWIIOL->query($aoal) or die ($dbConnWWIIOL->error._LINE_);
+if (!$aoals) {
+    throw new Exception("Database Error [{$dbConnWWIIOL->query($aoal)->errno}] {$dbConnWWIIOL->query($aoal)->error}");
 }
+
+ ?>
+
+ <?php
+ 
+// query for Axis AO's 
+
+$aoax = "SELECT name, contention as axcon FROM strat_cp WHERE is_objective>='1' AND conside='1'";
+$aoaxs = $dbConnWWIIOL->query($aoax) or die ($dbConnWWIIOL->error._LINE_);
+if (!$aoaxs) {
+    throw new Exception("Database Error [{$dbConnWWIIOL->query($aoax)->errno}] {$dbConnWWIIOL->query($aoax)->error}");
+}
+
+
 
  ?>

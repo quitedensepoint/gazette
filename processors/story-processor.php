@@ -20,7 +20,13 @@ class StoryProcessor {
 	protected $dbConn;
 	
 	/**
-	 * Connection ot the wwiionline db (game db)
+	 * Connection to the wwii db (kills db)
+	 * @var resource 
+	 */
+	protected $dbConnWWII;	
+	
+	/**
+	 * Connection to the wwiionline db (game db)
 	 * @var resource 
 	 */
 	protected $dbConnWWIIOnline;
@@ -37,9 +43,9 @@ class StoryProcessor {
 	 */
 	protected $dbHelper;
 	
-	public function __construct($dbConn, $dbConnWWIIOnline, $dbConnToe) {
-	
+	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe) {
 		$this->dbConn = $dbConn;
+		$this->dbConnWWII = $dbConnWWII;
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
 		$this->dbConnToe = $dbConnToe;
 		$this->dbHelper = new dbhelper($this->dbConn);
@@ -149,6 +155,7 @@ class StoryProcessor {
 			'template_vars' => [
 				'country' => $storyType['country'],
 				'side' => $storyType['side'],
+				'enemy_side' => strtolower($storyType['side']) == 'allied' ? 'axis' : 'allied',
 				'country_adj' => $storyType['country_adj']
 			]
 		];			
@@ -232,7 +239,7 @@ class StoryProcessor {
 		}
 
 		/* @var $storyCreator StoryInterface */
-		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWIIOnline, $this->dbConnToe, $creatorData);
+		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWII, $this->dbConnWWIIOnline, $this->dbConnToe, $creatorData);
 		echo sprintf("\tChecking story %s" , $storyCreatorClass);
 
 		if($storyCreator->isValid())
@@ -292,14 +299,13 @@ class StoryProcessor {
 	/**
 	 * Retrieves the valid sources and their related templates for a story
 	 * 
-	 * @param type $sourceId
-	 * @param type $countryId
-	 * @return type
+	 * @param integer $sourceId
+	 * @return array
 	 */
 	private function getStorySource($sourceId)
 	{
 		$query = $this->dbHelper
-		->prepare("SELECT s.source_id,s.name, s.weight,s.life WHERE s.source_id = ?", [$sourceId]);
+			->prepare("SELECT s.source_id, s.name, s.weight, s.life FROM `sources` as s WHERE s.source_id = ? limit 1", [$sourceId]);
 
 		return $this->dbHelper->getAsArray($query);		
 	}
