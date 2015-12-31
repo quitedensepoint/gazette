@@ -298,5 +298,37 @@ abstract class StoryBase
 
 		return 'huge';
 		
+	}
+	
+	/**
+	 * Retrieves a random city for a specified country
+	 * 
+	 * @param integer $countryId
+	 * @return array
+	 */
+	public function getRandomCityForCountry($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
+		
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieves a random factory city for a specified country
+	 * 
+	 * @param integer $countryId
+	 * @return array
+	 */
+	public function getRandomFactoryCityForCountry($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
+		
+		return $dbHelper->getAsArray($query);					
 	}	
 }

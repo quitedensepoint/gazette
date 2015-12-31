@@ -29,14 +29,15 @@ $gazetteDbHelper = new dbhelper($dbconn);
  */
 $serverTimezone = new DateTimeZone(date_default_timezone_get());
 
-$options = getopt('', ['list:', 'expire:', 'help:', 'generate:','sourceid:']);
+$options = getopt('', ['list:', 'expire:', 'help:', 'generate:', 'sourceid:', 'templateid:']);
 
 if(count($options) == 0 || isset($options['help']))
 {
-	exit("\nusage: php command/stories.php [--help] [--list] [--expire=story-key] [--generate] [--sourceid=]"
+	exit("\nusage: php command/stories.php [--help] [--expire=story-key] [--generate] [--sourceid=] [--templateid=]"
 		. "\n\n  --expire=key\tWill expire the story with the specified key which will be processed on the next call."
 		. "\n  --generate=all|expired|story_name\tWill generate a new story for the option providede, or new stories for all stories that have expired if no option given."
 		. "\n  --sourceid\tForces a specific story of the id passed in to be generated.\n"
+		. "\n  --templateid\tForces a specific template for the source to be used.\n"
 		);
 }
 
@@ -59,6 +60,7 @@ if(!isset($dbConnToe)) {
 $storyProcessor = new StoryProcessor($dbconn, $dbConnWWII, $dbConnWWIIOL, $dbConnToe);
 
 $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
+$templateId = (isset($options['templateid']) && ctype_digit($options['templateid'])) ? intval($options['templateid']) : null;
 
 if(isset($options['generate'])) {
 	
@@ -70,7 +72,7 @@ if(isset($options['generate'])) {
 		/**
 		 * Generate a new story for the entry provided
 		 */
-		$storyProcessor->process($options['generate'], $sourceId);
+		$storyProcessor->process($options['generate'], $sourceId, $templateId);
 	}
 	else
 	{
@@ -92,7 +94,7 @@ if(isset($options['generate'])) {
 		
 		foreach ($storyKeysData as $storyKey)
 		{
-			$storyProcessor->process($storyKey['story_key'], $sourceId);
+			$storyProcessor->process($storyKey['story_key'], $sourceId, $templateId);
 		}
 	}
 	
