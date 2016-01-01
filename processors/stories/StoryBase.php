@@ -60,6 +60,19 @@ abstract class StoryBase
 
 		$result = $this->parseStory($this->creatorData['template_vars'], $template['title'], $template['body']);
 		
+		return $this->makeVarieties($template, $result);
+	}
+	
+	/**
+	 * Creates a set of varieties out of the initial set of data. This varies selected statements in the
+	 * story to make them a bit more random
+	 * 
+	 * @param array $template
+	 * @param string $result
+	 * @return string
+	 */
+	public function makeVarieties($template, $result)
+	{
 		/**
 		 * Randomise some of the text in the template based on the variety_1 field in the templates table
 		 */
@@ -74,8 +87,8 @@ abstract class StoryBase
 		
 		$result = str_replace('%VARIETY2%', $varieties2[rand(0, count($varieties2) - 1)], $result);		
 		
-		return $result;
-	}	
+		return $result;		
+	}
 	
 	/**
 	 * Take the template vars and the templates, and turns them into the story

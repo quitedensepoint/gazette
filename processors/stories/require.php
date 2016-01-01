@@ -37,3 +37,5 @@ require(__DIR__ . "/StoryRDPRemoval.php");
 require(__DIR__ . "/StoryRDPStatus.php");
 require(__DIR__ . "/StoryRDPEfficiency.php");
 require(__DIR__ . "/StorySpawnLister.php");
+require(__DIR__ . "/StoryRDPArchiver.php");
+require(__DIR__ . "/StoryFactoryHealth.php");
