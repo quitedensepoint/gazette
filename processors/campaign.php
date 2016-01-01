@@ -20,14 +20,12 @@ $ver=$vers->fetch_assoc();
 
 
 //get todays date and subtract start date to get number of days between the two.
-date_default_timezone_set("America/Chicago");
-$today = time();
-$today=date("d-M-Y", $today);
-$start= date("d-M-Y", strtotime($row['start_time']));
-$days= $today-$start-1;
+// date_default_timezone_set("America/Chicago");
+// $today = time();
+// $today=date("d-M-Y", $today);
+// $start= date("d-M-Y", strtotime($row['start_time']));
+// $days= $today-$start-1;
 
-
-
-
+$days = date_diff(date_create($row['start_time'])),date_create(date('Y-m-d')))->format('%d');
 
 ?>
