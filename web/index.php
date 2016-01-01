@@ -180,6 +180,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 						$firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
 						$firstArticle = str_replace('class="contentpagetitle"', 'target="_blank" class="contentpagetitle"', $firstArticle);
 						$firstArticle = str_replace('class="readon"', 'target="_blank" class="readon"', $firstArticle);
+						$firstArticle = str_replace('<img src=', '<img style="padding-right: 2px;" src=', $firstArticle);
 						echo $firstArticle;
 					?><?php /*
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
