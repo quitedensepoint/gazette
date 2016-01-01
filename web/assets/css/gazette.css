@@ -131,7 +131,7 @@ html, body {
 
 #container {
 	height: 100%;
-	width: 909px;
+	width: 925px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	display: block;
 	margin-left: auto;
@@ -144,7 +144,7 @@ html, body {
 
 #headerMiddle {
 	height: 90px;
-	width: 909px; 
+	width: 925px; 
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -174,7 +174,7 @@ html, body {
 	position: relative;
 	top: 90px;
 	height: 80%;
-	color:black;
+	color: black;
 }
 
 #override {
@@ -183,18 +183,18 @@ html, body {
 
 #topLeftStory {
 	height: 175px;
-	width: 177px;
+	width: 181px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
 }
 
 #mapImage {
-	width: 531px; 
+	width: 543px; 
 }
 #mapText {
 	display:block; 
-	width: 531px; 
+	width: 543px; 
 	height: 15px;
 	text-align: center; 
 	padding-top: 3px;
@@ -202,7 +202,7 @@ html, body {
 }
 
 #topRightStory {
-	width: 177px;
+	width: 181px;
 	text-align: center;
 	border-left: 1px black solid;
 }
@@ -218,13 +218,13 @@ html, body {
 }
 
 #middleTopRightStory {
-	width: 177px;
+	width: 181px;
 	text-align: center;
 }
 
 #middleBottomLeftStory {
 	height: 175px;
-	width: 177px;
+	width: 181px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
