@@ -99,8 +99,8 @@ class StoryRDPStatus extends StoryRDPBase implements StoryInterface {
 		
 		$query = $dbHelper
 			->prepare("select f.facility_oid, o.damage_pctg from  strat_facility f left join strat_factory_outputs o on f.country = o.country " 
-				. "where (f.facility_oid = o.facility_oid or o.facility_oid is null) and f.country = 1 and facility_type = 2 and facility_subtype = 7 "
-				. "AND output_time = (SELECT MAX(output_time) FROM strat_factory_outputs)",[$countryId]);	
+				. "where (f.facility_oid = o.facility_oid or o.facility_oid is null) and f.country = ? and facility_type = 2 and facility_subtype = 7 "
+				. "AND output_time >= (SELECT DATE_SUB(MAX(output_time),INTERVAL 1 MINUTE) FROM strat_factory_outputs)",[$countryId]);	
 		
 		return $dbHelper->getAsArray($query);			
 			

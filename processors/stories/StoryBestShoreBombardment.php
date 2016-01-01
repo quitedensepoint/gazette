@@ -77,7 +77,8 @@ class StoryBestShoreBombardment extends StoryBase implements StoryInterface {
 		}
 	
 		$killerVehicle = $killerVehicle[0];
-		$this->creatorData['template_vars']['vehicle'] = $killerVehicle['fullName'];
+		$this->creatorData['template_vars']['vehicle'] = $killerVehicle['name'];
+		$this->creatorData['template_vars']['vehicle_short'] = $killerVehicle['short_name'];
 		
 		$kills = $this->getVehicleKillCountsForSortie($sortie['sortie_id']);
 		$killList = [];

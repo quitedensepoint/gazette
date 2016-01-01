@@ -8,19 +8,34 @@ class StoryRDPIntro extends StoryRDPBase implements StoryInterface {
 	
 	public function isValid() {
 
-		$action = $this->getRDPActionData('+');
+		$action = $this->getRDPActionData('+', $this->creatorData['country_id']);
 
 		if(count($action) == 0)
 		{
+			var_dump($action);
 			return false;
 		}
 		$action = $action[0];
 		
-		/** this vehicle classification **
-		$this->creatorData['template_vars']['vehicle'] = 
-		*/
-		// branch is defined by the veh_category_id, veh_class_id, veh_type_id, of the action so have to
-		// use the classification function
+		$vehicle = $this->getVehicleByClassification($action['country_id'], $action['veh_category_id'], $action['veh_class_id'], $action['veh_type_id']);
+		if(count($vehicle) == 0)
+		{
+			return false;
+		}
+		$vehicle = $vehicle[0];
+		$this->creatorData['template_vars']['vehicle'] = $vehicle['name'];
+		$this->creatorData['template_vars']['vehicle_short'] = $vehicle['short_name'];
+		
+		/**
+		 * Branch placeholder
+		 */
+		$branch = $this->getBranchById($vehicle['branch_id']);
+		if(count($branch) == 0)
+		{
+			return false;
+		}
+		$branch = $branch[0];
+		$this->creatorData['template_vars']['branch'] = $branch['name'];
 		
 		$randomCity = $this->getRandomCityForCountry($action['country_id'])[0];
 		

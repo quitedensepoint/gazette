@@ -8,7 +8,7 @@ class StoryRDPPhaseOut extends StoryRDPBase implements StoryInterface {
 	
 	public function isValid() {
 
-		$action = $this->getRDPActionData('-');
+		$action = $this->getRDPActionData('-', $this->creatorData['country_id']);
 
 		if(count($action) == 0)
 		{
@@ -16,11 +16,12 @@ class StoryRDPPhaseOut extends StoryRDPBase implements StoryInterface {
 		}
 		$action = $action[0];
 		
-		/** this vehicle classification **
-		$this->creatorData['template_vars']['vehicle'] = 
-		*/
-		// branch is defined by the veh_category_id, veh_class_id, veh_type_id, of the action so have to
-		// use the classification function
+		$vehicle = $this->getVehicleByClassification($action['country_id'], $action['veh_category_id'], $action['veh_class_id'], $action['veh_type_id']);
+		if(count($vehicle) == 0)
+		{
+			return false;
+		}
+		$vehicle = $vehicle[0];	
 		
 		$randomCity = $this->getRandomCityForCountry($action['country_id'])[0];
 		
