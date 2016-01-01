@@ -1,5 +1,5 @@
 body, tr, td, p, li {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 9pt;
 	color: #000000;
 	vertical-align: top;
@@ -16,91 +16,92 @@ html, body {
 }
 
 .story {
-    //border:1px solid ;
+    
     border-color: black;
 }
 
 .paperdefault {
-	font-family: Georgia, Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000 !important;
 }
 
 
 .papertimessmall {
-	font-family: Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000;
 }
 
 .papertimesmedium {
-	font-family: Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 10pt;
 	color: #000000;
 }
 
 .papertimesbig {
-	font-family: Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 13pt;
 	color: #000000;
 }
 
 .papertimeshuge {
-	font-family: Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 16pt;
 	color: #000000;
 }
 
 .paperarialsmall {
-	font-family: Georgia, Times New Roman, Times, serif;
-	font-size: 7pt;
+	font-family: Times New Roman, Georgia, Times, serif;
+	font-size: 8pt;
 	color: #000000;
 }
 
 .paperarialmedium {
-	font-family: Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 10pt;
 	color: #000000;
 }
 
 .paperarialbig {
-	font-family: Georgia, Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 13pt;
 	color: #000000;
 }
 
 .paperarialhuge {
-	font-family: Georgia, Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 16pt;
 	color: #000000;
 }
 
 .paperheadline {
-	font-family: Georgia, Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 35pt;
 	color: #000000;
+    text-transform: uppercase;
 }
 
 .paperhidden {
-	font-family: Courier New, Courier, mono;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000;
 }
 
 .paperservernews {
-	font-family: Georgia, Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 12pt;
 	color: #CCCC00;
 }
 
 .paperserverheader {
-	font-family: Georgia, Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #CCCCCC;
 }
 
 .paperbarlink {
-	font-family: Times New Roman, Times, serif;
+	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000 !important;
 }
@@ -119,10 +120,18 @@ html, body {
 	margin-right: auto;
 }
 
+#version {
+	position: absolute;
+	top: 74px;
+    right: 195px;
+	font-size: 7pt;
+	background-color: transparent;
+	color: #cccccc;
+}
 
 #container {
 	height: 100%;
-	width: 940px;
+	width: 925px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	display: block;
 	margin-left: auto;
@@ -135,7 +144,7 @@ html, body {
 
 #headerMiddle {
 	height: 90px;
-	width: 940px; 
+	width: 925px; 
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -147,8 +156,8 @@ html, body {
 	top: 3px;
 	left: 5px;
 	border: 1px solid black;
-	font-family: Georgia, Times New Roman, Times, serif; 
-	font-size: 8pt;
+	font-family: Times New Roman, Georgia, Times, serif; 
+	font-size: 9pt;
 }
 
 #axisDeaths {
@@ -157,17 +166,15 @@ html, body {
     top: 3px;
     right: 5px;
     border: 1px solid black;
-    font-family: Georgia, Times New Roman, Times, serif;
-    font-size: 8pt;
+    font-family: Times New Roman, Georgia, Times, serif;
+    font-size: 9pt;
 }
 
 #mainBody {
-	position: absolute;
-	background-image: url("paper_tile_new.jpg") !important;
+	position: relative;
 	top: 90px;
-	height: 100%;
-	width: 940px;
-	color:black;
+	height: 80%;
+	color: black;
 }
 
 #override {
@@ -176,15 +183,18 @@ html, body {
 
 #topLeftStory {
 	height: 175px;
-	width: 188px;
+	width: 180px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
 }
 
+#mapImage {
+	width: 540px; 
+}
 #mapText {
 	display:block; 
-	width: 564px; 
+	width: 540px; 
 	height: 15px;
 	text-align: center; 
 	padding-top: 3px;
@@ -192,7 +202,7 @@ html, body {
 }
 
 #topRightStory {
-	width: 188px;
+	width: 180px;
 	text-align: center;
 	border-left: 1px black solid;
 }
@@ -208,13 +218,13 @@ html, body {
 }
 
 #middleTopRightStory {
-	width: 188px;
+	width: 180px;
 	text-align: center;
 }
 
 #middleBottomLeftStory {
 	height: 175px;
-	width: 188px;
+	width: 180px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
