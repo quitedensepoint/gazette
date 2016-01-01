@@ -141,10 +141,10 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 					</td>
 <!-- Recent Town Captures -->
 					<td id="middleTopRightStory"> 
-						<hr style="width: 90%;">
+						<hr style="width: 100%;">
 						<span class='paperarialbig'><b>Most Recent Captures:</b></span>
 						<br><br>
-						<table>
+						<table style='width:100%'>
 							<tr align='center'>
 								<th>City</th>
 								<th>By</th>
