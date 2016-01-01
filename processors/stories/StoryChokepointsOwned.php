@@ -73,6 +73,9 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 			 */	
 			$rank++;
 		}
+		$city = $this->getRandomCityForCountry($this->creatorData['country_id']);
+		$city = count($city) == 1 ? $city[0]['name'] : 'an undiclosed location';
+		$this->creatorData['template_vars']['city'] = $city;
 		
 		return true;
 	}

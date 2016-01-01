@@ -50,11 +50,16 @@ class StoryBestATGunSortie extends StoryBase implements StoryInterface {
 			return false;
 		}
 		$sortie = $sortie[0];
-		$spawned = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time']);
-		$returned = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['return_time']);
-		$dateInterval = $spawned->diff($returned);
 		
-		$this->creatorData['template_vars']['duration'] = $dateInterval->format('%i');
+		$duration  = 0;
+		if($sortie['spawn_time'] != null && $sortie['return_time'] != null) {
+			$spawned = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time']);
+			$returned = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['return_time']);
+			$dateInterval = $spawned->diff($returned);
+			$duration  = $dateInterval->format('%i');
+		}
+		
+		$this->creatorData['template_vars']['duration'] = $duration  = 0;
 		$this->creatorData['template_vars']['target_kills'] = $sortie['kills'];
 		
 		
