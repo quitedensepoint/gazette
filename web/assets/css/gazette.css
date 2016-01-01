@@ -183,18 +183,18 @@ html, body {
 
 #topLeftStory {
 	height: 175px;
-	width: 181px;
+	width: 180px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
 }
 
 #mapImage {
-	width: 543px; 
+	width: 540px; 
 }
 #mapText {
 	display:block; 
-	width: 543px; 
+	width: 540px; 
 	height: 15px;
 	text-align: center; 
 	padding-top: 3px;
@@ -202,7 +202,7 @@ html, body {
 }
 
 #topRightStory {
-	width: 181px;
+	width: 180px;
 	text-align: center;
 	border-left: 1px black solid;
 }
@@ -218,13 +218,13 @@ html, body {
 }
 
 #middleTopRightStory {
-	width: 181px;
+	width: 180px;
 	text-align: center;
 }
 
 #middleBottomLeftStory {
 	height: 175px;
-	width: 181px;
+	width: 180px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
