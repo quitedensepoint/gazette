@@ -39,7 +39,13 @@ abstract class StoryBase
 	 * An array of data used to populate the stories
 	 * @var array
 	 */
-	protected $creatorData;	
+	protected $creatorData;
+	
+	/**
+	 * An array of direction adjectives for entering into stories.
+	 * @var array
+	 */
+	public static $directionAdjectives = ['southern', 'southeastern', 'eastern','northeastern','northern','northwestern','western','southwestern'];
 	
 	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
 		$this->dbConn = $dbConn;
@@ -138,6 +144,16 @@ abstract class StoryBase
 		
 		return $status;
 	}
+	
+	/**
+	 *  Retrieve a random direction adjective
+	 * 
+	 * @return string
+	 */
+	public function getRandomDirectionAdjective()
+	{
+		return self::$directionAdjectives[rand(0, count(self::$directionAdjectives) - 1)]; 
+	}
 
 	/**
 	 * Retrieve the record of a single player, or an empty array if no record
@@ -156,9 +172,25 @@ abstract class StoryBase
 	}
 	
 	/**
+	 * Retrieve the record of a single branch
+	 * 
+	 * @param integer $branchId The ID of the record
+	 * @return array
+	 */
+	public function getBranchById($branchId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from branches WHERE branch_id = ? LIMIT 1", [$branchId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}	
+	
+	/**
 	 * Retrieve the record of a single sortie, or an empty array if no record
 	 * 
-	 * @param integer $playerId The ID of the record
+	 * @param integer $sortieId The ID of the record
 	 * @return array
 	 */
 	public function getSortieById($sortieId)
@@ -215,14 +247,30 @@ abstract class StoryBase
 	 */
 	public function getVehicleByClassification($countryId, $categoryId, $classId, $typeId)
 	{
-		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConn);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from wwii_vehtype WHERE countryID = ? AND categoryID = ? "
-				. "AND classID = ? AND typeID = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
+			->prepare("SELECT * from vehicles WHERE country_id = ? AND category_id = ? "
+				. "AND class_id = ? AND type_id = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
 
 		return $dbHelper->getAsArray($query);					
 	}
+	
+	/**
+	 * Retrieve a vehicle class detail by the id of the class
+	 * 
+	 * @param integer $classId
+	 * @return array
+	 */
+	public function getClassById($classId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from vehicle_classes WHERE class_id = ? LIMIT 1", [$classId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}	
 	
 	/**
 	 * Get a list and count of enemy vehicles killed in a sortie
@@ -327,7 +375,50 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("SELECT * FROM strat_cp WHERE country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
+			->prepare("SELECT sc.name FROM strat_factory_outputs sfo inner join strat_facility sf on sfo.facility_oid = sf.facility_oid"
+				. " INNER JOIN strat_cp sc ON  sc.cp_oid = sf.cp_oid WHERE sc.country = ? AND cp_type != 5 order by RAND() limit 1",[$countryId]);	
+		
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieves a random front line city for a country
+	 * 
+	 * @param integer $countryId
+	 * @return array
+	 */
+	public function getRandomFrontlineCityForCountry($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("select distinct c.name
+				from strat_link l
+				INNER JOIN strat_facility f ON  l.startdepot_oid = f.facility_oid
+				INNER JOIN strat_cp c ON f.cp_oid = c.cp_oid
+				INNER JOIN strat_facility of ON l.enddepot_oid = of.facility_oid
+				INNER JOIN strat_cp oc ON of.cp_oid = oc.cp_oid
+				WHERE c.country = ? AND oc.side != c.side
+				ORDER BY RAND() LIMIT 1",[$countryId]);	
+		
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieves a random city for a specified country
+	 * 
+	 * @param integer $countryId An optional country ID to filter on
+	 * @return array
+	 */
+	public function getRandomContestedCity($countryId = null)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$countryFilter = $countryId != null ? "AND country = ?" : "";
+		$countryBindings = $countryId != null ? [$countryId] : [];
+		
+		$query = $dbHelper
+			->prepare("SELECT * FROM strat_cp WHERE cp_type != 5 AND contention = 1 " . $countryFilter . " ORDER BY RAND() limit 1",$countryBindings);	
 		
 		return $dbHelper->getAsArray($query);					
 	}	

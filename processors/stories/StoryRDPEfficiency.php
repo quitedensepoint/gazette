@@ -2,13 +2,13 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "RDP Removal" source.
+ * "RDP Efficiency" source.
  */
-class StoryRDPRemoval extends StoryRDPBase implements StoryInterface {
+class StoryRDPEfficiency extends StoryRDPBase implements StoryInterface {
 	
 	public function isValid() {
 		
-		$action = $this->getRDPActionData('x', $this->creatorData['country_id']);
+		$action = $this->getRDPActionData('=', $this->creatorData['country_id']);
 		if(count($action) == 0)
 		{
 			return false;
@@ -28,6 +28,10 @@ class StoryRDPRemoval extends StoryRDPBase implements StoryInterface {
 
 		$this->creatorData['template_vars']['vehicle'] = $vehicle['name'];
 		$this->creatorData['template_vars']['vehicle_short'] = $vehicle['short_name'];
+		
+		$contestedCity = $this->getRandomContestedCity();
+		$contestedCity = count($contestedCity) == 1 ? $contestedCity[0]['name'] : 'an unnamed town';
+		$this->creatorData['template_vars']['any_con_city'] = $contestedCity;
 		
 		$randomCity = $this->getRandomCityForCountry($action['country_id'])[0];
 		

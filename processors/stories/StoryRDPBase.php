@@ -17,12 +17,12 @@ abstract class StoryRDPBase extends StoryBase implements StoryInterface {
 	 * @return array
 
 	 */
-	public function getRDPActionData($action)
+	public function getRDPActionData($action, $countryId)
 	{
 		$dbHelper = new dbhelper($this->dbConnToe);
 		
 		$query = $dbHelper
-			->prepare("SELECT * FROM v_rdp_in_progress_2 WHERE action = ? ORDER BY RAND() LIMIT 1",[$action]);	
+			->prepare("SELECT * FROM v_rdp_in_progress_2 WHERE action = ? and country_id = ? ORDER BY RAND() LIMIT 1",[$action, $countryId]);	
 		
 		return $dbHelper->getAsArray($query);					
 	}
