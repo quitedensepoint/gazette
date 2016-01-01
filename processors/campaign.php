@@ -26,6 +26,8 @@ $ver=$vers->fetch_assoc();
 // $start= date("d-M-Y", strtotime($row['start_time']));
 // $days= $today-$start-1;
 
-$days = date_diff(date_create($row['start_time'])),date_create(date('Y-m-d')))->format('%d');
+$start = date_create($row['start_time']);
+$today = date_create(date('Y-m-d'));
+$days = date_diff($start,$today)->format('%d');
 
 ?>
