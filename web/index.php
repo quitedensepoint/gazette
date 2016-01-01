@@ -38,11 +38,12 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 	<div id="container">
 		<div id='top' >
 			<img src='assets/img/header.gif'  id='headerMiddle'>
+			<span id="version">Version: 2.0</span>
 <!-- Allied Deaths --> 
 			<table id='alliedDeaths'>
 				<tr>
 					<th class='paperwhite'><span>ALLIED CASUALTIES</span></th>
-				<tr>
+				</tr>
 				<tr>
 					<td class='paperarialsmall'>
 						<?php

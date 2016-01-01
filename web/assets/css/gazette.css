@@ -53,7 +53,7 @@ html, body {
 
 .paperarialsmall {
 	font-family: Times New Roman, Georgia, Times, serif;
-	font-size: 7pt;
+	font-size: 8pt;
 	color: #000000;
 }
 
@@ -120,6 +120,14 @@ html, body {
 	margin-right: auto;
 }
 
+#version {
+	position: absolute;
+	top: 74px;
+    right: 195px;
+	font-size: 7pt;
+	background-color: transparent;
+	color: #cccccc;
+}
 
 #container {
 	height: 100%;
@@ -149,7 +157,7 @@ html, body {
 	left: 5px;
 	border: 1px solid black;
 	font-family: Times New Roman, Georgia, Times, serif; 
-	font-size: 8pt;
+	font-size: 9pt;
 }
 
 #axisDeaths {
@@ -159,13 +167,13 @@ html, body {
     right: 5px;
     border: 1px solid black;
     font-family: Times New Roman, Georgia, Times, serif;
-    font-size: 8pt;
+    font-size: 9pt;
 }
 
 #mainBody {
 	position: relative;
 	top: 90px;
-	height: 100%;
+	height: 80%;
 	color:black;
 }
 
