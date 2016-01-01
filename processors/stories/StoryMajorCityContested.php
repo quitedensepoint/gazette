@@ -19,6 +19,7 @@ class StoryMajorCityContested extends StoryBase implements StoryInterface {
 		if(count($contestedFacility) > 0 && $contestedFacility['facilities'] > 10)
 		{
 			$this->creatorData['template_vars']['city'] = $contestedFacility['name'];
+			$this->creatorData['template_vars']['con_city'] = $contestedFacility['name'];
 			
 			return true;
 		}
