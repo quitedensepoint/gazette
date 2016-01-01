@@ -93,8 +93,8 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 					</td>
 <!-- Front Line Map -->
 					<td rowspan='2' colspan='3'>
-						<a href='https://webmap.wwiionline.com'><img src='https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png'></a>
-						<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' style="color: yellow;">CLICK FOR FULL SIZE</a></span>
+						<a href='https://webmap.wwiionline.com' target="_blank"><img src='https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png'></a>
+						<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' target="_blank" style="color: yellow;">CLICK FOR FULL SIZE</a></span>
 					</td>
 <!-- Attacks Captures Top Right Story -->
 					<td id='topRightStory'> 
@@ -176,6 +176,8 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 						$firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
 						$firstArticle = str_replace('<a href="/index.php', '<a href="http://www.battlegroundeurope.com/index.php', $firstArticle);
 						$firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
+						$firstArticle = str_replace('class="contentpagetitle"', 'target="_blank" class="contentpagetitle"', $firstArticle);
+						$firstArticle = str_replace('class="readon"', 'target="_blank" class="readon"', $firstArticle);
 						echo $firstArticle;
 					?><?php /*
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
