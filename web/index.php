@@ -45,7 +45,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 				<tr>
 					<td class='paperarialsmall'>
 						<?php
-							echo "GROUND FORCES: ".$casualtyData['allied']['ground']."<br>AIR FORCES: ".$casualtyData['allied']['air']."<br>SEA FORCES: ".$casualtyData['allied']['sea']."\n";
+							echo "GROUND FORCES: ".number_format($casualtyData['allied']['ground'])."<br>AIR FORCES: ".number_format($casualtyData['allied']['air'])."<br>SEA FORCES: ".number_format($casualtyData['allied']['sea'])."\n";
 						?>
 					</td>
 				</tr>
@@ -58,7 +58,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 				<tr>
 					<td class='paperarialsmall' style="text-align: right;">
 						<?php
-							echo "GROUND FORCES: ".$casualtyData['axis']['ground']."<br>AIR FORCES: ".$casualtyData['axis']['air']."<br>SEA FORCES: ".$casualtyData['axis']['sea']."\n";
+							echo "GROUND FORCES: ".number_format($casualtyData['axis']['ground'])."<br>AIR FORCES: ".number_format($casualtyData['axis']['air'])."<br>SEA FORCES: ".number_format($casualtyData['axis']['sea'])."\n";
 						?>
 					</td>
 				</tr>
@@ -73,7 +73,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 							<table style="width: 100%; border: 1px black solid;">
 								<tr>
 									<td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.15</span></td>
-									<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days; ?></span></td> 
+									<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days ?></span></td> 
 									<td style="width: 33%; text-align: right;"><span class='papertimesmedium'>Coming Soon: <a href="">ALLIED Section</a> & <a href="">AXIS Section</a></span></td>
 								</tr>
 							</table>
