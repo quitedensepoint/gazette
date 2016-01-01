@@ -107,7 +107,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 									{{echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";}
 									if (isset($row['alcon']) && $row['alcon']=='1') 
 									{echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";} 
-									else {echo "<td style='width: 50%; text-align: center;'><br></td></tr>";}}
+									else {echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";}}
 								   
 							?>
 						</table>
@@ -119,7 +119,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 									{{echo "<tr><td style='width:50%; text-align:center; '>".$row['name']."</td>";} 
 									if (isset($row['axcon']) && $row['axcon']=='1')
 									{echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";}
-									else {echo "<td style='width: 50%; text-align: center;'><br></td></tr>";}}
+									else {echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";}}
 							?>
 						</table>
 
