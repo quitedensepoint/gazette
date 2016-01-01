@@ -31,6 +31,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 <head>        
     <title>World@War Gazette</title>
 	<link rel='stylesheet' href='assets/css/gazette.css'>
+	<link rel="shortcut icon" href="assets/img/favicon.ico" />
 </head>
 
 <body>
@@ -93,7 +94,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 					</td>
 <!-- Front Line Map -->
 					<td rowspan='2' colspan='3'>
-						<a href='https://webmap.wwiionline.com' target="_blank"><img src='https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png'></a>
+						<a href='https://webmap.wwiionline.com' target="_blank"><img id="mapImage" src='https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png'></a>
 						<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' target="_blank" style="color: yellow;">CLICK FOR FULL SIZE</a></span>
 					</td>
 <!-- Attacks Captures Top Right Story -->

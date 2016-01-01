@@ -123,7 +123,7 @@ html, body {
 
 #container {
 	height: 100%;
-	width: 930px;
+	width: 920px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	display: block;
 	margin-left: auto;
@@ -136,7 +136,7 @@ html, body {
 
 #headerMiddle {
 	height: 90px;
-	width: 930px; 
+	width: 920px; 
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -148,7 +148,7 @@ html, body {
 	top: 3px;
 	left: 5px;
 	border: 1px solid black;
-	font-family: Georgia, Times New Roman, Times, serif; 
+	font-family: Times New Roman, Georgia, Times, serif; 
 	font-size: 8pt;
 }
 
@@ -158,16 +158,14 @@ html, body {
     top: 3px;
     right: 5px;
     border: 1px solid black;
-    font-family: Georgia, Times New Roman, Times, serif;
+    font-family: Times New Roman, Georgia, Times, serif;
     font-size: 8pt;
 }
 
 #mainBody {
-	position: absolute;
-	background-image: url("paper_tile_new.jpg") !important;
+	position: relative;
 	top: 90px;
 	height: 100%;
-	width: 940px;
 	color:black;
 }
 
@@ -177,15 +175,18 @@ html, body {
 
 #topLeftStory {
 	height: 175px;
-	width: 186px;
+	width: 180px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
 }
 
+#mapImage {
+	width: 540px; 
+}
 #mapText {
 	display:block; 
-	width: 558px; 
+	width: 540px; 
 	height: 15px;
 	text-align: center; 
 	padding-top: 3px;
@@ -193,7 +194,7 @@ html, body {
 }
 
 #topRightStory {
-	width: 186px;
+	width: 180px;
 	text-align: center;
 	border-left: 1px black solid;
 }
@@ -209,13 +210,13 @@ html, body {
 }
 
 #middleTopRightStory {
-	width: 186px;
+	width: 180px;
 	text-align: center;
 }
 
 #middleBottomLeftStory {
 	height: 175px;
-	width: 186px;
+	width: 180px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
