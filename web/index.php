@@ -106,7 +106,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 								while($row=$aoals->fetch_assoc())
 									{{echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";}
 									if (isset($row['alcon']) && $row['alcon']=='1') 
-									{echo "<td style='width: 50%; text-align: center;color:red'><i>Contested</i></td></tr>";} 
+									{echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";} 
 									else {echo "<td style='width: 50%; text-align: center;'><br></td></tr>";}}
 								   
 							?>
@@ -118,7 +118,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 								while($row=$aoaxs->fetch_assoc())
 									{{echo "<tr><td style='width:50%; text-align:center; '>".$row['name']."</td>";} 
 									if (isset($row['axcon']) && $row['axcon']=='1')
-									{echo "<td style='width: 50%; text-align: center; color:red'><i>Contested</i></td></tr>";}
+									{echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";}
 									else {echo "<td style='width: 50%; text-align: center;'><br></td></tr>";}}
 							?>
 						</table>
@@ -145,7 +145,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 						<span class='paperarialbig'><b>Most Recent Captures:</b></span>
 						<br><br>
 						<table>
-							<tr>
+							<tr align='center'>
 								<th>City</th>
 								<th>By</th>
 							</tr>
@@ -177,8 +177,11 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
 						$firstArticle = str_replace('<a href="/index.php', '<a href="http://www.battlegroundeurope.com/index.php', $firstArticle);
 						$firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
 						echo $firstArticle;
-					?>
+					?><?php /*
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td colspan='2'><hr></td>
+                        </tr>
                         <tbody>
 							<tr>
                                 <td align="left" valign="top">
@@ -207,7 +210,7 @@ $indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_fren
                             </tr>
                         </tbody>
 					</table>					
-				</td>
+				</td>*/?>
 <!-- Old Advertising spot Right in in case still wanted/needed could also be used for Propa-->
 					<td id="middleBottomRightStory">
 						<hr style="width: 90%;">

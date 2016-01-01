@@ -1,5 +1,5 @@
 body, tr, td, p, li {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 9pt;
 	color: #000000;
 	vertical-align: top;
@@ -16,7 +16,7 @@ html, body {
 }
 
 .story {
-    //border:1px solid ;
+    
     border-color: black;
 }
 
@@ -28,25 +28,25 @@ html, body {
 
 
 .papertimessmall {
-	font-family: Times New Roman, Times, serif;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 8pt;
 	color: #000000;
 }
 
 .papertimesmedium {
-	font-family: Times New Roman, Times, serif;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 10pt;
 	color: #000000;
 }
 
 .papertimesbig {
-	font-family: Times New Roman, Times, serif;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 13pt;
 	color: #000000;
 }
 
 .papertimeshuge {
-	font-family: Times New Roman, Times, serif;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 16pt;
 	color: #000000;
 }
@@ -58,7 +58,7 @@ html, body {
 }
 
 .paperarialmedium {
-	font-family: Times New Roman, Times, serif;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 10pt;
 	color: #000000;
 }
@@ -79,10 +79,11 @@ html, body {
 	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 35pt;
 	color: #000000;
+    text-transform:uppercase;
 }
 
 .paperhidden {
-	font-family: Courier New, Courier, mono;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 8pt;
 	color: #000000;
 }
@@ -100,7 +101,7 @@ html, body {
 }
 
 .paperbarlink {
-	font-family: Times New Roman, Times, serif;
+	font-family: Georgia, Times New Roman, Times, serif;
 	font-size: 8pt;
 	color: #000000 !important;
 }
