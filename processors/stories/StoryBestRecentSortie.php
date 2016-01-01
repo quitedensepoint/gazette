@@ -13,9 +13,9 @@ class StoryBestRecentSortie extends StoryBase implements StoryInterface {
 		 * 
 		 * @todo Remove hardcoding of timezone name
 		 */
-
+		$tz = new DateTimeZone('America/Chicago');
 		$time = new DateTime();
-		$time->setTimezone(new DateTimeZone('America/Chicago'));
+		$time->setTimezone($tz);
 		$time->setTimestamp(time() - 7200);
 
 		$sorties = $this->getRecentSorties($time->getTimestamp());
@@ -35,8 +35,12 @@ class StoryBestRecentSortie extends StoryBase implements StoryInterface {
 				$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
 				$this->creatorData['template_vars']['kills'] = $sortie['kills'];
 				$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
-				$this->creatorData['template_vars']['duration'] = ((intval($sortie['returned']) - intval($sortie['spawned'])) / 60);
+				$this->creatorData['template_vars']['duration'] = intval((intval($sortie['returned']) - intval($sortie['spawned'])) / 60);
 				$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($capture[0]['facility_oid']);
+				
+				$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", $tz);
+				$this->creatorData['template_vars']['month'] = $dateOfSpawn->format('F');
+				$this->creatorData['template_vars']['day_ord'] = $dateOfSpawn->format('j');
 				
 				return true;
 			}
