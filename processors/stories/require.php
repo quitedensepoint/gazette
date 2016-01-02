@@ -48,6 +48,7 @@ require(__DIR__ . "/StoryFactoryUnderAttack.php");
 require(__DIR__ . "/StorySortieAverages.php");
 require(__DIR__ . "/StoryCasualtyReporter.php");
 require(__DIR__ . "/StoryRecentPromotion.php");
+require(__DIR__ . "/StoryMisc.php");
 
 /**
  * Stories here are skipped as they are possibly not relevant anymore, or may need
