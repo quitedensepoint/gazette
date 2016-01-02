@@ -84,11 +84,16 @@ class StoryProcessor {
 			return false;
 		}
 		
-		$content = $this->parseTemplate($storyData['template'], $story);
-		$content .= "<!-- " . $storyKey . "-->"; 
+		$content = $this->parseTemplate($storyData['template'], $story['story']);
+		
+		/**
+		 * Add some debug content
+		 */
+		$content .= sprintf("<!-- StoryKey: %s SourceID : %s TemplateID : %s -->", 
+			$storyKey, $story['debug_data']['source_id'], $story['debug_data']['template_id']);  
 		
 		$this->pushToFile($storyKey, $content);
-		echo sprintf("\tStory could be made for %s!\n", $storyKey);
+		echo sprintf("\tStory was created for %s!\n", $storyKey);
 		
 		/**
 		 * Update the expiry date on the story
@@ -264,7 +269,11 @@ class StoryProcessor {
 			echo " -- valid\n";
 			echo sprintf("\tUsing Template %s\n" , $template[0]['template_id']);
 			
-			$content =  $storyCreator->makeStory($template[0]);
+			/**
+			 * Content is an array of [title, body]
+			 */
+			$content['story'] =  $storyCreator->makeStory($template[0]);
+			$content['debug_data'] = ['source_id' => $source['source_id'], 'template_id' => $template[0]['template_id']];
 			
 			$this->updateStoryExpiry($storyData['story_key'], $source['life']);
 			

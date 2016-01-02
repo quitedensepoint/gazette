@@ -13,7 +13,7 @@
  *  KILLS
  *  RTB
  */
-class StoryBestShoreBombardment extends StoryBase implements StoryInterface {
+class StoryBestShoreBombardment extends StoryBestSortieBase implements StoryInterface {
 	
 	public function isValid() {
 
@@ -50,15 +50,7 @@ class StoryBestShoreBombardment extends StoryBase implements StoryInterface {
 		}
 		$sortie = $sortie[0];
 		
-		$duration  = 0;
-		if($sortie['spawn_time'] != null && $sortie['return_time'] != null) {
-			$spawned = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time']);
-			$returned = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['return_time']);
-			$dateInterval = $spawned->diff($returned);
-			$duration  = $dateInterval->format('%i');
-		}
-		
-		$this->creatorData['template_vars']['duration'] = $duration  = 0;
+		$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawn_time'], $sortie['return_time']);
 		$this->creatorData['template_vars']['target_kills'] = $sortie['kills'];		
 
 		/**

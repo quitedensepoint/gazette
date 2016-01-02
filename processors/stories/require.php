@@ -20,6 +20,7 @@ require(__DIR__ . "/StoryVictoryPossible.php");
 require(__DIR__ . "/StoryOffensiveCountry.php");
 require(__DIR__ . "/StoryAirfieldsOwned.php");
 require(__DIR__ . "/StoryChokepointsOwned.php");
+require(__DIR__ . "/StoryBestSortieBase.php");
 require(__DIR__ . "/StoryBestRecentSortie.php");
 require(__DIR__ . "/StoryBestAirGroundAttack.php");
 require(__DIR__ . "/StoryBestAirNavalAttack.php");
@@ -39,3 +40,10 @@ require(__DIR__ . "/StoryRDPEfficiency.php");
 require(__DIR__ . "/StorySpawnLister.php");
 require(__DIR__ . "/StoryRDPArchiver.php");
 require(__DIR__ . "/StoryFactoryHealth.php");
+require(__DIR__ . "/StoryServerNews.php");
+
+/**
+ * Stories here are skipped as they are possibly not relevant anymore, or may need
+ * further work to address correctly
+ */
+//require(__DIR__ . "/StoryServerStatus.php");

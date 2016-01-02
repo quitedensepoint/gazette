@@ -4,7 +4,7 @@
  * Executes the logic to generate a story from the 
  * "Best Recent Sortie" source.
  */
-class StoryBestRecentSortie extends StoryBase implements StoryInterface {
+class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterface {
 	
 	public function isValid() {
 
@@ -19,14 +19,10 @@ class StoryBestRecentSortie extends StoryBase implements StoryInterface {
 		$time->setTimestamp(time() - 7200);
 
 		$sorties = $this->getRecentSorties($time->getTimestamp());
-
-		echo sprintf("\n\t\tFound %d sorties\n", count($sorties));
 		
 		foreach ($sorties as $sortie)
 		{
 			$capture = $this->getStratCaptures($sortie['mission_id'], $sortie['player_id'], $sortie['country_id']);
-			
-			echo sprintf("\t\t\tFound %d captures; m:%d, p:%d, c:%d\n", count($capture),$sortie['mission_id'], $sortie['player_id'], $sortie['country_id']);
 			
 			if(count($capture) == 1)
 			{
@@ -35,7 +31,7 @@ class StoryBestRecentSortie extends StoryBase implements StoryInterface {
 				$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
 				$this->creatorData['template_vars']['kills'] = $sortie['kills'];
 				$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
-				$this->creatorData['template_vars']['duration'] = intval((intval($sortie['returned']) - intval($sortie['spawned'])) / 60);
+				$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawn_time'], $sortie['return_time']);
 				$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($capture[0]['facility_oid']);
 				
 				$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", $tz);
