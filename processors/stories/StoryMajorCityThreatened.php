@@ -47,7 +47,11 @@ class StoryMajorCityThreatened extends StoryBase implements StoryInterface {
 				{
 					$this->creatorData['template_vars']['city'] = $contestedFacility['name'];
 					$this->creatorData['template_vars']['threats'] = $enemy;
-					$this->creatorData['template_vars']['enemy_side'] = $this->creatorData['template_vars']['side'];
+					
+					$enemySide = $this->getEnemySide($this->creatorData['side_id']);
+					$this->creatorData['template_vars']['enemy_side'] = $enemySide['name'];
+					$this->creatorData['template_vars']['enemy_side_adj'] = $enemySide['adjective'];
+					
 					return true;					
 				}
 
@@ -55,6 +59,33 @@ class StoryMajorCityThreatened extends StoryBase implements StoryInterface {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Override the story to produce variances from varieties
+	 * 
+	 * This appears to be a weird way to generate headlines outside the normal process
+	 * 
+	 * @param type $template
+	 * @return type
+	 */
+	public function makeStory($template) {
+		
+		$varieties1 = explode(";", trim($template['variety_1']));
+		$variety = $varieties1[rand(0, count($varieties1) - 1)];
+		
+		$data = [
+			'title' => $variety,
+			'body' => $variety
+		];
+
+		foreach ($this->creatorData['template_vars'] as $key => $value)
+		{
+			$data['title'] = str_replace('%' . strtoupper($key) . '%', $value, $data['title']);
+			$data['body'] = str_replace('%' . strtoupper($key) . '%', $value, $data['body']);
+		}
+
+		return $data;			
 	}
 	
 	/**

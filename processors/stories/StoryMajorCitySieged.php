@@ -6,14 +6,8 @@
  */
 class StoryMajorCitySieged extends StoryBase implements StoryInterface {
 	
-	
 	public function isValid() {
 		
-		/**
-		 * @todo Some of the tables from the old perl queries no longer exist - will need to reformulate queries
-		 */
-		return false;
-
 		$side = $this->creatorData['side_id'];
 		
 		/**
@@ -22,12 +16,11 @@ class StoryMajorCitySieged extends StoryBase implements StoryInterface {
 		$contestedFacilities = $this->getContestedFacilities($this->creatorData['country_id']);
 		
 		foreach($contestedFacilities as $contestedFacility)
-		{
-		
+		{		
 			/**
 			 * Ten CPs or more appears to be "A Major City"
 			 */
-			if($contestedFacility['facilities'] > -1)
+			if($contestedFacility['facilities'] > 10)
 			{
 				/**
 				* Randomly decide 50% of the time to skip this city
@@ -36,6 +29,7 @@ class StoryMajorCitySieged extends StoryBase implements StoryInterface {
 				{
 					continue;
 				}
+				
 				/**
 				 * select the controlling sides for all links from the CPs
 				 */
@@ -45,9 +39,9 @@ class StoryMajorCitySieged extends StoryBase implements StoryInterface {
 				foreach($links as $link)
 				{
 					$total++;
-					$enemy = $enemy + ($link['controlling_side'] != $side) ? 1 : 0;
+					$enemy = $enemy + ($link['conside'] != $side) ? 1 : 0;
 				}
-					
+
 				// Does the enemy control all outbound links from the cp
 				if($total == $enemy)
 				{
@@ -57,7 +51,6 @@ class StoryMajorCitySieged extends StoryBase implements StoryInterface {
 
 					return true;					
 				}
-
 			}
 		}
 		
