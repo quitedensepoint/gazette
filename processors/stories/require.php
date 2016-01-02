@@ -41,6 +41,7 @@ require(__DIR__ . "/StorySpawnLister.php");
 require(__DIR__ . "/StoryRDPArchiver.php");
 require(__DIR__ . "/StoryFactoryHealth.php");
 require(__DIR__ . "/StoryServerNews.php");
+require(__DIR__ . "/StoryFactoryOutputShutdown.php");
 
 /**
  * Stories here are skipped as they are possibly not relevant anymore, or may need

@@ -47,6 +47,16 @@ abstract class StoryBase
 	 */
 	public static $directionAdjectives = ['southern', 'southeastern', 'eastern','northeastern','northern','northwestern','western','southwestern'];
 	
+	/**
+	 * A set of hardcoded side information
+	 * 
+	 * @var type 
+	 */
+	public static $sideData = [
+		1 => ['name' => 'allied', 'adjective' => 'allied'],
+		2 => ['name' => 'axis', 'adjective' => 'axis'],
+	];
+	
 	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
 		$this->dbConn = $dbConn;
 		$this->dbHelper = new dbhelper($dbConn);
@@ -434,5 +444,73 @@ abstract class StoryBase
 			->prepare("SELECT * FROM strat_cp WHERE cp_type != 5 AND contention = 1 " . $countryFilter . " ORDER BY RAND() limit 1",$countryBindings);	
 		
 		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieves information about the enemy side of the side represented by the input side
+	 * 
+	 * i.e. Inputting the Id for the Allied side, will return the Axis side data
+	 * 
+	 * @param type $sideId
+	 */
+	public function getEnemySide($sideId)
+	{
+		/**
+		 * swap the sides
+		 */
+		$sideId = intval($sideId) == 1 ? 2 : 1;
+		
+		return $this->getSide($sideId);
+	}
+	
+	/**
+	 * Will retrieve a set of information about requested side
+	 * 
+	 * @param integer $sideId
+	 */
+	public function getSide($sideId)
+	{
+		return self::$sideData[$sideId];
+	}
+	
+	/**
+	 * Retrieve a random enemy country
+	 * 
+	 * Retrieves a randomly selected country not on a specific side, or null if cannot find one
+	 * 
+	 * @param integer $sideId
+	 * @return array|null
+	 */
+	public function getRandomEnemyCountry($sideId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("select * from countries where side_id != ? order by RAND() limit 1",[$sideId]);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;		
+	}
+	
+	/**
+	 * Retrieves a random vehicle class, filtered by category if needed
+	 * 
+	 * @param integer $categoryId Option filter for category
+	 * @return array|null
+	 */
+	public function getRandomVehicleClass($categoryId = null)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$filter = $categoryId != null ? " WHERE category_id = ?" : "";
+		$filterParams = $categoryId != null ? [$categoryId] : [];
+		
+		$query = $dbHelper
+			->prepare(sprintf("select * from vehicle_classes %s order by RAND() limit 1", $filter),$filterParams);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;		
 	}	
 }

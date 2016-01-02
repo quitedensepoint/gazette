@@ -2,9 +2,12 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "Factory Health" source.
+ * "Factory Output Shutdown" source.
+ * 
+ * This checks all of the factory towns for a side, and checks to see if
+ * all of the factories have been captured or damaged to 100%.
  */
-class StoryFactoryHealth extends StoryBase implements StoryInterface {
+class StoryFactoryOutputShutdown extends StoryBase implements StoryInterface {
 		
 	public function isValid() {
 
@@ -30,81 +33,42 @@ class StoryFactoryHealth extends StoryBase implements StoryInterface {
 
 		}
 		
-		$this->creatorData['chokepoints'] = $chokepoints;
-		
-		return true;
-		
-	}
-	
-	/**
-	 * This has been overridden due to the unique nature of the data required by
-	 * this particular story
-	 * 
-	 * @param array $template
-	 */
-	public function makeStory($template) {
 		/**
-		 * All of the factories in each chokepoint need to be reviwed and will
-		 * built an outline of that chokepoint
-		 * 
-		 * We'll build a list of all chokepoints and their status
+		 * Go through each chokepoint and see if all the factories have been captured
 		 */
-		
-		$finalBody = '';
-		
-		foreach($this->creatorData['chokepoints'] as $chokepoint)
-		{
-			$producers = $health = $damage = $captured = $reduced = $repairs = 0;
+		foreach($chokepoints as $chokepoint)
+		{	
+			$health = $damage = 0;
 			
 			foreach($chokepoint['factories'] as $fact)
 			{			
-				$producers++;
 				$health +=100;
 				
 				if($fact['side'] != $fact['originalside'])
 				{
-					$captured++;					
+					$damage += 100;					
 				}
-				if(intval($fact['damage_pctg']) > 0)
-				{
-					$reduced++;					
-				}				
-				$damage += $fact['damage_pctg'];
 			}
 			
-			$template_vars = [];
-			$template_vars['factory_cp'] = $chokepoint['cp_name'];
-			$template_vars['factory_country'] = $chokepoint['country_name'];				
-
-			$factoryDamage = intval(($damage / $health) * 100);
-			$template_vars['factory_damage'] = $factoryDamage;
-			
-			$factoryOutput = intval(($health - $damage) / $producers);
-			$template_vars['factory_output'] = $factoryOutput;
+			/**
+			 * If the factories are fully smashed
+			 */
+			if($health - $damage == 0)
+			{
+				$this->creatorData['template_vars']['factory_city'] = $chokepoint['cp_name'];			
+				$this->creatorData['template_vars']['factory_damage'] = 100;
+				
+				$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);			
+				$this->creatorData['template_vars']['enemy_country_adj'] = $enemyCountry['adjective'];
+				
+				$vehicleClass = $this->getRandomVehicleClass();
+				$this->creatorData['template_vars']['class'] = $vehicleClass['name'];
+				
+				return true;
+			}
+		}
 		
-			$template_vars['factory_status'] = 'Full Production';
-			
-			if($captured == $producers)
-			{
-				$template_vars['factory_status'] 	= 'Captured';
-			}
-			else if($captured > 0)
-			{
-				$template_vars['factory_status'] 	= 'Under Attack';
-			}			
-			else if($repairs > 0)
-			{
-				$template_vars['factory_status'] 	= 'Under Repairs';
-			}
-			else if($reduced > 0)
-			{
-				$template_vars['factory_status'] 	= 'Reduced Production';
-			}
-
-			$finalBody .= $this->parseStory($template_vars, $template['title'], $template['body'])['body'];
-		}		
-		
-		return ['title' => '', 'body' => $this->makeVarieties($template, $finalBody)];
+		return false;		
 	}
 	
 	/**
