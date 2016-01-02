@@ -11,7 +11,6 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 		/**
 		 * Get all the sorties in the last two hours
 		 */
-		$tz = new DateTimeZone('America/Chicago');
 		$time = new DateTime();
 		$time->setTimezone(self::$timezone);
 		$time->setTimestamp(time() - 7200);
@@ -32,7 +31,7 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 				$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawned'], $sortie['returned']);
 				$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($capture[0]['facility_oid']);
 				
-				$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", $tz);
+				$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", self::$timezone);
 				$this->creatorData['template_vars']['month'] = $dateOfSpawn->format('F');
 				$this->creatorData['template_vars']['day_ord'] = $dateOfSpawn->format('j');
 				

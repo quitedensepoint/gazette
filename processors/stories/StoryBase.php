@@ -451,6 +451,9 @@ abstract class StoryBase
 	 */
 	public function getRandomFrontlineCityForCountry($countryId)
 	{
+		return $this->getFrontlineCitiesForCountry($countryId, true, 1);
+
+		/**
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
@@ -463,8 +466,37 @@ abstract class StoryBase
 				WHERE c.country = ? AND oc.side != c.side
 				ORDER BY RAND() LIMIT 1",[$countryId]);	
 		
-		return $dbHelper->getAsArray($query);					
+		return $dbHelper->getAsArray($query);	
+
+		 */				
 	}
+	
+	/**
+	 * Retrieves a random front line city for a country
+	 * 
+	 * @param integer $countryId
+	 * @param boolean $randomOrder
+	 * @param integer $limit
+	 * @return array
+	 */
+	public function getFrontlineCitiesForCountry($countryId, $randomOrder = false, $limit = null)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$randomness = $randomOrder ? " ORDER BY RAND()" : "";
+		$limitation = $limit != null ? sprintf("LIMIT %d", $limit) : "";
+		
+		$query = $dbHelper
+			->prepare(trim(sprintf("SELECT distinct c.name, distance, oc.name as opposite_city
+				FROM strat_link l
+				INNER JOIN strat_facility f ON  l.startdepot_oid = f.facility_oid
+				INNER JOIN strat_cp c ON f.cp_oid = c.cp_oid
+				INNER JOIN strat_facility of ON l.enddepot_oid = of.facility_oid
+				INNER JOIN strat_cp oc ON of.cp_oid = oc.cp_oid
+				WHERE c.country = ? AND oc.side != c.side %s %s", $randomness, $limitation)),[$countryId]);	
+		
+		return $dbHelper->getAsArray($query);					
+	}	
 	
 	/**
 	 * Retrieves a random city for a specified country

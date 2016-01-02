@@ -89,6 +89,8 @@ class StoryBestATRSortie extends StoryBestSortieBase implements StoryInterface {
 		
 		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side'];
 	
+		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
+		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');	
 		
 		return true;
 
