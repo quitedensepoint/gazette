@@ -454,7 +454,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("select distinct c.name
+			->prepare("select distinct c.name, distance
 				from strat_link l
 				INNER JOIN strat_facility f ON  l.startdepot_oid = f.facility_oid
 				INNER JOIN strat_cp c ON f.cp_oid = c.cp_oid
@@ -611,5 +611,23 @@ abstract class StoryBase
 			->prepare("SELECT * from wwii_rank WHERE rankid = ? LIMIT 1", [$rankId]);	
 
 		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Get a random vehicle for a country
+	 * 
+	 * @param integer $countryId
+	 * @return array|null
+	 */
+	public function getRandomVehicle($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+
+		$query = $dbHelper
+			->prepare("SELECT * from VEHICLES where country_id = ? ORDER BY RAND() LIMIT 1", [$countryId]);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;		
 	}	
 }
