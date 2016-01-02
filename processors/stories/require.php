@@ -54,3 +54,4 @@ require(__DIR__ . "/StoryCasualtyReporter.php");
  */
 //require(__DIR__ . "/StoryServerStatus.php");
 //require(__DIR__ . "/StoryRDPArchiveFiller.php");
+//require(__DIR__ . "/StoryMajorCitiesOwned.php");
