@@ -45,6 +45,7 @@ require(__DIR__ . "/StoryFactoryOutputShutdown.php");
 require(__DIR__ . "/StoryFactoryOutputSlowed.php");
 require(__DIR__ . "/StoryFactoryCaptured.php");
 require(__DIR__ . "/StoryFactoryUnderAttack.php");
+require(__DIR__ . "/StorySortieAverages.php");
 
 /**
  * Stories here are skipped as they are possibly not relevant anymore, or may need
