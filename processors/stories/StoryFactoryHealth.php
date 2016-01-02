@@ -104,7 +104,7 @@ class StoryFactoryHealth extends StoryBase implements StoryInterface {
 			$finalBody .= $this->parseStory($template_vars, $template['title'], $template['body'])['body'];
 		}		
 		
-		return ['title' => '', 'body' => $this->makeVarieties($template, $finalBody)];
+		return ['title' => '', 'body' => $this->makeVarieties($template, $finalBody, $template_vars)];
 	}
 	
 	/**

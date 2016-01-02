@@ -29,7 +29,7 @@ class StoryMajorCitySieged extends StoryBase implements StoryInterface {
 				{
 					continue;
 				}
-				
+
 				/**
 				 * select the controlling sides for all links from the CPs
 				 */
@@ -41,7 +41,7 @@ class StoryMajorCitySieged extends StoryBase implements StoryInterface {
 					$total++;
 					$enemy = $enemy + ($link['conside'] != $side) ? 1 : 0;
 				}
-
+				
 				// Does the enemy control all outbound links from the cp
 				if($total == $enemy)
 				{

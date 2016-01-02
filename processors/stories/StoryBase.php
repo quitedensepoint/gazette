@@ -94,7 +94,7 @@ abstract class StoryBase
 
 		$result = $this->parseStory($this->creatorData['template_vars'], $template['title'], $template['body']);
 		
-		return $this->makeVarieties($template, $result);
+		return $this->makeVarieties($template, $result, $this->creatorData['template_vars']);
 	}
 	
 	/**
@@ -103,23 +103,36 @@ abstract class StoryBase
 	 * 
 	 * @param array $template
 	 * @param string $result
+	 * @param array $template_vars
 	 * @return string
 	 */
-	public function makeVarieties($template, $result)
+	public function makeVarieties($template, $result, $template_vars)
 	{
 		/**
 		 * Randomise some of the text in the template based on the variety_1 field in the templates table
+		 * Some varieties also have placeholders that need to be replaced
 		 */
 		$varieties1 = explode(";", trim($template['variety_1']));
 		
-		$result = str_replace('%VARIETY1%', $varieties1[rand(0, count($varieties1) - 1)], $result);
+		$variety1 = $varieties1[rand(0, count($varieties1) - 1)];
+		foreach ($template_vars as $key => $value)
+		{
+			$variety1 = str_replace('%' . strtoupper($key) . '%', $value, $variety1);
+		}		
+		
+		$result = str_replace('%VARIETY1%', $variety1 , $result);
 		
 		/**
 		 * Do the same for the varieties2 column
 		 */
 		$varieties2 = explode(";", trim($template['variety_2']));
 		
-		$result = str_replace('%VARIETY2%', $varieties2[rand(0, count($varieties2) - 1)], $result);		
+		$variety2 = $varieties2[rand(0, count($varieties2) - 1)];
+		foreach ($template_vars as $key => $value)
+		{
+			$variety2 = str_replace('%' . strtoupper($key) . '%', $value, $variety2);
+		}		
+		$result = str_replace('%VARIETY2%', $variety2, $result);		
 		
 		return $result;		
 	}

@@ -40,7 +40,10 @@ class StoryServerNews extends StoryBase implements StoryInterface {
 		
 		$output = $this->parseStory($template_vars, $template['title'], $template['body']);
 		
-		return ['title' => $this->makeVarieties($template, $output['title']), 'body' => $this->makeVarieties($template, $output['body'])];
+		return [
+			'title' => $this->makeVarieties($template, $output['title'], $template_vars), 
+			'body' => $this->makeVarieties($template, $output['body'], $template_vars)
+			];
 	}
 	
 	/**
