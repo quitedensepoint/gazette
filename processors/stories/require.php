@@ -41,9 +41,21 @@ require(__DIR__ . "/StorySpawnLister.php");
 require(__DIR__ . "/StoryRDPArchiver.php");
 require(__DIR__ . "/StoryFactoryHealth.php");
 require(__DIR__ . "/StoryServerNews.php");
+require(__DIR__ . "/StoryFactoryOutputShutdown.php");
+require(__DIR__ . "/StoryFactoryOutputSlowed.php");
+require(__DIR__ . "/StoryFactoryCaptured.php");
+require(__DIR__ . "/StoryFactoryUnderAttack.php");
+require(__DIR__ . "/StorySortieAverages.php");
+require(__DIR__ . "/StoryCasualtyReporter.php");
+require(__DIR__ . "/StoryRecentPromotion.php");
+require(__DIR__ . "/StoryMisc.php");
+require(__DIR__ . "/StoryFrontLines.php");
 
 /**
  * Stories here are skipped as they are possibly not relevant anymore, or may need
  * further work to address correctly
  */
 //require(__DIR__ . "/StoryServerStatus.php");
+//require(__DIR__ . "/StoryRDPArchiveFiller.php");
+//require(__DIR__ . "/StoryMajorCitiesOwned.php");
+//require(__DIR__ . "/StoryForcesOnline.php");

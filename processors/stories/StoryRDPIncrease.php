@@ -51,7 +51,7 @@ class StoryRDPIncrease extends StoryRDPBase implements StoryInterface {
 		$this->creatorData['template_vars']['vehicle_short'] = $vehicle['short_name'];
 		$this->creatorData['template_vars']['class'] = $vehicleClass['name'];
 		
-		$this->creatorData['template_vars']['direction_adj'] = $this->getRandomDirectionAdjective();		
+		$this->creatorData['template_vars']['direction_adj'] = $this->getRandomDirection()['adjective'];		
 		
 		$randomCity = $this->getRandomCityForCountry($action['country_id'])[0];
 		$this->creatorData['template_vars']['city']  = $randomCity['name'];

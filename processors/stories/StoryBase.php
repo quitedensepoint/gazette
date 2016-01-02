@@ -42,10 +42,42 @@ abstract class StoryBase
 	protected $creatorData;
 	
 	/**
-	 * An array of direction adjectives for entering into stories.
+	 * An array of directions  for entering into stories.
 	 * @var array
 	 */
-	public static $directionAdjectives = ['southern', 'southeastern', 'eastern','northeastern','northern','northwestern','western','southwestern'];
+	public static $directions = [
+		['name' => 'south', 'adjective' => 'southern'], 
+		['name' => 'southeast', 'adjective' => 'southeastern'], 
+		['name' => 'east', 'adjective' => 'eastern'],
+		['name' => 'northeast', 'adjective' => 'northeastern'],
+		['name' => 'north', 'adjective' => 'northern'],
+		['name' => 'northwest', 'adjective' => 'northwestern'],
+		['name' => 'west', 'adjective' => 'western'],
+		['name' => 'southwest', 'adjective' => 'southwestern']
+	];
+	
+	/**
+	 * A set of hardcoded side information
+	 * 
+	 * @var array 
+	 */
+	public static $sideData = [
+		1 => ['name' => 'allied', 'adjective' => 'allied'],
+		2 => ['name' => 'axis', 'adjective' => 'axis'],
+	];
+	
+	/**
+	 *	A set ot intensitie descriptors
+	 *	@var array
+	 */
+	public static $intensities = ['light', 'medium', 'heavy'];
+	
+	/**
+	 * The Datetime that the gazette is running under
+	 * 
+	 * @var DateTimeZone 
+	 */
+	public static $timezone;
 	
 	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
 		$this->dbConn = $dbConn;
@@ -53,14 +85,16 @@ abstract class StoryBase
 		$this->dbConnWWII = $dbConnWWII;
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
 		$this->dbConnToe = $dbConnToe;
-		$this->creatorData = $creatorData;		
+		$this->creatorData = $creatorData;
+		
+		self::$timezone = new DateTimeZone('America/Chicago');
 	}
 	
 	public function makeStory($template) {
 
 		$result = $this->parseStory($this->creatorData['template_vars'], $template['title'], $template['body']);
 		
-		return $this->makeVarieties($template, $result);
+		return $this->makeVarieties($template, $result, $this->creatorData['template_vars']);
 	}
 	
 	/**
@@ -69,23 +103,36 @@ abstract class StoryBase
 	 * 
 	 * @param array $template
 	 * @param string $result
+	 * @param array $template_vars
 	 * @return string
 	 */
-	public function makeVarieties($template, $result)
+	public function makeVarieties($template, $result, $template_vars)
 	{
 		/**
 		 * Randomise some of the text in the template based on the variety_1 field in the templates table
+		 * Some varieties also have placeholders that need to be replaced
 		 */
 		$varieties1 = explode(";", trim($template['variety_1']));
 		
-		$result = str_replace('%VARIETY1%', $varieties1[rand(0, count($varieties1) - 1)], $result);
+		$variety1 = $varieties1[rand(0, count($varieties1) - 1)];
+		foreach ($template_vars as $key => $value)
+		{
+			$variety1 = str_replace('%' . strtoupper($key) . '%', $value, $variety1);
+		}		
+		
+		$result = str_replace('%VARIETY1%', $variety1 , $result);
 		
 		/**
 		 * Do the same for the varieties2 column
 		 */
 		$varieties2 = explode(";", trim($template['variety_2']));
 		
-		$result = str_replace('%VARIETY2%', $varieties2[rand(0, count($varieties2) - 1)], $result);		
+		$variety2 = $varieties2[rand(0, count($varieties2) - 1)];
+		foreach ($template_vars as $key => $value)
+		{
+			$variety2 = str_replace('%' . strtoupper($key) . '%', $value, $variety2);
+		}		
+		$result = str_replace('%VARIETY2%', $variety2, $result);		
 		
 		return $result;		
 	}
@@ -159,13 +206,15 @@ abstract class StoryBase
 	}
 	
 	/**
-	 *  Retrieve a random direction adjective
+	 * Retrieve a random direction 
 	 * 
-	 * @return string
+	 * Returns an array consisting of [name, adjective]
+	 * 
+	 * @return array
 	 */
-	public function getRandomDirectionAdjective()
+	public function getRandomDirection()
 	{
-		return self::$directionAdjectives[rand(0, count(self::$directionAdjectives) - 1)]; 
+		return self::$directions[rand(0, count(self::$directions) - 1)]; 
 	}
 
 	/**
@@ -402,10 +451,13 @@ abstract class StoryBase
 	 */
 	public function getRandomFrontlineCityForCountry($countryId)
 	{
+		return $this->getFrontlineCitiesForCountry($countryId, true, 1);
+
+		/**
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("select distinct c.name
+			->prepare("select distinct c.name, distance
 				from strat_link l
 				INNER JOIN strat_facility f ON  l.startdepot_oid = f.facility_oid
 				INNER JOIN strat_cp c ON f.cp_oid = c.cp_oid
@@ -414,8 +466,37 @@ abstract class StoryBase
 				WHERE c.country = ? AND oc.side != c.side
 				ORDER BY RAND() LIMIT 1",[$countryId]);	
 		
-		return $dbHelper->getAsArray($query);					
+		return $dbHelper->getAsArray($query);	
+
+		 */				
 	}
+	
+	/**
+	 * Retrieves a random front line city for a country
+	 * 
+	 * @param integer $countryId
+	 * @param boolean $randomOrder
+	 * @param integer $limit
+	 * @return array
+	 */
+	public function getFrontlineCitiesForCountry($countryId, $randomOrder = false, $limit = null)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$randomness = $randomOrder ? " ORDER BY RAND()" : "";
+		$limitation = $limit != null ? sprintf("LIMIT %d", $limit) : "";
+		
+		$query = $dbHelper
+			->prepare(trim(sprintf("SELECT distinct c.name, distance, oc.name as opposite_city
+				FROM strat_link l
+				INNER JOIN strat_facility f ON  l.startdepot_oid = f.facility_oid
+				INNER JOIN strat_cp c ON f.cp_oid = c.cp_oid
+				INNER JOIN strat_facility of ON l.enddepot_oid = of.facility_oid
+				INNER JOIN strat_cp oc ON of.cp_oid = oc.cp_oid
+				WHERE c.country = ? AND oc.side != c.side %s %s", $randomness, $limitation)),[$countryId]);	
+		
+		return $dbHelper->getAsArray($query);					
+	}	
 	
 	/**
 	 * Retrieves a random city for a specified country
@@ -434,5 +515,151 @@ abstract class StoryBase
 			->prepare("SELECT * FROM strat_cp WHERE cp_type != 5 AND contention = 1 " . $countryFilter . " ORDER BY RAND() limit 1",$countryBindings);	
 		
 		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieves information about the enemy side of the side represented by the input side
+	 * 
+	 * i.e. Inputting the Id for the Allied side, will return the Axis side data
+	 * 
+	 * @param type $sideId
+	 */
+	public function getEnemySide($sideId)
+	{
+		/**
+		 * swap the sides
+		 */
+		$sideId = intval($sideId) == 1 ? 2 : 1;
+		
+		return $this->getSide($sideId);
+	}
+	
+	/**
+	 * Will retrieve a set of information about requested side
+	 * 
+	 * @param integer $sideId
+	 */
+	public function getSide($sideId)
+	{
+		return self::$sideData[$sideId];
+	}
+	
+	/**
+	 * Retrieve a random enemy country
+	 * 
+	 * Retrieves a randomly selected country not on a specific side, or null if cannot find one
+	 * 
+	 * @param integer $sideId
+	 * @return array|null
+	 */
+	public function getRandomEnemyCountry($sideId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("select * from countries where side_id != ? order by RAND() limit 1",[$sideId]);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;		
+	}
+	
+	/**
+	 * Retrieves a random vehicle class, filtered by category if needed
+	 * 
+	 * @param integer $categoryId Option filter for category
+	 * @return array|null
+	 */
+	public function getRandomVehicleClass($categoryId = null)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$filter = $categoryId != null ? " WHERE category_id = ?" : "";
+		$filterParams = $categoryId != null ? [$categoryId] : [];
+		
+		$query = $dbHelper
+			->prepare(sprintf("select * from vehicle_classes %s order by RAND() limit 1", $filter),$filterParams);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;		
+	}
+	
+	/**
+	 * Retrieves a random intensity to assigned to a story
+	 * 
+	 * @return string
+	 */
+	public function getRandomIntensity()
+	{
+		return self::$intensities[rand(0, count(self::$intensities) - 1)];
+	}
+	
+	/**
+	 * Retrieve a specific country by ID
+	 * 
+	 * @param integer $countryId
+	 * @return array|null
+	 */
+	public function getCountryById($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("select * from countries where country_id = ? limit 1",[$countryId]);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;			
+	}
+	
+	/**
+	 * Retrieve a vehicle category detail by the id of the category
+	 * 
+	 * @param integer $categoryId
+	 * @return array
+	 */
+	public function getCategoryById($categoryId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from vehicle_categories WHERE category_id = ? LIMIT 1", [$categoryId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieve a rank by ID
+	 * 
+	 * @param integer $rankId
+	 * @return array
+	 */
+	public function getRankById($rankId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_rank WHERE rankid = ? LIMIT 1", [$rankId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Get a random vehicle for a country
+	 * 
+	 * @param integer $countryId
+	 * @return array|null
+	 */
+	public function getRandomVehicle($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+
+		$query = $dbHelper
+			->prepare("SELECT * from VEHICLES where country_id = ? ORDER BY RAND() LIMIT 1", [$countryId]);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;		
 	}	
 }

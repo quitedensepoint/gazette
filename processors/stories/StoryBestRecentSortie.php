@@ -10,15 +10,12 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 
 		/**
 		 * Get all the sorties in the last two hours
-		 * 
-		 * @todo Remove hardcoding of timezone name
 		 */
-		$tz = new DateTimeZone('America/Chicago');
 		$time = new DateTime();
-		$time->setTimezone($tz);
+		$time->setTimezone(self::$timezone);
 		$time->setTimestamp(time() - 7200);
 
-		$sorties = $this->getRecentSorties($time->getTimestamp());
+		$sorties = $this->getRecentSorties($this->creatorData['country_id'], $time->getTimestamp());
 		
 		foreach ($sorties as $sortie)
 		{
@@ -31,12 +28,16 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 				$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
 				$this->creatorData['template_vars']['kills'] = $sortie['kills'];
 				$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
-				$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawn_time'], $sortie['return_time']);
+				$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawned'], $sortie['returned']);
 				$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($capture[0]['facility_oid']);
 				
-				$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", $tz);
+				$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", self::$timezone);
 				$this->creatorData['template_vars']['month'] = $dateOfSpawn->format('F');
 				$this->creatorData['template_vars']['day_ord'] = $dateOfSpawn->format('j');
+				
+				$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);
+				$this->creatorData['template_vars']['enemy_country'] = $enemyCountry['name'];
+				$this->creatorData['template_vars']['enemy_country_adj'] = $enemyCountry['adjective'];
 				
 				return true;
 			}
@@ -46,13 +47,15 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 	}
 	
 	/**
-	 * Check to see if a country has any CPs left
+	 * Get the recent best sorties for a country
 	 * 
+	 * @param integer $countryId
+	 * @param integer $time the number of seconds since 1970 (epoch or unix time)
 	 * @return integer
 	 * 
 	 * @todo This function had "and s.captures > 0" in the original Perl file. Work out 
 	 */
-	public function getRecentSorties($time)
+	public function getRecentSorties($countryId, $time)
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
@@ -60,8 +63,9 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 			->prepare("SELECT s.mission_id, s.player_id, s.vcountry as country_id, s.rtb, s.kills, s.vehicles_hit, p.customerid as customer_id, p.callsign, "
 				. "UNIX_TIMESTAMP(s.spawn_time) as spawned, UNIX_TIMESTAMP(s.return_time) as returned "
 				. "FROM wwii_sortie s INNER JOIN wwii_player p ON s.player_id = p.playerid "
-				. "WHERE s.added > FROM_UNIXTIME(?) and s.mission_id > 0 and kills > 2 "
-				. "ORDER BY s.score DESC",[$time]);	
+				. "WHERE s.added > FROM_UNIXTIME(?) AND s.spawn_time IS NOT NULL AND s.return_time IS NOT NULL "
+				. "AND s.mission_id > 0 AND kills > 2 AND s.vcountry = ? "
+				. "ORDER BY s.score DESC",[$time, $countryId]);	
 		
 		return $dbHelper->getAsArray($query);					
 	}

@@ -35,6 +35,9 @@ class StoryRDPEfficiency extends StoryRDPBase implements StoryInterface {
 		
 		$randomCity = $this->getRandomCityForCountry($action['country_id'])[0];
 		
+		$randomFactoryCity = $this->getRandomFactoryCityForCountry($action['country_id'])[0];		
+		$this->creatorData['template_vars']['factory_city']  = $randomFactoryCity['name'];		
+		
 		$this->creatorData['template_vars']['city']  = $randomCity['name'];
 		
 		return true;

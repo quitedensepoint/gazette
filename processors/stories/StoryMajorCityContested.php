@@ -28,23 +28,6 @@ class StoryMajorCityContested extends StoryBase implements StoryInterface {
 	}
 	
 	/**
-	 * Retrieve the enemy side
-	 * 
-	 * @todo This was in the original perl file. Not sure if relevant anymore as it was never called 
-	 * 
-	 * @return integer
-	 */
-	public function getEnemySide($sideId)
-	{
-		$dbHelper = new dbhelper($this->dbConn);
-		
-		$query = $dbHelper
-			->prepare("select `side` from `countries` where side_id != ? limit 1", [$sideId]);	
-		
-		return $dbHelper->getAsArray($query)[0]['side'];					
-	}
-	
-	/**
 	 * Retrieves the number of contested facilties for each city on the map and then
 	 * returns the city with the greatest number contested
 	 * 	 

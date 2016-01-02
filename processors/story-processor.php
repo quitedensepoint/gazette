@@ -259,7 +259,7 @@ class StoryProcessor {
 			{
 				$template = $this->getRandomTemplateForSource($source['source_id'], $creatorData['country_id']);
 			}
-
+			
 			if(count($template) !== 1)
 			{
 				echo sprintf("\t** No valid templates for source %s**\n" , $sourceName);

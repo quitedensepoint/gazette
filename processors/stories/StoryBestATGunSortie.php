@@ -85,6 +85,9 @@ class StoryBestATGunSortie extends StoryBestSortieBase implements StoryInterface
 		}
 		$this->creatorData['template_vars']['list'] = join(", ", $killList);
 		$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
+		
+		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
+		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');	
 	
 		
 		return true;
