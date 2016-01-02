@@ -567,4 +567,20 @@ abstract class StoryBase
 		
 		return count($result) == 1 ? $result[0] : null;			
 	}
+	
+	/**
+	 * Retrieve a vehicle category detail by the id of the category
+	 * 
+	 * @param integer $categoryId
+	 * @return array
+	 */
+	public function getCategoryById($categoryId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from vehicle_categories WHERE category_id = ? LIMIT 1", [$categoryId]);	
+
+		return $dbHelper->getAsArray($query);					
+	}	
 }

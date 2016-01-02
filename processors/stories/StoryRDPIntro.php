@@ -12,7 +12,6 @@ class StoryRDPIntro extends StoryRDPBase implements StoryInterface {
 
 		if(count($action) == 0)
 		{
-			var_dump($action);
 			return false;
 		}
 		$action = $action[0];
@@ -45,6 +44,10 @@ class StoryRDPIntro extends StoryRDPBase implements StoryInterface {
 		$this->creatorData['template_vars']['data']				= $data;
 		$this->creatorData['template_vars']['start_quantity'] 	= $data;
 		$this->creatorData['template_vars']['start_adj'] 		= $this->getRDPChangeAdjective($data);		
+		
+		$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);
+		$enemyVehicle = $this->getVehicleByClassification($enemyCountry['country_id'], $action['veh_category_id'], $action['veh_class_id'], $action['veh_type_id']);
+		$this->creatorData['template_vars']['enemy_vehicle']	= $enemyVehicle[0]['name'];	
 
 		return true;
 		
