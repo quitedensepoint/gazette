@@ -42,20 +42,35 @@ abstract class StoryBase
 	protected $creatorData;
 	
 	/**
-	 * An array of direction adjectives for entering into stories.
+	 * An array of directions  for entering into stories.
 	 * @var array
 	 */
-	public static $directionAdjectives = ['southern', 'southeastern', 'eastern','northeastern','northern','northwestern','western','southwestern'];
+	public static $directions = [
+		['name' => 'south', 'adjective' => 'southern'], 
+		['name' => 'southeast', 'adjective' => 'southeastern'], 
+		['name' => 'east', 'adjective' => 'eastern'],
+		['name' => 'northeast', 'adjective' => 'northeastern'],
+		['name' => 'north', 'adjective' => 'northern'],
+		['name' => 'northwest', 'adjective' => 'northwestern'],
+		['name' => 'west', 'adjective' => 'western'],
+		['name' => 'southwest', 'adjective' => 'southwestern']
+	];
 	
 	/**
 	 * A set of hardcoded side information
 	 * 
-	 * @var type 
+	 * @var array 
 	 */
 	public static $sideData = [
 		1 => ['name' => 'allied', 'adjective' => 'allied'],
 		2 => ['name' => 'axis', 'adjective' => 'axis'],
 	];
+	
+	/**
+	 *	A set ot intensitie descriptors
+	 *	@var array
+	 */
+	public static $intensities = ['light', 'medium', 'heavy'];
 	
 	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
 		$this->dbConn = $dbConn;
@@ -169,13 +184,15 @@ abstract class StoryBase
 	}
 	
 	/**
-	 *  Retrieve a random direction adjective
+	 * Retrieve a random direction 
 	 * 
-	 * @return string
+	 * Returns an array consisting of [name, adjective]
+	 * 
+	 * @return array
 	 */
-	public function getRandomDirectionAdjective()
+	public function getRandomDirection()
 	{
-		return self::$directionAdjectives[rand(0, count(self::$directionAdjectives) - 1)]; 
+		return self::$directions[rand(0, count(self::$directions) - 1)]; 
 	}
 
 	/**
@@ -512,5 +529,15 @@ abstract class StoryBase
 		$result = $dbHelper->getAsArray($query);
 		
 		return count($result) == 1 ? $result[0] : null;		
-	}	
+	}
+	
+	/**
+	 * Retrieves a random intensity to assigned to a story
+	 * 
+	 * @return string
+	 */
+	public function getRandomIntensity()
+	{
+		return self::$intensities[rand(0, count(self::$intensities) - 1)];
+	}
 }
