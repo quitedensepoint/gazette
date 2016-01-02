@@ -2,12 +2,12 @@
 
 /**
  * Executes the logic to generate a story from the 
- * "Factory Captured" source.
+ * "Factory Under Attack" source.
  * 
  * This checks all of the factory towns for a side, and checks to see if
  * all of the factories reduced in capacity.
  */
-class StoryFactoryCaptured extends StoryBase implements StoryInterface {
+class StoryFactoryUnderAttack extends StoryBase implements StoryInterface {
 		
 	public function isValid() {
 
@@ -38,31 +38,47 @@ class StoryFactoryCaptured extends StoryBase implements StoryInterface {
 		 */
 		foreach($chokepoints as $chokepoint)
 		{	
-			$captured = $producers = $capturingCountryId = 0;
+			$health = $damage = $captured = $producers = $capturingCountryId = 0;
 			
 			foreach($chokepoint['factories'] as $fact)
 			{	
 				$producers++;
+				$health +=100;
+				
+				$capturingCountryId = $fact['country_id'];
 				
 				if($fact['side'] != $fact['originalside'])
 				{
 					$captured++;
-					$capturingCountryId = $fact['country_id'];
+					
+					$damage += 100;					
+				}
+				else
+				{
+					$damage += $fact['damage_pctg'];
 				}
 			}
 			
 			/**
 			 * If all factories are captured
 			 */
-			if($producers == $captured)
+			if($captured > 0 and $captured < $producers)			
 			{
 				$this->creatorData['template_vars']['factory_city'] = $chokepoint['cp_name'];
+				$this->creatorData['template_vars']['factory_damage'] = intval(($damage / $health) * 100);
+				$this->creatorData['template_vars']['factory_output'] = intval(($health - $damage) / $producers );				
 				
 				$country = $this->getCountryById($capturingCountryId);
 				
 				$this->creatorData['template_vars']['capturing_country']		= $country['name'];
 				$this->creatorData['template_vars']['capturing_country_adj']	= $country['adjective'];
-				$this->creatorData['template_vars']['capturing_side']			= $country['side'];				
+				$this->creatorData['template_vars']['capturing_side']			= $country['side'];
+				$this->creatorData['template_vars']['attacking_country_adj']	= $country['adjective'];
+				
+				$percentEnemy = intval((($captured * 100) / (100 * $producers)) * 100);
+				$this->creatorData['template_vars']['percent_enemy'] 	= $percentEnemy;
+				$this->creatorData['template_vars']['percent_owned'] 	= 100 - $percentEnemy;
+							
 
 				$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);			
 				$this->creatorData['template_vars']['enemy_country_adj'] = $enemyCountry['adjective'];
@@ -79,6 +95,9 @@ class StoryFactoryCaptured extends StoryBase implements StoryInterface {
 				$dt = new DateTime();
 				$dt->setTimezone(self::$timezone);
 				$this->creatorData['template_vars']['military_time'] = $dt->format('Hi');
+				$this->creatorData['template_vars']['day'] = $dt->format('l');
+				$this->creatorData['template_vars']['month'] = $dt->format('F');
+				$this->creatorData['template_vars']['day_ord'] = $dt->format('j');
 
 				return true;
 			}
