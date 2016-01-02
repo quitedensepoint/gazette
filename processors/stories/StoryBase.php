@@ -595,5 +595,21 @@ abstract class StoryBase
 			->prepare("SELECT * from vehicle_categories WHERE category_id = ? LIMIT 1", [$categoryId]);	
 
 		return $dbHelper->getAsArray($query);					
+	}
+	
+	/**
+	 * Retrieve a rank by ID
+	 * 
+	 * @param integer $rankId
+	 * @return array
+	 */
+	public function getRankById($rankId)
+	{
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		
+		$query = $dbHelper
+			->prepare("SELECT * from wwii_rank WHERE rankid = ? LIMIT 1", [$rankId]);	
+
+		return $dbHelper->getAsArray($query);					
 	}	
 }

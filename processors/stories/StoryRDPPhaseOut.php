@@ -39,6 +39,11 @@ class StoryRDPPhaseOut extends StoryRDPBase implements StoryInterface {
 		$branchData =  $this->getBranchById($categoryData[0]['branch_id']);
 		$this->creatorData['template_vars']['branch']  = $branchData[0]['name'];
 		
+		$currentCapacity = intval($action['current_capacity']);
+		$data = intval($action['next_capacity']) - $currentCapacity	;	
+		$percentageDecrease = abs(intval($data / $currentCapacity * 100));
+		$this->creatorData['template_vars']['percentage_decrease%'] 	= $percentageDecrease . "%";		
+		
 		return true;
 		
 	}

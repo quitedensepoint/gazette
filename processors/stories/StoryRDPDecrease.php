@@ -37,9 +37,12 @@ class StoryRDPDecrease extends StoryRDPBase implements StoryInterface {
 		$this->creatorData['template_vars']['data']					= $data;
 		$this->creatorData['template_vars']['spawns']				= $currentCapacity;
 		$this->creatorData['template_vars']['quantity_decrease'] 	= $data;
-		$percentageDecrease = intval($data / $currentCapacity * 100);
+		$percentageDecrease = abs(intval($data / $currentCapacity * 100));
 		$this->creatorData['template_vars']['percentage_decrease%'] 	= $percentageDecrease . "%";
-		$this->creatorData['template_vars']['decrease_adj'] 		= $this->getRDPChangeAdjective($percentageDecrease);		
+		$this->creatorData['template_vars']['decrease_adj'] 		= $this->getRDPChangeAdjective($percentageDecrease);
+		
+		$classData = $this->getClassById($action['veh_class_id']);	
+		$this->creatorData['template_vars']['class']  = $classData[0]['name'];		
 		
 		return true;
 		
