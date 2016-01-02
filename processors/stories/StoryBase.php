@@ -72,13 +72,22 @@ abstract class StoryBase
 	 */
 	public static $intensities = ['light', 'medium', 'heavy'];
 	
+	/**
+	 * The Datetime that the gazette is running under
+	 * 
+	 * @var DateTimeZone 
+	 */
+	public static $timezone;
+	
 	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
 		$this->dbConn = $dbConn;
 		$this->dbHelper = new dbhelper($dbConn);
 		$this->dbConnWWII = $dbConnWWII;
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
 		$this->dbConnToe = $dbConnToe;
-		$this->creatorData = $creatorData;		
+		$this->creatorData = $creatorData;
+		
+		self::$timezone = new DateTimeZone('America/Chicago');
 	}
 	
 	public function makeStory($template) {
@@ -539,5 +548,23 @@ abstract class StoryBase
 	public function getRandomIntensity()
 	{
 		return self::$intensities[rand(0, count(self::$intensities) - 1)];
+	}
+	
+	/**
+	 * Retrieve a specific country by ID
+	 * 
+	 * @param integer $countryId
+	 * @return array|null
+	 */
+	public function getCountryById($countryId)
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("select * from countries where country_id = ? limit 1",[$countryId]);	
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		return count($result) == 1 ? $result[0] : null;			
 	}
 }
