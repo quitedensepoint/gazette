@@ -58,3 +58,4 @@ require(__DIR__ . "/StoryFrontLines.php");
 //require(__DIR__ . "/StoryServerStatus.php");
 //require(__DIR__ . "/StoryRDPArchiveFiller.php");
 //require(__DIR__ . "/StoryMajorCitiesOwned.php");
+//require(__DIR__ . "/StoryForcesOnline.php");
