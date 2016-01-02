@@ -26,9 +26,11 @@ class StoryRDPPhaseOut extends StoryRDPBase implements StoryInterface {
 		$this->creatorData['template_vars']['vehicle'] = $vehicle['name'];
 		$this->creatorData['template_vars']['vehicle_short'] = $vehicle['short_name'];
 		
-		$randomCity = $this->getRandomCityForCountry($action['country_id'])[0];
-		
+		$randomCity = $this->getRandomCityForCountry($action['country_id'])[0];		
 		$this->creatorData['template_vars']['city']  = $randomCity['name'];
+		
+		$randomFactoryCity = $this->getRandomFactoryCityForCountry($action['country_id'])[0];		
+		$this->creatorData['template_vars']['factory_city']  = $randomFactoryCity['name'];		
 		
 		$classData = $this->getClassById($action['veh_class_id']);	
 		$this->creatorData['template_vars']['class']  = $classData[0]['name'];

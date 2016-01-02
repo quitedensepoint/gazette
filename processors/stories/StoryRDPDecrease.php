@@ -32,6 +32,9 @@ class StoryRDPDecrease extends StoryRDPBase implements StoryInterface {
 		
 		$this->creatorData['template_vars']['city']  = $randomCity['name'];
 		
+		$randomFactoryCity = $this->getRandomFactoryCityForCountry($action['country_id'])[0];		
+		$this->creatorData['template_vars']['factory_city']  = $randomFactoryCity['name'];		
+		
 		$currentCapacity = intval($action['current_capacity']);
 		$data = intval($action['next_capacity']) - $currentCapacity;
 		$this->creatorData['template_vars']['data']					= $data;
