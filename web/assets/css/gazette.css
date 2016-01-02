@@ -7,7 +7,7 @@ body, tr, td, p, li {
 
 html, body {
 	height: 100%;
-	background-image: url("/assets/img/background.jpg");
+	//background-image: url("/assets/img/background.jpg");
 	background-attachment: fixed;
 	background-position: center;
 	background-color: black;
@@ -123,15 +123,15 @@ html, body {
 #version {
 	position: absolute;
 	top: 74px;
-    right: 195px;
+        right: 195px;
 	font-size: 7pt;
 	background-color: transparent;
 	color: #cccccc;
 }
 
 #container {
-	height: 100%;
-	width: 925px;
+	height: 950px;
+	width: 915px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	display: block;
 	margin-left: auto;
@@ -144,7 +144,7 @@ html, body {
 
 #headerMiddle {
 	height: 90px;
-	width: 925px; 
+	width: 915px; 
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -183,18 +183,18 @@ html, body {
 
 #topLeftStory {
 	height: 175px;
-	width: 180px;
+	width: 178px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
 }
 
 #mapImage {
-	width: 540px; 
+	width: 537px; 
 }
 #mapText {
 	display:block; 
-	width: 540px; 
+	width: 537px; 
 	height: 15px;
 	text-align: center; 
 	padding-top: 3px;
@@ -202,7 +202,7 @@ html, body {
 }
 
 #topRightStory {
-	width: 180px;
+	width: 178px;
 	text-align: center;
 	border-left: 1px black solid;
 }
@@ -218,13 +218,13 @@ html, body {
 }
 
 #middleTopRightStory {
-	width: 180px;
+	width: 178px;
 	text-align: center;
 }
 
 #middleBottomLeftStory {
 	height: 175px;
-	width: 180px;
+	width: 178px;
 	text-align: center;
 	border-right: 1px black solid;
 	padding: 5px;
