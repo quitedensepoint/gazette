@@ -17,11 +17,11 @@ class StoryMajorCityThreatened extends StoryBase implements StoryInterface {
 		
 		foreach($contestedFacilities as $contestedFacility)
 		{
-		
+			
 			/**
 			 * Ten CPs or more appears to be "A Major City"
 			 */
-			if($contestedFacility['facilities'] > 10)
+			if(intval($contestedFacility['facilities']) > 10)
 			{
 				/**
 				* Randomly decide 50% of the time to skip this city. This may prevent any story at all from being generated
@@ -41,7 +41,7 @@ class StoryMajorCityThreatened extends StoryBase implements StoryInterface {
 					$total++;
 					$enemy = $enemy + ($link['conside'] != $sideId) ? 1 : 0;
 				}
-					
+	
 				// Does the enemy control all outbound links from the cp
 				if($enemy > 0)
 				{
@@ -71,20 +71,27 @@ class StoryMajorCityThreatened extends StoryBase implements StoryInterface {
 	 */
 	public function makeStory($template) {
 		
-		$varieties1 = explode(";", trim($template['variety_1']));
-		$variety = $varieties1[rand(0, count($varieties1) - 1)];
-		
 		$data = [
-			'title' => $variety,
-			'body' => $variety
-		];
+			'title' => $template['title'],
+			'body' => $template['body']
+		];		
+		
+		if(trim($template['variety_1']) != "") {
+			$varieties1 = explode(";", trim($template['variety_1']));
+			$variety = $varieties1[rand(0, count($varieties1) - 1)];
+			
+			$data = [
+				'title' => $variety,
+				'body' => $variety
+			];
+		}
 
 		foreach ($this->creatorData['template_vars'] as $key => $value)
 		{
 			$data['title'] = str_replace('%' . strtoupper($key) . '%', $value, $data['title']);
 			$data['body'] = str_replace('%' . strtoupper($key) . '%', $value, $data['body']);
 		}
-
+		
 		return $data;			
 	}
 	
