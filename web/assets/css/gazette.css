@@ -6,11 +6,11 @@ body, tr, td, p, li {
 }
 
 html, body {
-	height: 100%;
+	
 	//background-image: url("/assets/img/background.jpg");
 	background-attachment: fixed;
 	background-position: center;
-	background-color: black;
+	background-color: white;
 	background-repeat: no-repeat;
 	margin: 0;
 }
@@ -24,6 +24,7 @@ html, body {
 	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000 !important;
+    text-align:center;
 }
 
 
@@ -43,6 +44,7 @@ html, body {
 	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 13pt;
 	color: #000000;
+    text-align:center;
 }
 
 .papertimeshuge {
@@ -80,6 +82,7 @@ html, body {
 	font-size: 35pt;
 	color: #000000;
     text-transform: uppercase;
+    
 }
 
 .paperhidden {
@@ -123,7 +126,7 @@ html, body {
 #version {
 	position: absolute;
 	top: 74px;
-        right: 195px;
+    right: 195px;
 	font-size: 7pt;
 	background-color: transparent;
 	color: #cccccc;
@@ -140,14 +143,6 @@ html, body {
 
 #top {
 	position: absolute;
-}
-
-#headerMiddle {
-	height: 90px;
-	width: 915px; 
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
 }
 
 #alliedDeaths {
@@ -170,6 +165,140 @@ html, body {
     font-size: 9pt;
 }
 
+#info {
+	position: absolute;
+    width: 915px;
+    top:90px;
+}
+#infobar {
+    position: absolute;
+    width: 900px;
+    left: 5px;
+   
+}
+
+#mainheadline {
+    position:absolute;
+    top:110px;
+    width: 915px;
+    
+}
+#top {
+    position: absolute;
+
+
+}
+#topLeftStory {
+    position:relative;
+    top:175px;
+	
+	width: 178px;
+	text-align: center;
+	border-top: 1px black solid;
+	padding: 5px;
+}
+
+#middleTopLeftpic {
+    position: relative;
+    top: 175px;
+    width: 178px;
+    text-align: center;
+    padding: 5px;
+}
+
+#map {
+    position: absolute;
+    top:175px;   
+	width: 537px; 
+    left:190px;
+    
+}
+
+#mapText {
+	display:block; 
+	width: 540px; 
+	height: 15px;
+	text-align: center; 
+	padding-top: 3px;
+	margin-top: -3px;
+}
+
+#topRightStory {
+    position: absolute;
+	width: 178px;
+    top:175px;
+    left: 732px;
+	text-align: center;
+	border-top: 1px black solid;
+    ;
+}
+
+#middleTopRightStory {
+    position:relative;
+    top:15px;
+	width: 178px;
+	text-align: center;
+    left: 732px;
+}
+
+#undernews {
+    position: absolute;
+	top:555px;
+	width: 915px; 
+    }
+
+#news {
+    position:absolute;
+	width: 537px;
+    top: 0px;
+	left: 190px;
+    border-right: 1px black solid;
+    border-left: 1px black solid;
+}
+
+#middleBottomLeftStory {
+    position: relative;
+	left: 5px;
+    top: 175px;
+	width: 178px;
+	text-align: center;
+	padding: 5px;
+}
+
+#middleBottomRightPic {
+    position: relative;
+    width: 178px;
+    text-align: center;
+    padding: 5px;
+    right: 5px;
+}
+
+#belownews {
+    position:absolute;
+	width: 537px;
+    top:185px;
+	left: 190px;
+    border-right: 1px black solid;
+    border-left: 1px black solid;
+}
+
+#BottomRightStory {
+    position: relative;
+    width: 178px;
+    text-align: center;
+    padding: 5px;
+    
+    
+}
+
+#headerMiddle {
+	height: 90px;
+	width: 915px; 
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #mainBody {
 	position: relative;
 	top: 90px;
@@ -181,35 +310,6 @@ html, body {
     color: black !important;
 }
 
-#topLeftStory {
-	height: 175px;
-	width: 178px;
-	text-align: center;
-	border-right: 1px black solid;
-	padding: 5px;
-}
-
-#mapImage {
-	width: 537px; 
-}
-#mapText {
-	display:block; 
-	width: 537px; 
-	height: 15px;
-	text-align: center; 
-	padding-top: 3px;
-	margin-top: -3px;
-}
-
-#topRightStory {
-	width: 178px;
-	text-align: center;
-	border-left: 1px black solid;
-}
-
-#middleTopLeft {
-}
-
 #poster{
 	 height: 210px;
 	 display: block;
@@ -217,15 +317,19 @@ html, body {
 	 margin-right: auto;
 }
 
-#middleTopRightStory {
+#storya {
 	width: 178px;
 	text-align: center;
+    vertical-align: top;
+	border-right: 1px black solid;
+    border-left: 1px black solid;
+   
+	padding: 5px;
 }
 
-#middleBottomLeftStory {
-	height: 175px;
+#storyb {
 	width: 178px;
 	text-align: center;
-	border-right: 1px black solid;
-	padding: 5px;
+    vertical-align: top;
+    padding: 5px;
 }
