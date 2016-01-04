@@ -79,8 +79,15 @@ class StorySortieAverages extends StoryBase implements StoryInterface {
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
+		/**
+		 * Note that the following query has a calculated field called "successful". There is also a real field called the same name in the table
+		 * however due to game bug, the field is never populated and always has the default in place. The calculation below, supplied by @gadget
+		 * is supposed to replicate true or false value of the field
+		 */
 		$query = $dbHelper
-			->prepare("SELECT UNIX_TIMESTAMP(spawn_time) as spawned, UNIX_TIMESTAMP(return_time) as returned, kills, rtb, mission_id, mission_type, successful "
+			->prepare("SELECT UNIX_TIMESTAMP(spawn_time) as spawned, UNIX_TIMESTAMP(return_time) as returned, kills, rtb, mission_id, mission_type, "
+				. "IF(rtb <> 0 AND IF(IF(mission_type=5, resupplies>0, DATE_SUB(IFNULL(return_time,NOW()),INTERVAL 10 MINUTE) >= IFNULL(spawn_time,added) "
+				. "AND(kills>0 OR vclass IN (1,6))),1,0),1,0) AS successful "
 				. "FROM wwii_sortie "
 				. "WHERE spawn_time IS NOT NULL AND return_time IS NOT NULL "
 				. "ORDER BY ADDED DESC LIMIT 1000", []);	
