@@ -20,10 +20,9 @@ $ver=$vers->fetch_assoc();
 
 
 //get todays date and subtract start date to get number of days between the two.
-$today = time () ;
-$today=date("d-M-Y", $today);
-$start= date("d-M-Y", strtotime($row['start_time']))."<br>";
-$days= $today-$start-1;
+$start = date_create($row['start_time']);
+$today = date_create(date('Y-m-d'));
+$days = date_diff($start,$today)->format('%d');
 
 
 
