@@ -6,116 +6,98 @@ body, tr, td, p, li {
 }
 
 html, body {
-	
 	//background-image: url("/assets/img/background.jpg");
 	background-attachment: fixed;
 	background-position: center;
-	background-color: white;
+	background-color: black;
 	background-repeat: no-repeat;
 	margin: 0;
 }
 
-.story {
-    
+/* .story {
     border-color: black;
-}
+} */
 
 .paperdefault {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000 !important;
-    text-align:center;
+    text-align: center;
 }
 
-
-.papertimessmall {
-	font-family: Times New Roman, Georgia, Times, serif;
+/* .papertimessmall {
 	font-size: 8pt;
 	color: #000000;
-}
+} */
 
 .papertimesmedium {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 10pt;
 	color: #000000;
 }
 
 .papertimesbig {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 13pt;
 	color: #000000;
-    text-align:center;
+    text-align: center;
 }
 
-.papertimeshuge {
-	font-family: Times New Roman, Georgia, Times, serif;
+/* .papertimeshuge {
 	font-size: 16pt;
 	color: #000000;
 }
-
+ */
 .paperarialsmall {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000;
 }
 
 .paperarialmedium {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 10pt;
 	color: #000000;
 }
 
 .paperarialbig {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 13pt;
 	color: #000000;
 }
 
 .paperarialhuge {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 16pt;
 	color: #000000;
 }
 
 .paperheadline {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 35pt;
 	color: #000000;
     text-transform: uppercase;
-    
 }
 
 .paperhidden {
-	font-family: Times New Roman, Georgia, Times, serif;
 	font-size: 8pt;
 	color: #000000;
 }
 
-.paperservernews {
-	font-family: Times New Roman, Georgia, Times, serif;
+/* .paperservernews {
 	font-size: 12pt;
 	color: #CCCC00;
-}
+} */
 
-.paperserverheader {
-	font-family: Times New Roman, Georgia, Times, serif;
+/* .paperserverheader {
 	font-size: 8pt;
 	color: #CCCCCC;
-}
+} */
 
-.paperbarlink {
-	font-family: Times New Roman, Georgia, Times, serif;
+/* .paperbarlink {
 	font-size: 8pt;
 	color: #000000 !important;
-}
+} */
 
 .paperwhite {
 	background-color: #333333;
-	font-family: Times New Roman;
 	font-size: 8pt;
 	color: #FFFFFF;
 }
 
+/* RSS Feed */
 .contentpagetitle {
 	text-align: center;
 	display: block;
@@ -151,50 +133,44 @@ html, body {
 	top: 3px;
 	left: 5px;
 	border: 1px solid black;
-	font-family: Times New Roman, Georgia, Times, serif; 
 	font-size: 9pt;
 }
 
 #axisDeaths {
-    position: absolute;
+	position: absolute;
     width: 150px;
     top: 3px;
     right: 5px;
     border: 1px solid black;
-    font-family: Times New Roman, Georgia, Times, serif;
     font-size: 9pt;
 }
 
 #info {
 	position: absolute;
     width: 915px;
-    top:90px;
+    top: 90px;
 }
-#infobar {
+
+#infoBar {
     position: absolute;
     width: 900px;
     left: 5px;
-   
+    border: 1px black solid;
 }
 
-#mainheadline {
-    position:absolute;
-    top:110px;
-    width: 915px;
-    
-}
-#top {
+#mainHeadline {
     position: absolute;
-
-
+    top: 115px;
+    width: 915px;
+	text-align: center;
 }
+
 #topLeftStory {
     position:relative;
-    top:175px;
-	
+    top: 175px;
 	width: 178px;
 	text-align: center;
-	border-top: 1px black solid;
+	//border-top: 1px black solid;
 	padding: 5px;
 }
 
@@ -208,14 +184,14 @@ html, body {
 
 #map {
     position: absolute;
-    top:175px;   
+    top: 175px;   
 	width: 537px; 
-    left:190px;
+    left: 190px;
     
 }
 
 #mapText {
-	display:block; 
+	display: block; 
 	width: 540px; 
 	height: 15px;
 	text-align: center; 
@@ -226,29 +202,28 @@ html, body {
 #topRightStory {
     position: absolute;
 	width: 178px;
-    top:175px;
+    top: 175px;
     left: 732px;
 	text-align: center;
-	border-top: 1px black solid;
-    ;
+	//border-top: 1px black solid;
 }
 
 #middleTopRightStory {
-    position:relative;
-    top:15px;
+    position: relative;
+    top: 15px;
 	width: 178px;
 	text-align: center;
     left: 732px;
 }
 
-#undernews {
+#underNews {
     position: absolute;
-	top:555px;
+	top: 555px;
 	width: 915px; 
-    }
+}
 
 #news {
-    position:absolute;
+    position: absolute;
 	width: 537px;
     top: 0px;
 	left: 190px;
@@ -273,22 +248,20 @@ html, body {
     right: 5px;
 }
 
-#belownews {
-    position:absolute;
+#belowNews {
+    position: absolute;
 	width: 537px;
-    top:185px;
+    top: 185px;
 	left: 190px;
     border-right: 1px black solid;
     border-left: 1px black solid;
 }
 
-#BottomRightStory {
+#bottomRightStory {
     position: relative;
     width: 178px;
     text-align: center;
     padding: 5px;
-    
-    
 }
 
 #headerMiddle {
@@ -317,19 +290,18 @@ html, body {
 	 margin-right: auto;
 }
 
-#storya {
+/* #storyA {
 	width: 178px;
 	text-align: center;
     vertical-align: top;
 	border-right: 1px black solid;
     border-left: 1px black solid;
-   
 	padding: 5px;
-}
+} */
 
-#storyb {
+/* #storyB {
 	width: 178px;
 	text-align: center;
     vertical-align: top;
     padding: 5px;
-}
+} */
