@@ -147,11 +147,7 @@ html, body {
 
 #info {
 	position: absolute;
-<<<<<<< HEAD
-    width: 915px;
-=======
     width: 910px;
->>>>>>> feature/#1038_Gazette_Pages
     top: 90px;
 }
 
@@ -165,25 +161,15 @@ html, body {
 #mainHeadline {
     position: absolute;
     top: 115px;
-<<<<<<< HEAD
-    width: 915px;
-=======
     width: 910px;
->>>>>>> feature/#1038_Gazette_Pages
 	text-align: center;
 }
 
 #topLeftStory {
     position:relative;
     top: 175px;
-<<<<<<< HEAD
-	width: 178px;
-	text-align: center;
-	//border-top: 1px black solid;
-=======
 	width: 172px;
 	text-align: center;
->>>>>>> feature/#1038_Gazette_Pages
 	padding: 5px;
 }
 
@@ -198,22 +184,14 @@ html, body {
 #map {
     position: absolute;
     top: 175px;   
-<<<<<<< HEAD
-	width: 537px; 
-=======
 	width: 516px; 
->>>>>>> feature/#1038_Gazette_Pages
     left: 190px;
     
 }
 
 #mapText {
 	display: block; 
-<<<<<<< HEAD
-	width: 540px; 
-=======
 	width: 535px; 
->>>>>>> feature/#1038_Gazette_Pages
 	height: 15px;
 	text-align: center; 
 	padding-top: 3px;
@@ -222,28 +200,16 @@ html, body {
 
 #ao {
     position: absolute;
-<<<<<<< HEAD
-	width: 178px;
-    top: 175px;
-    left: 732px;
-	text-align: center;
-	//border-top: 1px black solid;
-=======
 	width: 172px;
     top: 175px;
     left: 732px;
 	text-align: center;
->>>>>>> feature/#1038_Gazette_Pages
 }
 
 #middleTopRightStory {
     position: relative;
     top: 15px;
-<<<<<<< HEAD
-	width: 178px;
-=======
 	width: 172px;
->>>>>>> feature/#1038_Gazette_Pages
 	text-align: center;
     left: 732px;
 }
@@ -251,11 +217,7 @@ html, body {
 #underNews {
     position: absolute;
 	top: 555px;
-<<<<<<< HEAD
-	width: 915px; 
-=======
 	width: 910px; 
->>>>>>> feature/#1038_Gazette_Pages
 }
 
 #news {

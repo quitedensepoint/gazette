@@ -20,7 +20,7 @@ $ver=$vers->fetch_assoc();
 
 
 //get todays date and subtract start date to get number of days between the two.
-<<<<<<< HEAD
+
 // date_default_timezone_set("America/Chicago");
 // $today = time();
 // $today=date("d-M-Y", $today);
@@ -30,14 +30,5 @@ $ver=$vers->fetch_assoc();
 $start = date_create($row['start_time']);
 $today = date_create(date('Y-m-d'));
 $days = date_diff($start,$today)->format('%d');
-=======
-$start = date_create($row['start_time']);
-$today = date_create(date('Y-m-d'));
-$days = date_diff($start,$today)->format('%d');
-
-
-
-
->>>>>>> feature/#1038_Gazette_Pages
 
 ?>
