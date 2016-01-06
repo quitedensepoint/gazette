@@ -169,7 +169,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 							$selImage = $image[array_rand($image)];
 						?>
 						<!-- End rotation Code -->
-						<img id="poster" src="<?php echo $selImage ?>" style="width: 172px;"> 
+						<img id="poster" src="<?php echo $selImage ?>" style="width: 170px;"> 
                     </div>
                      <div id='top'>  </div>  
 <!-- Article Below Poster Right Side-->
