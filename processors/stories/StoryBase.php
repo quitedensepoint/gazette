@@ -656,7 +656,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 
 		$query = $dbHelper
-			->prepare("SELECT * from VEHICLES where country_id = ? ORDER BY RAND() LIMIT 1", [$countryId]);	
+			->prepare("SELECT * FROM vehicles where country_id = ? ORDER BY RAND() LIMIT 1", [$countryId]);	
 		
 		$result = $dbHelper->getAsArray($query);
 		
