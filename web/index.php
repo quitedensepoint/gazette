@@ -86,7 +86,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 <!-- Main Headline --> 
         <div id="mainHeadline">
             <span  class='paperheadline'><?= $indexMainHeadline ?></span>
-            <div id='top'>  </div> <!-- sets an absolute point at the story bottom for the poster to be relative to -->
+            <div class='top'>  </div> <!-- sets an absolute point at the story bottom for the poster to be relative to -->
         </div>
 <!-- Top Row: topLeftStory | Map | Top Right Story Row  (AO's)-->
 <!-- top L Story -->
@@ -97,6 +97,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
             </div>
 <!-- map -->
             <div id="map">
+<<<<<<< HEAD
 				<a href="https://webmap.wwiionline.com"><img src="https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png" width="540"></a>
 				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' style="color: yellow;">CLICK FOR FULL SIZE</a></span>
             </div>
@@ -104,6 +105,15 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
             <div id="topRightStory">
 				<hr style="width: 90%; margin-top: 0;">
 				<table width="178px">
+=======
+				<a href="https://webmap.wwiionline.com"><img src="https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png" width="535"></a>
+				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' style="color: yellow;">CLICK FOR FULL SIZE</a></span>
+            </div>
+<!-- AO info -->
+            <div id="ao">
+				<hr style="width: 90%; margin-top: 0;">
+				<table width="172px">
+>>>>>>> feature/#1038_Gazette_Pages
 					<tr>
 						<td>
 							<b><span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
@@ -169,7 +179,11 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 							$selImage = $image[array_rand($image)];
 						?>
 						<!-- End rotation Code -->
+<<<<<<< HEAD
 						<img id="poster" src="<?php echo $selImage ?>"> 
+=======
+						<img id="poster" src="<?php echo $selImage ?>" style="width: 172px;"> 
+>>>>>>> feature/#1038_Gazette_Pages
                     </div>
                      <div id='top'>  </div>  
 <!-- Article Below Poster Right Side-->
@@ -238,7 +252,11 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 											<td style="text-align: center;"> 
 												<span class="papertimesbig">French Notes</span>
 												<br>
+<<<<<<< HEAD
 												<span class="paperarialmedium"><?= $indexAlliedBritishRDP1 ?></span>
+=======
+												<span class="paperarialmedium"><?= $indexAlliedFrenchRDP1 ?></span>
+>>>>>>> feature/#1038_Gazette_Pages
 										   </td>
 										</tr>
 										<?php /*
@@ -289,4 +307,3 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 </body>
 </html>
  
-

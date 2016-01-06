@@ -116,7 +116,7 @@ html, body {
 
 #container {
 	height: 950px;
-	width: 915px;
+	width: 910px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	display: block;
 	margin-left: auto;
@@ -147,13 +147,17 @@ html, body {
 
 #info {
 	position: absolute;
+<<<<<<< HEAD
     width: 915px;
+=======
+    width: 910px;
+>>>>>>> feature/#1038_Gazette_Pages
     top: 90px;
 }
 
 #infoBar {
     position: absolute;
-    width: 900px;
+    width: 895px;
     left: 5px;
     border: 1px black solid;
 }
@@ -161,23 +165,32 @@ html, body {
 #mainHeadline {
     position: absolute;
     top: 115px;
+<<<<<<< HEAD
     width: 915px;
+=======
+    width: 910px;
+>>>>>>> feature/#1038_Gazette_Pages
 	text-align: center;
 }
 
 #topLeftStory {
     position:relative;
     top: 175px;
+<<<<<<< HEAD
 	width: 178px;
 	text-align: center;
 	//border-top: 1px black solid;
+=======
+	width: 172px;
+	text-align: center;
+>>>>>>> feature/#1038_Gazette_Pages
 	padding: 5px;
 }
 
 #middleTopLeftpic {
     position: relative;
     top: 175px;
-    width: 178px;
+    width: 172px;
     text-align: center;
     padding: 5px;
 }
@@ -185,33 +198,52 @@ html, body {
 #map {
     position: absolute;
     top: 175px;   
+<<<<<<< HEAD
 	width: 537px; 
+=======
+	width: 516px; 
+>>>>>>> feature/#1038_Gazette_Pages
     left: 190px;
     
 }
 
 #mapText {
 	display: block; 
+<<<<<<< HEAD
 	width: 540px; 
+=======
+	width: 535px; 
+>>>>>>> feature/#1038_Gazette_Pages
 	height: 15px;
 	text-align: center; 
 	padding-top: 3px;
 	margin-top: -3px;
 }
 
-#topRightStory {
+#ao {
     position: absolute;
+<<<<<<< HEAD
 	width: 178px;
     top: 175px;
     left: 732px;
 	text-align: center;
 	//border-top: 1px black solid;
+=======
+	width: 172px;
+    top: 175px;
+    left: 732px;
+	text-align: center;
+>>>>>>> feature/#1038_Gazette_Pages
 }
 
 #middleTopRightStory {
     position: relative;
     top: 15px;
+<<<<<<< HEAD
 	width: 178px;
+=======
+	width: 172px;
+>>>>>>> feature/#1038_Gazette_Pages
 	text-align: center;
     left: 732px;
 }
@@ -219,7 +251,11 @@ html, body {
 #underNews {
     position: absolute;
 	top: 555px;
+<<<<<<< HEAD
 	width: 915px; 
+=======
+	width: 910px; 
+>>>>>>> feature/#1038_Gazette_Pages
 }
 
 #news {
@@ -235,14 +271,14 @@ html, body {
     position: relative;
 	left: 5px;
     top: 175px;
-	width: 178px;
+	width: 172px;
 	text-align: center;
 	padding: 5px;
 }
 
 #middleBottomRightPic {
     position: relative;
-    width: 178px;
+    width: 172px;
     text-align: center;
     padding: 5px;
     right: 5px;
@@ -259,14 +295,14 @@ html, body {
 
 #bottomRightStory {
     position: relative;
-    width: 178px;
+    width: 172px;
     text-align: center;
     padding: 5px;
 }
 
 #headerMiddle {
 	height: 90px;
-	width: 915px; 
+	width: 910px; 
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -288,6 +324,7 @@ html, body {
 	 display: block;
 	 margin-left: auto;
 	 margin-right: auto;
+     width:172px;
 }
 
 /* #storyA {
