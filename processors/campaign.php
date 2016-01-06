@@ -17,14 +17,11 @@ $row=$currcamp->fetch_assoc();
 $vers=$dbconnAuth->query("SELECT MAX(maxClientVersion), platform FROM app_host_versions WHERE appID='1' AND platform='0' ");
 $ver=$vers->fetch_assoc();
 
+// date_default_timezone_set("America/Chicago");
 
-
-//get todays date and subtract start date to get number of days between the two.
-$start = date_create($row['start_time']);
-$today = date_create(date('Y-m-d'));
-$days = date_diff($start,$today)->format('%d');
-
-
+ $today = new DateTime("today");
+ $start = new DateTime($row['start_time']);
+ $days = $start->diff($today);
 
 
 
