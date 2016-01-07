@@ -116,7 +116,7 @@ html, body {
 
 #container {
 	height: 950px;
-	width: 910px;
+	width: 905px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	display: block;
 	margin-left: auto;
@@ -147,7 +147,7 @@ html, body {
 
 #info {
 	position: absolute;
-    width: 910px;
+    width: 905px;
     top: 90px;
 }
 
@@ -161,7 +161,7 @@ html, body {
 #mainHeadline {
     position: absolute;
     top: 115px;
-    width: 910px;
+    width: 905px;
 	text-align: center;
 }
 
@@ -185,7 +185,7 @@ html, body {
     position: absolute;
     top: 175px;   
 	width: 516px; 
-    left: 190px;
+    left: 185px;
     
 }
 
@@ -202,29 +202,29 @@ html, body {
     position: absolute;
 	width: 172px;
     top: 175px;
-    left: 732px;
+    left: 729px;
 	text-align: center;
 }
-
+/*
 #middleTopRightStory {
     position: relative;
     top: 15px;
 	width: 172px;
 	text-align: center;
-    left: 732px;
+    left: 710px;
 }
-
+*/
 #underNews {
     position: absolute;
 	top: 555px;
-	width: 910px; 
+	width: 905px; 
 }
 
 #news {
     position: absolute;
-	width: 537px;
+	width: 535px;
     top: 0px;
-	left: 190px;
+	left: 185px;
     border-right: 1px black solid;
     border-left: 1px black solid;
 }
@@ -240,7 +240,7 @@ html, body {
 
 #middleBottomRightPic {
     position: relative;
-    width: 172px;
+    width: 170px;
     text-align: center;
     padding: 5px;
     right: 5px;
@@ -248,9 +248,9 @@ html, body {
 
 #belowNews {
     position: absolute;
-	width: 537px;
-    top: 185px;
-	left: 190px;
+	width: 535px;
+    top: 172px;
+	left: 185px;
     border-right: 1px black solid;
     border-left: 1px black solid;
 }
@@ -260,11 +260,12 @@ html, body {
     width: 172px;
     text-align: center;
     padding: 5px;
+    right: 5px;
 }
 
 #headerMiddle {
 	height: 90px;
-	width: 910px; 
+	width: 905px; 
 	display: block;
 	margin-left: auto;
 	margin-right: auto;

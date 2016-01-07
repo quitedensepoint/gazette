@@ -78,7 +78,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
             <table id='infoBar'>
                 <tr>
 				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.15</span></td>
-					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days; ?></span></td> 
+					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days->format('%a'); ?></span></td> 
 					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'>Coming Soon: ALLIED Section & AXIS Section</span></td>
 			    </tr>
 		    </table>
@@ -169,7 +169,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 							$selImage = $image[array_rand($image)];
 						?>
 						<!-- End rotation Code -->
-						<img id="poster" src="<?php echo $selImage ?>" style="width: 172px;"> 
+						<img id="poster" src="<?php echo $selImage ?>" style="width: 170px;"> 
                     </div>
                      <div id='top'>  </div>  
 <!-- Article Below Poster Right Side-->
