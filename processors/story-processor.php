@@ -80,7 +80,7 @@ class StoryProcessor {
 			 */
 			$this->pushToFile($storyKey, $storyData['alt']);
 			
-			echo sprintf("\tNo stories could be made for %s! - using story alt\n", $storyKey);
+			echo sprintf("*** No stories could be made for %s! - using story alt***\n", $storyKey);
 			return false;
 		}
 		
@@ -93,7 +93,7 @@ class StoryProcessor {
 			$storyKey, $story['debug_data']['source_id'], $story['debug_data']['template_id']);  
 		
 		$this->pushToFile($storyKey, $content);
-		echo sprintf("\tStory was created for %s!\n", $storyKey);
+		echo sprintf("  Story was created for %s!\n", $storyKey);
 		
 		/**
 		 * Update the expiry date on the story
@@ -116,7 +116,7 @@ class StoryProcessor {
 		$storyTypes = $this->getTypeData($storyId);
 		if(count($storyTypes) == 0)
 		{
-			echo sprintf('There are no story types for key %s - skipping', $storyKey);
+			echo sprintf('There are no story types for key %s - skipping\n', $storyKey);
 			return false;			
 		}
 		
@@ -134,11 +134,11 @@ class StoryProcessor {
 	 */
 	private function checkStoryTypes($storyData, $storyTypes, $sourceId = null, $templateId = null)
 	{
-		echo sprintf("  Story has %d storytypes\n", count($storyTypes));
+		echo sprintf("    Story has %d storytypes\n", count($storyTypes));
 		
 		foreach($storyTypes as $storyType)
 		{
-			echo sprintf("    Checking StoryType %s for %s\n", $storyType['name'], $storyType['country']);
+			echo sprintf("      Checking StoryType %s for %s (id: %d)\n", $storyType['name'], $storyType['country'], $storyData['story_id']);
 			
 			if(($content = $this->prepareStoryType($storyData, $storyType, $sourceId, $templateId)))
 			{
@@ -231,8 +231,14 @@ class StoryProcessor {
 	 */
 	private function processSource($storyData, $source, $creatorData, $templateId) {
 
+		/* @var $sourceName string */
 		$sourceName = $source['name'];
-
+		
+		/* @var $pageId integer */
+		$pageId = $storyData['page_id'];
+		
+		/* @var $storyId integer */
+		$storyId = $storyData['story_id'];
 
 		$storyCreatorClass = "Story" . str_replace(" ", "", $sourceName);
 
@@ -241,13 +247,13 @@ class StoryProcessor {
 		 */
 		if(!class_exists($storyCreatorClass))
 		{
-			echo "\tNo story class has been defined for $storyCreatorClass - skipping...\n";
+			echo "        No story class has been defined for $storyCreatorClass - skipping...\n";
 			return false;
 		}
 
 		/* @var $storyCreator StoryInterface */
 		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWII, $this->dbConnWWIIOnline, $this->dbConnToe, $creatorData);
-		echo sprintf("\tChecking story %s" , $storyCreatorClass);
+		echo sprintf("        Checking story %s\n" , $storyCreatorClass);
 
 		if($storyCreator->isValid())
 		{
@@ -257,31 +263,29 @@ class StoryProcessor {
 			}
 			else
 			{
-				$template = $this->getRandomTemplateForSource($source['source_id'], $creatorData['country_id']);
+				$template = $this->getRandomTemplateForSource($source['source_id'], $creatorData['country_id'], $pageId, $storyId);
 			}
 			
-			if(count($template) !== 1)
+			if($template == null)
 			{
-				echo sprintf("\t** No valid templates for source %s**\n" , $sourceName);
+				echo sprintf("          ** No valid templates for source %s**\n" , $sourceName);
 				return false;
 			}
 			
-			echo " -- valid\n";
-			echo sprintf("\tUsing Template %s\n" , $template[0]['template_id']);
+			echo sprintf("          Using Template %s\n" , $template['template_id']);
 			
 			/**
 			 * Content is an array of [title, body]
 			 */
-			$content['story'] =  $storyCreator->makeStory($template[0]);
-			$content['debug_data'] = ['source_id' => $source['source_id'], 'template_id' => $template[0]['template_id']];
+			$content['story'] =  $storyCreator->makeStory($template);
+			$content['debug_data'] = ['source_id' => $source['source_id'], 'template_id' => $template['template_id']];
 			
-			$this->updateStoryExpiry($storyData['story_key'], $source['life']);
+			$this->updateStory($storyData['story_key'], $source['life'], $template['template_id']);
 			
 			return $content;
 		}
 		else
 		{
-			echo "-- not valid\n";
 			return false;
 		}
 		
@@ -291,12 +295,14 @@ class StoryProcessor {
 	 * Updates the story to set the expiry date
 	 * 
 	 * @param string $storyKey the story_key in the stories table
-	 * @param integer $lifetime the number of minutes to add to NOW for expiry date of this story. 
+	 * @param integer $lifetime the number of minutes to add to NOW for expiry date of this story.
+	 * @param integer $templateId The last templateId used to populate this story. 
 	 */
-	public function updateStoryExpiry($storyKey, $lifetime)
+	public function updateStory($storyKey, $lifetime, $templateId)
 	{
 		$query = $this->dbHelper
-		->prepare("UPDATE `stories` SET `expire` = 0, `expires` = DATE_ADD(NOW(), INTERVAL ? second) WHERE `story_key` = ? LIMIT 1", [$lifetime * 60, $storyKey]);
+		->prepare("UPDATE `stories` SET `expire` = 0, `expires` = DATE_ADD(NOW(), INTERVAL ? second), "
+			. "used_id = ? WHERE `story_key` = ? LIMIT 1", [$lifetime * 60, $templateId, $storyKey]);
 		
 		$query->execute();
 	}
@@ -333,25 +339,51 @@ class StoryProcessor {
 	 * 
 	 * @param integer $sourceId
 	 * @param integer $countryId
-	 * @return array
+	 * @return array|null
 	 */
-	private function getRandomTemplateForSource($sourceId, $countryId)
+	private function getRandomTemplateForSource($sourceId, $countryId, $pageId, $storyId)
 	{
 		$query = $this->dbHelper
 		->prepare("SELECT t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
 			." FROM template_sources AS ts"
 			." INNER JOIN templates AS t ON ts.template_id = t.template_id "
 			." INNER JOIN template_countries AS tc ON t.template_id = tc.template_id"
-			." WHERE ts.source_id = ? AND tc.country_id = ? ORDER BY RAND() LIMIT 1", [$sourceId, $countryId]);
+			." WHERE ts.source_id = ? AND tc.country_id = ? ORDER BY RAND()", [$sourceId, $countryId]);
 
-		return $this->dbHelper->getAsArray($query);		
+		$templates = $this->dbHelper->getAsArray($query);
+		
+		echo sprintf("          There are %d templates for source %d, country %d\n",count($templates), $sourceId, $countryId);		
+		
+		/**
+		 * Go through every returned template. If we find one that allows duplicates, accept it.
+		 * 
+		 * If a template is disallowed, move onto the next until you either find one that hasn't
+		 * been used on the same page, or run out of templates
+		 */
+		
+		foreach($templates as $template)
+		{
+			if(strtolower($template['duplicates']) == 'allow') {
+				return $template;
+			}
+
+			if(!$this->checkIfTemplateDuplicatedOnPage($pageId, $storyId, $template['template_id']))
+			{
+				echo sprintf("          Template %d ok\n",$template['template_id']); 
+				return $template;
+			}
+			
+			echo sprintf("          Template %d is already duplicated on page %s\n",$template['template_id'], $pageId);
+		}
+		
+		return null;
 	}	
 
 	/**
-	 * Retrieves a specific template by Id
+	 * Retrieves a specific template by Id, or null if not found
 	 * 
 	 * @param integer $templateId
-	 * @return array
+	 * @return array|null
 	 */
 	private function getTemplateById($templateId)
 	{
@@ -362,7 +394,9 @@ class StoryProcessor {
 			." INNER JOIN template_countries AS tc ON t.template_id = tc.template_id"
 			." WHERE t.template_id = ? LIMIT 1", [$templateId]);
 
-		return $this->dbHelper->getAsArray($query);		
+		$result = $this->dbHelper->getAsArray($query);
+		
+		return count($result) > 0 ? $result[0] : null;
 	}	
 	
 	/**
@@ -515,4 +549,26 @@ class StoryProcessor {
 		
 		file_put_contents($cacheFile, $storyData);
 	}
+	
+	
+	/**
+	 * Retrieves whether a story on a page has used the same template as another on the same page
+	 * 
+	 * @param integer $pageId
+	 * @param integer $storyId
+	 * @param integer $templateId
+	 * @return boolean
+	 */
+	public function checkIfTemplateDuplicatedOnPage($pageId, $storyId, $templateId) {
+	
+		$dbHelper = new dbhelper($this->dbConn);
+
+		$query = $dbHelper
+			->prepare("SELECT count(*) as used_count FROM stories WHERE page_id = ? and story_id != ? and used_id = ?", 
+				[$pageId, $storyId, $templateId]);	
+		
+		$result = $dbHelper->getAsArray($query);
+
+		return $result[0]['used_count'] > 0;
+	}	
 }
