@@ -61,7 +61,8 @@ class StoryProcessor {
 	public function process($storyKey, $sourceId = null, $templateId = null)
 	{
 		$storyQuery = $this->dbHelper
-			->prepare("SELECT * FROM `stories` WHERE `story_key` = ?", [$storyKey]);
+			->prepare("SELECT s.*, sf.`key` as `story_format` FROM `stories` AS s INNER JOIN `story_formats` AS sf ON s.`story_format_id` = sf.`id` "
+				. "WHERE `story_key` = ?", [$storyKey]);
 		
 		$storyData = $this->dbHelper->getAsArray($storyQuery);
 		if(count($storyData) !== 1)
@@ -84,7 +85,7 @@ class StoryProcessor {
 			return false;
 		}
 		
-		$content = $this->parseTemplate($storyData['template'], $story['story']);
+		$content = $this->parseTemplate($storyData['template'], $story['story'], $storyData['story_format']);
 		
 		/**
 		 * Add some debug content
@@ -527,15 +528,72 @@ class StoryProcessor {
 		return $weights;
 	}
 	
-	private function parseTemplate($template, $data)
+	/**
+	 * Takes a template and replaces placeholders with the values from key/value pairs in the data attribute
+	 * 
+	 * Returns an array of title and body elements containing the text of the stories
+	 * 
+	 * @param array $template
+	 * @param array $data
+	 * @param string $storyFormat
+	 * @return array
+	 */
+	private function parseTemplate($template, $data, $storyFormat)
 	{
-		foreach($data as $key => $value)
+		/**
+		 * Stripe extra whitespace
+		 */
+		$output = trim($template);
+		
+		switch($storyFormat)
 		{
-			$template = str_replace('%' . strtoupper($key) . '%', $value, $template);
+			case StoryBase::STORY_FORMAT_HEADLINE : {
+				$output = $this->parseHeadlineStoryFormat($output, $data);
+				break;
+			}
+			default : {
+				// StoryBase::STORY_FORMAT_DEFAULT
+				$output = $this->parseDefaultStoryFormat($output, $data);
+				break; 
+			}
 		}
 		
-		return $template;
+
+		
+		return $output;
 	}
+	
+	/**
+	 * Parse and return data generated for headlines
+	 * 
+	 * @param string $template
+	 * @param array $data
+	 */
+	private function parseHeadlineStoryFormat($template, $data)
+	{
+		$tag = 'h1';
+		return str_replace('%TITLE%', sprintf("<%s>%s</%s>\n", $tag, $data['title'], $tag), $template);
+	}	
+	
+	
+	private function parseTableStoryFormat($template, $data)
+	{		
+		$tag = 'h3';
+		$template =  str_replace('%TITLE%', sprintf("<%s>%s</%s>\n", $tag, $data['title'], $tag), $template);
+		
+		$tag = 'div';
+		return str_replace('%TITLE%', sprintf("<%s>%s</%s>\n", $tag, $data['body'], $tag), $template);
+		
+	}
+	
+	private function parseDefaultStoryFormat($template, $data)
+	{
+		$tag = 'h3';
+		$template =  str_replace('%TITLE%', sprintf("<%s>%s</%s>\n", $tag, $data['title'], $tag), $template);
+		
+		$tag = 'div';
+		return str_replace('%BODY%', sprintf("<%s>%s</%s>\n", $tag, $data['body'], $tag), $template);		
+	}	
 	
 	/**
 	 * Push a file to the cache directory in the file system
