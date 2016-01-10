@@ -40,7 +40,7 @@ UPDATE `templates` SET `body` = REPLACE(`body`,'\r\n\r\n','\n');
 UPDATE `templates` SET `body` = REPLACE(`body`,'\n\n','\n');
 
 -- TITLE only stories
-UPDATE `stories` SET `story_format` = 2 WHERE `story_key` in ('index_main_headline');
+UPDATE `stories` SET `story_format_id` = 2 WHERE `story_key` in ('index_main_headline');
 
 
 -- ** ROLL BACK DEFINITIONS **
