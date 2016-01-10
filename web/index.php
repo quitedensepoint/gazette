@@ -84,8 +84,8 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 		    </table>
         </div>
 <!-- Main Headline --> 
-        <div id="mainHeadline">
-            <span  class='paperheadline'><?= $indexMainHeadline ?></span>
+        <div id="mainHeadline" class="mainheadline">
+            <?= $indexMainHeadline ?>
             <div class='top'>  </div> <!-- sets an absolute point at the story bottom for the poster to be relative to -->
         </div>
 <!-- Top Row: topLeftStory | Map | Top Right Story Row  (AO's)-->
@@ -93,7 +93,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
         <div id="top">
             <div id="topLeftStory">
 				<hr style="width: 90%; margin-top: -5px;">
-                <span class="topLeftStory"><?= $indexAlliedStats2 ?></span>
+                <div class="story-detail topLeftStory"><?= $indexAlliedStats2 ?></div>
             </div>
 <!-- map -->
             <div id="map">
@@ -173,7 +173,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
                     </div>
                      <div id='top'>  </div>  
 <!-- Article Below Poster Right Side-->
-			<div  id='bottomRightStory'>
+			<div  id='bottomRightStory' class="story-detail">
                 <?= $indexAxisStats2 ?>
             </div>
          </div>
@@ -191,7 +191,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 						    <img id="poster" src="<?php echo $selImage ?>"> 
             </div><div id='top'>
 <!-- Article Below Poster Left Side-->
-			<div  id='middleBottomLeftStory'>
+			<div  id='middleBottomLeftStory' class="story-detail">
                 <?= $indexAlliedStats1 ?>
             </div>
         </div>
@@ -232,13 +232,13 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 											<td style="text-align: center;"> 
 												<span class="papertimesbig">British Notes</span>
 												<br>
-												<span class="paperarialmedium"><?= $indexAlliedBritishRDP1 ?></span>
+												<span class="paperarialmedium story-detail"><?= $indexAlliedBritishRDP1 ?></span>
 											</td>
 <!--Allied French RDP Note --> 
 											<td style="text-align: center;"> 
 												<span class="papertimesbig">French Notes</span>
 												<br>
-												<span class="paperarialmedium"><?= $indexAlliedFrenchRDP1 ?></span>
+												<span class="paperarialmedium story-detail"><?= $indexAlliedFrenchRDP1 ?></span>
 										   </td>
 										</tr>
 										<?php /*

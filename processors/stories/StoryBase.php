@@ -5,6 +5,11 @@
  */
 abstract class StoryBase
 {
+	
+	const STORY_FORMAT_DEFAULT		= 'default';
+	const STORY_FORMAT_HEADLINE		= 'headline';
+	const STORY_FORMAT_TABLE		= 'table';
+	
 	/**
 	 * A database connection to the gazette DB
 	 * @var resource 
@@ -40,6 +45,7 @@ abstract class StoryBase
 	 * @var array
 	 */
 	protected $creatorData;
+	
 	
 	/**
 	 * An array of directions  for entering into stories.
@@ -147,6 +153,19 @@ abstract class StoryBase
 	public function parseStory($template_vars, $title, $body)
 	{
 		
+		/**
+		 * Turn CRLF in the body into P tags
+		 */
+		$bodyLines = explode("\n", $body);
+		$body = "";
+		foreach($bodyLines as $bodyLine)
+		{
+			if(strlen(trim($bodyLine)) > 0 && trim($bodyLine) != '')
+			{
+				$body .= "<p>" . $bodyLine . "</p>";
+			}
+		}
+		
 		$data = [
 			'title' => $title,
 			'body' => $body
@@ -154,8 +173,8 @@ abstract class StoryBase
 
 		foreach ($template_vars as $key => $value)
 		{
-			$data['title'] = str_replace('%' . strtoupper($key) . '%', $value, $data['title']);
-			$data['body'] = str_replace('%' . strtoupper($key) . '%', $value, $data['body']);
+			$data['title'] = str_replace('%' . strtoupper($key) . '%', '<span class="' . strtolower($key) . '">' . $value . '</span>', $data['title']);
+			$data['body'] = str_replace('%' . strtoupper($key) . '%', '<span class="' . strtolower($key) . '">' . $value . '</span>', $data['body']);
 		}
 
 		return $data;		
@@ -656,7 +675,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 
 		$query = $dbHelper
-			->prepare("SELECT * FROM vehicles where country_id = ? ORDER BY RAND() LIMIT 1", [$countryId]);	
+			->prepare("SELECT * from VEHICLES where country_id = ? ORDER BY RAND() LIMIT 1", [$countryId]);	
 		
 		$result = $dbHelper->getAsArray($query);
 		

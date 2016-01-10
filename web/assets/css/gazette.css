@@ -290,6 +290,43 @@ html, body {
      width:172px;
 }
 
+
+.mainheadline {
+  
+}
+
+.mainheadline h1 {
+    text-transform: uppercase;  
+    font-size:45px;
+    margin: 3px auto;
+    
+}
+
+.mainheadline .side,.enemy_side,.side_adj {
+    text-transform: uppercase; 
+}
+.story-detail {
+    
+}
+.story-detail h3 {
+    margin:3px 0;
+}
+.story-detail div {
+
+}
+.story-detail div p {
+    margin-bottom: 5px;
+}
+
+/** data styles **/
+.player, .side, .enemy_side, .side_adj {
+    text-transform: capitalize;
+}
+
+.player {     
+    font-weight: bold;
+}
+
 /* #storyA {
 	width: 178px;
 	text-align: center;
