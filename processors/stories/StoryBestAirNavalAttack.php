@@ -84,10 +84,11 @@ class StoryBestAirNavalAttack extends StoryBestSortieBase implements StoryInterf
 			$killList[] = sprintf("%s %ss", $kill['kill_count'], $kill['name']);
 		}
 		$this->creatorData['template_vars']['list'] = join(", ", $killList);
-		$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
 		
 		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
-		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');			
+		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');	
+		
+		$this->createCommonTemplateVarsFromSortie($sortie);		
 		
 		return true;
 

@@ -46,4 +46,16 @@ abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 		
 		return $duration;
 	}
+	
+	/**
+	 * Creates a common set of sortie data across "Best..." stories
+	 * 
+	 * @param array $sortie
+	 * @return void
+	 */
+	public function createCommonTemplateVarsFromSortie($sortie)
+	{
+		$rtb = $this->getRTBStatus($sortie['rtb']);
+		$this->creatorData['template_vars']['rtb'] = $rtb == null ? 'Unknown' : $rtb;		
+	}
 }

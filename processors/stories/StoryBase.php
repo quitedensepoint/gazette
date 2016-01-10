@@ -192,36 +192,21 @@ abstract class StoryBase
 	}
 	
 	/**
-	 * Gets the text description of an RTB status
+	 * Gets the text description of an RTB status, or null if not found
 	 * 
 	 * @param integer $statusId
-	 * @return string
+	 * @return string|null
 	 */
 	public function getRTBStatus($statusId)
 	{
-		$status = "Killed in Action";
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+
+		$query = $dbHelper
+			->prepare("SELECT `name` FROM `wwii_rtb_codes` WHERE `rtb_code` = ? LIMIT 1", [$statusId]);	
 		
-		switch(intval($statusId))
-		{
-			case 1: {
-				$status = 'Returned to Base';
-				break;
-			}
-			case 2: {
-				$status = 'Rescued';
-				break;
-			}
-			case 3: {
-				$status = 'Missing in Action';
-				break;
-			}
-			default:
-			{
-				// Do nothing
-			}
-		}
+		$result = $dbHelper->getAsArray($query);
 		
-		return $status;
+		return count($result) == 1 ? $result[0]['name'] : null;			
 	}
 	
 	/**

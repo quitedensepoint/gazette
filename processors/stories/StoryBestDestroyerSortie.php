@@ -84,12 +84,13 @@ class StoryBestDestroyerSortie extends StoryBestSortieBase implements StoryInter
 			$killList[] = sprintf("%s %ss", $kill['kill_count'], $kill['name']);
 		}
 		$this->creatorData['template_vars']['list'] = join(", ", $killList);
-		$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
 		
 		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side'];
 		
 		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
 		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');	
+		
+		$this->createCommonTemplateVarsFromSortie($sortie);
 		
 		return true;
 

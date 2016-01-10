@@ -25,7 +25,6 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 			{
 				$this->creatorData['template_vars']['user_id'] = $sortie['customer_id'];
 				$this->creatorData['template_vars']['player'] = $sortie['callsign'];
-				$this->creatorData['template_vars']['rtb'] = $this->getRTBStatus($sortie['rtb']);
 				$this->creatorData['template_vars']['kills'] = $sortie['kills'];
 				$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
 				$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawned'], $sortie['returned']);
@@ -38,6 +37,8 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 				$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);
 				$this->creatorData['template_vars']['enemy_country'] = $enemyCountry['name'];
 				$this->creatorData['template_vars']['enemy_country_adj'] = $enemyCountry['adjective'];
+				
+				$this->createCommonTemplateVarsFromSortie($sortie);
 				
 				return true;
 			}
