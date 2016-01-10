@@ -85,6 +85,9 @@ array_walk($killsData, function(&$kill) use($hourStart, $date, $campaignId,$camp
 	$kill['updated_at'] = $date->format('Y-m-d H:i:s');
 });
 
+$existingQuery = $gazetteDbHelper->getStatement("SELECT count(id) AS record_count FROM campaign_casualties"
+	. " WHERE period_start = ? AND period_end = ? AND campaign_id = ? AND branch_id = ? AND country_id = ? ");
+
 
 $killsCreate = $gazetteDbHelper->getStatement(
 	"INSERT INTO `campaign_casualties` (`created_at`, `updated_at`, `campaign_id`, `branch_id`, `kill_count`, `period_start`,`period_end`, `country_id`)" .
@@ -92,11 +95,27 @@ $killsCreate = $gazetteDbHelper->getStatement(
 
 foreach($killsData as $killData)
 {
-	$killsCreate->bind_param("ssiiissi", $killData['created_at'], $killData['updated_at'], $killData['campaign_id'], $killData['branch_id'],
+	$existingQuery->bind_param("ssiii", $killData['period_start'], $killData['period_end'],
+		$killData['campaign_id'], $killData['branch_id'],$killData['country_id']);
+	
+	$existingCount = null;
+	$existingQuery->bind_result($existingCount);
+	$existingQuery->execute();
+	$existingQuery->store_result();
+	$existingQuery->fetch();
+	
+	if($existingCount == 0)
+	{
+		echo "existing count > 0";
+		$killsCreate->bind_param("ssiiissi", $killData['created_at'], $killData['updated_at'], $killData['campaign_id'], $killData['branch_id'],
 		$killData['kill_count'], $killData['period_start'], $killData['period_end'],$killData['country_id']);
 	
-	$killsCreate->execute();
+		if($killsCreate->execute() == false) {
+			echo $killsCreate->error;
+		}
+	}
 }
 $killsCreate->close();
+$existingQuery->close();
 
 exit(0);
