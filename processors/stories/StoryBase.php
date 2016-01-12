@@ -188,7 +188,13 @@ abstract class StoryBase
 	 */
 	protected function getPlace($rank)
 	{
-		return $rank == 1 ? '1st' : ($rank == 2 ? '2nd' : '3rd');
+		$ends = array('th','st','nd','rd','th','th','th','th','th','th');
+		if (($rank %100) >= 11 && ($rank%100) <= 13)
+		   $abbreviation = $rank. 'th';
+		else
+		   $abbreviation = $rank. $ends[$rank % 10];
+		
+		return $abbreviation;
 	}
 	
 	/**
