@@ -20,8 +20,6 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 		foreach($countries as $country)
 		{
 			$chokepointCounts[$country['country_id']] =  $this->getChokepointsCount($country['country_id']);
-			
-			$total += $chokepointCounts[$country['country_id']];
 		}
 		
 		// Rank the airfields from most to least
@@ -31,7 +29,7 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 		{
 			$country = $countries[$key];
 			$name = $country['name'];
-			$side = $country['side'];
+			$side = strtolower($country['side']);
 			$percent = intval(($count / $total) * 100);
 			
 			/*
@@ -46,9 +44,6 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 			
 			$this->creatorData['template_vars'][$side . '_count'] += $count;
 			$this->creatorData['template_vars'][$side . '_percent'] += $percent;
-			
-			$this->creatorData['template_vars'][$name . '_count'] = $count;
-			$this->creatorData['template_vars'][$name . '_percent'] = $percent;
 			
 			$place = $this->getPlace($rank);
 			$this->creatorData['template_vars'][$place . '_count'] = $count;
@@ -73,8 +68,9 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 			 */	
 			$rank++;
 		}
+
 		$city = $this->getRandomCityForCountry($this->creatorData['country_id']);
-		$city = count($city) == 1 ? $city[0]['name'] : 'an undiclosed location';
+		$city = count($city) == 1 ? $city[0]['name'] : 'an undisclosed location';
 		$this->creatorData['template_vars']['city'] = $city;
 		
 		return true;
