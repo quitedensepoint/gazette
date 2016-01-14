@@ -46,3 +46,17 @@ $dbconnAuth->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnToe->query("SET SESSION time_zone = 'America/Chicago'");
  * 
  */
+
+/**
+ * The Options arrays allows us to set some global options regarding the pages
+ * to be loaded
+ * e.g.
+ *   $options = [
+ *     'ga-active' => true or false
+ *   ];
+ */
+$options = [
+	// if true, Google Analytics will be added to the bottom of the page
+	// This should only be set to true on the live server
+	'ga-active' => false 
+];
