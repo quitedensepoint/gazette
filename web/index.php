@@ -98,7 +98,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 <!-- map -->
             <div id="map">
 				<a href="https://webmap.wwiionline.com"><img src="https://webmap.wwiionline.com/Library/images/GazetteFrontPage.png" width="535"></a>
-				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' style="color: yellow;">CLICK FOR FULL SIZE</a></span>
+				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' style="color: yellow;" target="_blank">CLICK FOR FULL SIZE</a></span>
             </div>
 <!-- AO info -->
             <div id="ao">
@@ -212,6 +212,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 					    ?>
             
             </div>
+
 <!-- START ALLIED RDP -->
             <div id='belowNews'>
             <table style='width: 537px'>

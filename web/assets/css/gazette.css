@@ -247,9 +247,9 @@ html, body {
 }
 
 #belowNews {
-    position: relative;
+    position: absolute;
 	width: 535px;
-    top: 185px;
+    top: 205px;
 	left: 185px;
     border-right: 1px black solid;
     border-left: 1px black solid;
