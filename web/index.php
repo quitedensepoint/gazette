@@ -109,7 +109,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 							<b><span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
 							<br><br>
 							<b>Allied</b><br>
-							<table>
+							<table style="width:100%">
 								<?php 
 									while($row=$aoals->fetch_assoc()){
 										echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";
@@ -124,7 +124,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 							<br>
 							<b>Axis</b>
 							<br>
-							<table>
+							<table style="width:100%">
 								<?php 
 									while($row=$aoaxs->fetch_assoc()){
 										echo "<tr><td style='width:50%; text-align:center; '>".$row['name']."</td>"; 
