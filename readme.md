@@ -1,12 +1,24 @@
 # World War II Online : Gazette
 
 ## Database modifications
-Database modification files are contained in the **database** directory. In order
-to correctly perform the database changes, they must be performed in the ascending
-order of the date in the file name.
+Database migrations are performed with the phinx library (http://phinx.org). As they were introduced during the project,
+several raw SQL based migrations had already been performed on the database. These changes have been converted to
+Phinx migrations, and these migrations must be added to the Phinx data.
 
-We must also track which scripts have been executed on the server in order to
-maintain the server integrity.
+### Installation
+
+* Install composer from http://getcomposer.org
+* From your gazette command line, run *composer install*. This will install the phinx libraries. They will not otherwise interfere with the gazette.
+* If your current Gazette database already has the **phinxlog table**, you can skip the next step and its sub-steps
+* Go into PHPMyAdmin for the database and run the SQL script at *database/phinx_init.sql*
+ * This will initialise the phinxlog table and setup the migrations that have already been done in the Gazette.
+* If you are installing the gazette from scratch, the file *database/gazette-initial.zip* contains the state of the gazette as 14th December 2015.
+ * In this case, you can just call *vendor/bin/phinx.bat migrate* directly from the command to bring the database up to the current state
+
+### Usage
+The documentation for phinx migrations can be found at http://docs.phinx.org/en/latest/migrations.html
+
+
 
 ## Scripts
 ### Campaign Start Script
