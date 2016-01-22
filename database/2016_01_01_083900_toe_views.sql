@@ -1,3 +1,8 @@
+/*************************
+ * These views were created in the TOE database in order for us to progress in the gazette
+ * They do NOT exist in the Gazette itself. You may have to run these independently on the
+ * TOE database in your local system if they do not already exist
+ *************************/
 delimiter //
 
 CREATE FUNCTION f_rdp_cycle_action (i_current INT(11) UNSIGNED, i_next INT(11) UNSIGNED) RETURNS char(1) CHARSET latin1

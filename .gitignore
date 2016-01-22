@@ -1,3 +1,5 @@
 DBconn.php
 # drloon Netbeans project file
 /nbproject/
+/vendor/
+/phinx.yml
