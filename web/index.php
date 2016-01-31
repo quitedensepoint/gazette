@@ -79,7 +79,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
                 <tr>
 				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.15</span></td>
 					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days->format('%a'); ?></span></td> 
-					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'>Coming Soon: ALLIED Section & AXIS Section</span></td>
+					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href="allied.php">ALLIED Section</a> & AXIS Section</span></td>
 			    </tr>
 		    </table>
         </div>
