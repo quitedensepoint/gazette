@@ -2,7 +2,8 @@
     "name": "wwiionline/gazette",
     "description": "WWIIOnline Gazette",
     "require": {
-        "robmorgan/phinx": "^0.5.1"
+        "robmorgan/phinx": "^0.5.1",
+        "monolog/monolog": "^1.17"
     },
     "authors": [
         {
