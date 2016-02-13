@@ -24,9 +24,11 @@ $wwiiOnlineDb = new dbhelper($dbConnWWIIOL);
 
 /**
  * This allows us to log script output to the console or to a file or wherever
+ * 
+ * Check the options value in DBConn.php for the retention value
  */
 $logger = new Logger("gazette");
-$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/campaign-check.log', Logger::INFO));
+$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/campaign-check.log', $options['campaigncheck_log_retention_days'], Logger::INFO));
 
 /**
  * NOTE:: This script assumes that all dates in the database
