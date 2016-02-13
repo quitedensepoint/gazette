@@ -42,7 +42,7 @@ The campaign checked should be run via CRON job every *5* minutes. You can set t
 
 > *php commands/campaign-check.php*
 
-This will check the *wwiionline* and *community* databases and determine the current state of the game. It will update the gazette based on these values.
+This will check the *wwiionline* and *community* databases and determine the current state of the game. It will update the gazette based on these values. It will additionally set all countries to inactive when a campaign ends, reactivate the initial countries (see the *is_active_initially* field) and activate additional countries as sorties appear for those countries in the main game DB.
 
 ### Casualties calculation script
 Run a cron job at the start of every hour to call the following script. This will populate the casualties data for the Gazette top page

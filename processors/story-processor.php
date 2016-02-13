@@ -1,10 +1,11 @@
 <?php
 /**
+ * copyright Playnet 2016
+ * 
  * Processes stories and generates new ones for the Gazette
  * 
  * - How stories are chosen.
  * 
- *
  * @author Jason Rout
  */
 
@@ -43,58 +44,76 @@ class StoryProcessor {
 	 */
 	protected $dbHelper;
 	
+	/**
+	 * A loaded array of the countries contributing to the campaign at the current time
+	 * @var array 
+	 */
+	private $activeCountries;
+	
+	/**
+	 * An array of country keys, each with an array of story ids that the country can use
+	 * @var array 
+	 */
+	private $countryStories = [];
+	
 	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe) {
 		$this->dbConn = $dbConn;
 		$this->dbConnWWII = $dbConnWWII;
 		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
 		$this->dbConnToe = $dbConnToe;
 		$this->dbHelper = new dbhelper($this->dbConn);
+		
+		$this->init();
 	}
 	
 	/**
 	 * Process a specific area of a specific page
 	 * 
 	 * @param string $storyKey
-	 * @param integer $sourceId The ID of a specific source to draw from
+	 * @param array $options Options for generating the stories
 	 * @return boolean true if a story could be made
 	 */
-	public function process($storyKey, $sourceId = null, $templateId = null)
+	public function process($storyKey, $options)
 	{
-		$storyQuery = $this->dbHelper
-			->prepare("SELECT s.*, sf.`key` as `story_format` FROM `stories` AS s INNER JOIN `story_formats` AS sf ON s.`story_format_id` = sf.`id` "
-				. "WHERE `story_key` = ?", [$storyKey]);
-		
-		$storyData = $this->dbHelper->getAsArray($storyQuery);
-		if(count($storyData) !== 1)
+		$sourceId	= $options['sourceId'];
+		$templateId = $options['templateId'];
+		$reportOnly = $options['reportOnly'];
+	
+		/**
+		if($this->isIntermission())
 		{
-			echo sprintf("Could not find a story with key %s - skipping\n", $storyKey);
+			$this->generateIntermissionStories();
 			return false;
 		}
+		**/
 		
-		$storyData = $storyData[0];
+		if(($storyData = $this->getStoryDataForKey($storyKey)) === false)
+		{
+			return false;
+		}
 
 		if(($story = $this->checkStory($storyData, $sourceId, $templateId)) === false)
-		{		
+		{	
+			echo sprintf("*** No stories could be made for %s! - using story alt***\n", $storyKey);
+
 			/**
 			 * No valid story could be found for this section of the page, so use
 			 * the "alt" value instead
 			 */
-			$this->pushToFile($storyKey, $storyData['alt']);
+			$this->outputStory($storyKey, $storyData['alt'], $reportOnly);
 			
-			echo sprintf("*** No stories could be made for %s! - using story alt***\n", $storyKey);
 			return false;
 		}
 		
 		$content = $this->parseTemplate($storyData['template'], $story['story'], $storyData['story_format']);
 		
 		/**
-		 * Add some debug content
-		 */
+		* Add some debug content
+		*/
 		$content .= sprintf("<!-- StoryKey: %s SourceID : %s TemplateID : %s -->", 
-			$storyKey, $story['debug_data']['source_id'], $story['debug_data']['template_id']);  
+			$storyKey, $story['debug_data']['source_id'], $story['debug_data']['template_id']); 
 		
-		$this->pushToFile($storyKey, $content);
-		echo sprintf("  Story was created for %s!\n", $storyKey);
+		$this->outputStory($storyKey, $content, $reportOnly);
 		
 		/**
 		 * Update the expiry date on the story
@@ -117,7 +136,7 @@ class StoryProcessor {
 		$storyTypes = $this->getTypeData($storyId);
 		if(count($storyTypes) == 0)
 		{
-			echo sprintf('There are no story types for key %s - skipping\n', $storyKey);
+			echo sprintf("There are no story types for key %s - skipping\n", $storyKey);
 			return false;			
 		}
 		
@@ -139,9 +158,7 @@ class StoryProcessor {
 		
 		foreach($storyTypes as $storyType)
 		{
-			echo sprintf("      Checking StoryType %s for %s (id: %d)\n", $storyType['name'], $storyType['country'], $storyData['story_id']);
-			
-			if(($content = $this->prepareStoryType($storyData, $storyType, $sourceId, $templateId)))
+			if(($content = $this->prepareStory($storyData, $storyType, $sourceId, $templateId)))
 			{
 				return $content;
 			}			
@@ -152,33 +169,16 @@ class StoryProcessor {
 	
 	/**
 	 * 
-	 * @param type $storyType
-	 * @param type $sourceId
+	 * @param array $storyData
+	 * @param array $storyType
+	 * @param integer $sourceId
+	 * @param integer $templateId
+	 * 
 	 * @return boolean
 	 */
-	private function prepareStoryType($storyData, $storyType, $sourceId, $templateId)
-	{
-		$creatorData = [
-			'template_vars' => [
-				'country' => $storyType['country'],
-				'side' => $storyType['side'],
-				'enemy_side' => strtolower($storyType['side']) == 'allied' ? 'axis' : 'allied',
-				'country_adj' => $storyType['country_adj']
-			]
-		];			
-
-		/**
-		 * Pull all the possible sources for a specific story type
-		 * 
-		 * e.g. for index_main_headline, the single story type is "Headline News" in the types table
-		 * We then look in the sources table for all sources of that type to get the weighting of that
-		 * story and how long it lasts
-		 */
-		$countryId = $storyType['country_id'];
+	private function prepareStory($storyData, $storyType, $sourceId, $templateId)
+	{		
 		$typeId = $storyType['type_id'];
-
-		$creatorData['side_id'] = strtolower($storyType['side_id']);
-		$creatorData['country_id'] = $countryId;
 
 		/**
 		 * If source ID is not null, we have asked for specific source of 
@@ -186,9 +186,16 @@ class StoryProcessor {
 		 */
 		if($sourceId !== null)
 		{
-			$sourceData = $this->getStorySource($sourceId, $countryId);
+			$sourceData = $this->getStorySource($sourceId);
 		}
 		else {
+			/**
+			 * Pull all the possible sources for a specific story type
+			 * 
+			 * e.g. for index_main_headline, the single story type is "Headline News" in the types table
+			 * We then look in the sources table for all sources of that type to get the weighting of that
+			 * story and how long it lasts
+			 */			
 			$sourceData = $this->getSourcesForType($typeId);
 			$sourceId = $sourceData[0]['source_id'];			
 		}
@@ -212,7 +219,7 @@ class StoryProcessor {
 			 */
 			foreach($organisedSources[$weight] as $source)
 			{
-				if(($content = $this->processSource($storyData, $source, $creatorData, $templateId)) !== false) {
+				if(($content = $this->processSource($storyData, $source, $templateId)) !== false) {
 					return $content;
 				}
 			}				
@@ -230,8 +237,67 @@ class StoryProcessor {
 	 * @param integer $templateId
 	 * @return array|false
 	 */
-	private function processSource($storyData, $source, $creatorData, $templateId) {
+	private function processSource($storyData, $source, $templateId) 
+	{
+		$activeCountries = $this->activeCountries;
+		
+		/**
+		 * Randomise the order of the countries so that the perspective of the story is
+		 * changed for this type
+		 */
+		shuffle($activeCountries);
 
+		/**
+		 * Go through each active country and see if the source story is true
+		 */
+		foreach($activeCountries as $activeCountry)
+		{			
+			echo sprintf("        Checking source %s on country %s", $source['name'], $activeCountry['name']);			
+			
+			// If the country has no stories, go to the next country
+			if(!isset($this->countryStories[$activeCountry['country_id']]))
+			{
+				echo " -- No stories\n";
+				
+				continue;
+			}
+			echo "\n";
+			
+			if(($result = $this->processSourceForCountry($storyData, $source, $activeCountry, $templateId)) !== false)
+			{
+				return $result;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Processes a specific source for the currently active country
+	 * 
+	 * Returns the content of the story, or false if no content could be generated
+	 * 
+	 * @param array $storyData
+	 * @param array $source
+	 * @param array $activeCountry
+	 * @param integer $templateId
+	 * @return string|false
+	 */
+	public function processSourceForCountry($storyData, $source, $activeCountry, $templateId)
+	{
+		$creatorData = [
+			'template_vars' => [
+				'country' => $activeCountry['name'],
+				'side' => $activeCountry['side'],
+				'enemy_side' => strtolower($activeCountry['side']) == 'allied' ? 'axis' : 'allied',
+				'country_adj' => $activeCountry['adjective'],
+				'side_id' => $activeCountry['side_id'],
+				'country_id' => $activeCountry['country_id'],				
+			],
+			'side_id' => $activeCountry['side_id'],
+			'country_id' => $activeCountry['country_id']
+		];			
+		
 		/* @var $sourceName string */
 		$sourceName = $source['name'];
 		
@@ -248,13 +314,13 @@ class StoryProcessor {
 		 */
 		if(!class_exists($storyCreatorClass))
 		{
-			echo "        No story class has been defined for $storyCreatorClass - skipping...\n";
+			echo "          No story class has been defined for $storyCreatorClass - skipping...\n";
 			return false;
 		}
 
 		/* @var $storyCreator StoryInterface */
 		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWII, $this->dbConnWWIIOnline, $this->dbConnToe, $creatorData);
-		echo sprintf("        Checking story %s\n" , $storyCreatorClass);
+		echo sprintf("          Checking story %s\n" , $storyCreatorClass);
 
 		if($storyCreator->isValid())
 		{
@@ -269,11 +335,11 @@ class StoryProcessor {
 			
 			if($template == null)
 			{
-				echo sprintf("          ** No valid templates for source %s**\n" , $sourceName);
+				echo sprintf("            ** No valid templates for source %s**\n" , $sourceName);
 				return false;
 			}
 			
-			echo sprintf("          Using Template %s\n" , $template['template_id']);
+			echo sprintf("            Using Template %s\n" , $template['template_id']);
 			
 			/**
 			 * Content is an array of [title, body]
@@ -288,8 +354,7 @@ class StoryProcessor {
 		else
 		{
 			return false;
-		}
-		
+		}		
 	}
 	
 	/**
@@ -353,7 +418,7 @@ class StoryProcessor {
 
 		$templates = $this->dbHelper->getAsArray($query);
 		
-		echo sprintf("          There are %d templates for source %d, country %d\n",count($templates), $sourceId, $countryId);		
+		echo sprintf("            There are %d templates for source %d, country %d\n",count($templates), $sourceId, $countryId);		
 		
 		/**
 		 * Go through every returned template. If we find one that allows duplicates, accept it.
@@ -370,11 +435,11 @@ class StoryProcessor {
 
 			if(!$this->checkIfTemplateDuplicatedOnPage($pageId, $storyId, $template['template_id']))
 			{
-				echo sprintf("          Template %d ok\n",$template['template_id']); 
+				echo sprintf("            Template %d ok\n",$template['template_id']); 
 				return $template;
 			}
 			
-			echo sprintf("          Template %d is already duplicated on page %s\n",$template['template_id'], $pageId);
+			echo sprintf("            Template %d is already duplicated on page %s\n",$template['template_id'], $pageId);
 		}
 		
 		return null;
@@ -413,17 +478,19 @@ class StoryProcessor {
 		 * 
 		 */
 		$query = $this->dbHelper
-			->prepare("SELECT t.*, c.country_id,c.side_id,c.name as country,c.side,c.adjective as country_adj 
-			FROM stories s 
-			INNER JOIN story_types st ON s.story_id = st.story_id
+			->prepare("SELECT t.* 
+			FROM story_types st
 			INNER JOIN types t ON st.type_id = t.type_id
-			INNER JOIN story_countries sc ON s.story_id = sc.story_id
-			INNER JOIN countries c ON sc.country_id = c.country_id
-			WHERE s.story_id = ? order by RAND()", [$storyId]);	
+			WHERE st.story_id = ?", [$storyId]);	
 		
 		return $this->dbHelper->getAsArray($query);
 	}
 	
+	/**
+	 * Retrieve all the story sources related to a given story type
+	 * @param integer $typeId
+	 * @return array
+	 */
 	private function getSourcesForType($typeId)
 	{
 		$query = $this->dbHelper
@@ -628,5 +695,95 @@ class StoryProcessor {
 		$result = $dbHelper->getAsArray($query);
 
 		return $result[0]['used_count'] > 0;
-	}	
+	}
+	
+	/**
+	 * Initialise internal data arrays
+	 * 
+	 * @return array
+	 */
+	private function init()
+	{
+		/**
+		 * Load in the active countries. Stories will only be generated for those countries
+		 */
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = $dbHelper
+			->prepare("SELECT * FROM `countries` WHERE `is_active` = 1");	
+		
+		$this->activeCountries = $dbHelper->getAsArray($query);	
+		
+		/**
+		 * Load in all the story ids that are relevant to active country
+		 */
+		$activeIds = [];
+		foreach ($this->activeCountries as $country)
+		{
+			$activeIds[] = $country['country_id'];
+		}
+		
+		if(count($activeIds) == 0)
+		{
+			return;
+		}
+		
+		$query2 = $dbHelper
+			->prepare(sprintf("SELECT * FROM `story_countries` WHERE `country_id` in (%s)", join(',', $activeIds)));
+		
+		$results = $dbHelper->getAsArray($query2);
+		
+		foreach($results as $result)
+		{
+			$this->countryStories[$result['country_id']][] = $result['story_id'];
+		}
+	
+	}
+	
+	/**
+	 * Retrieve a single story based on the key.
+	 * 
+	 * Returns an array of the story data, or false if no story could be found
+	 * @param string $storyKey
+	 * @return array|false
+	 */
+	private function getStoryDataForKey($storyKey)
+	{
+		echo sprintf("Checking page area %s\n", $storyKey);
+		
+		$storyQuery = $this->dbHelper
+			->prepare("SELECT s.*, sf.`key` as `story_format` FROM `stories` AS s INNER JOIN `story_formats` AS sf ON s.`story_format_id` = sf.`id` "
+				. "WHERE `story_key` = ?", [$storyKey]);
+		
+		$storyData = $this->dbHelper->getAsArray($storyQuery);
+		if(count($storyData) !== 1)
+		{
+			echo sprintf("Could not find a story with key %s - skipping\n", $storyKey);
+			return false;
+		}
+		
+		return $storyData[0];		
+	}
+	
+	/**
+	 * Output the story
+	 * 
+	 * Outputs the story either to a file, or to the console
+	 * 
+	 * @param string $storyKey
+	 * @param string $storyContent
+	 * @param boolean $reportOnly
+	 * @return void
+	 */
+	private function outputStory($storyKey, $storyContent, $reportOnly)
+	{
+		if(!$reportOnly) {
+			$this->pushToFile($storyKey, $storyContent);
+		}
+		else
+		{
+			echo $storyContent;
+		}		
+	}
+
 }

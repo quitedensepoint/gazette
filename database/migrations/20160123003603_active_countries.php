@@ -9,9 +9,12 @@ class ActiveCountries extends AbstractMigration
 		/**
 		 * New columns to track if a country is active
 		 */
-		$this->table('countries')->
-			addColumn('is_active', 'boolean', ['default' => 0, 'null' => false])->
-			addColumn('activated_at', 'datetime', ['null' => true])
+		$this->table('countries')
+			->addColumn('is_active', 'boolean', ['default' => 0, 'null' => false])
+			
+			// The country is always active at campaign start
+			->addColumn('is_active_initially', 'boolean', ['default' => 0, 'null' => false])
+			->addColumn('activated_at', 'datetime', ['null' => true])
 			->update();
 		
 		/**
@@ -24,6 +27,9 @@ class ActiveCountries extends AbstractMigration
 			(8, 1, 0, 'China', 'Chinese', 'Allied', NOW(), NOW()),
 			(9, 1, 0, 'Russia', 'Russian', 'Allied', NOW(), NOW());"
 			);
+		
+		// Set the initally active countries for the Gazette
+		$this->execute("UPDATE `countries` SET `is_active_initially` = 1 WHERE `country_id` IN (1,3,4)");
 	}
 	
 	public function down() {
@@ -32,6 +38,7 @@ class ActiveCountries extends AbstractMigration
 		
 		$this->table('countries')
 			->removeColumn('activated_at')
+			->removeColumn('is_active_initially')
 			->removeColumn('is_active')
 			->update();
 	}

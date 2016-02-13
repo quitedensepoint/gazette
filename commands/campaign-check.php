@@ -144,4 +144,39 @@ else
 {
 	$logger->info('No changes required for the campaign.');
 }
+
+/**
+ * Now we need to check if there are any sorties for countries that are not marked as
+ * active. If so, we need to mark those countries as active
+ */
+$activeCountries = $gazetteDb->get("SELECT `country_id` FROM `countries` WHERE `is_active` = 1");
+$activeCountryArray = [];
+foreach($activeCountries as $activeCountry)
+{
+	array_push($activeCountryArray, $activeCountry['country_id']);
+}
+
+/**
+ * Note the query joins a zero on the NOT IN. This is due to bad data occasionally appearing sorties that is not connected
+ * to anything.
+ */
+$newCountries = $wwiiOnlineDb->get("SELECT `vcountry` as `country_id` FROM wwii_sortie WHERE `vcountry` NOT IN (" . 
+	join(",", array_values($activeCountryArray)) . ", 0) GROUP BY `vcountry` HAVING COUNT(sortie_id) > 0");
+
+$newCountriesArray = [];
+foreach($newCountries as $newCountry)
+{
+	array_push($newCountriesArray, $newCountry['country_id']);
+}
+
+/**
+ * Now we set the included countries as active if there are any to be updated
+ */
+if(count($newCountriesArray) > 0)
+{
+	$logger->info(sprintf('Countries with IDs %d have entered the war!',join(",", array_values($newCountriesArray))));
+	
+	$gazetteDb->execute("UPDATE `countries` SET `is_active` = 1, `activated_at` = NOW() WHERE `country_id` IN (" . join(",", array_values($newCountriesArray)) . ")");
+}
+
 exit(0);
