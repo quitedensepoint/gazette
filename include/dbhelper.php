@@ -153,4 +153,35 @@ class dbhelper {
 		$stmt->close();
 	}
 	
+	/**
+	 * Execute a SQL statement and return a result set
+	 * 
+	 * @param string		$sql		The sql query to execute as a prepared statement
+	 * @param array			$params		The parameters for the prepared statement
+	 * @return array|null
+	 */
+	public function get($sql, array $params = array())
+	{
+		$stmt = $this->prepare($sql);
+		
+		return $this->getAsArray($stmt);		
+	}
+	
+	/**
+	 * Execute a SQL statement and return the first row
+	 * 
+	 * @param string		$sql		The sql query to execute as a prepared statement
+	 * @param array			$params		The parameters for the prepared statement
+	 * @return array|null
+	 */	
+	public function first($sql, array $params = array()) {
+		
+		$results = $this->get($sql, $params);
+		if($results == null)
+		{
+			return $results;
+		}
+		return $results[0];
+	}
+	
 }
