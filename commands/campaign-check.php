@@ -105,7 +105,11 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 		$campaignCreate = $gazetteDb->prepare("INSERT INTO `campaigns` (`start_time`, `status`, `campaign_id`) VALUES (?,?,?)",
 			[$newStartTime->format('Y-m-d H:i:s'), 'Running', $newCampaignId]);
 		$campaignCreate->execute();
-		$campaignCreate->close();		
+		$campaignCreate->close();
+		
+		/** At campaign start, we mark all initial countries in the campaign as active */
+		$logger->info('Marking all initially active countries as active for campaign start.');
+		$gazetteDb->execute("UPDATE `countries` SET `is_active` = `is_active_initially`, `activated_at` = NOW()");		
 		
 	}
 	else {
@@ -127,7 +131,13 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 		$campaignUpdate = $gazetteDb->prepare("UPDATE `campaigns` SET `stop_time` = ?, `status` = 'Completed' WHERE `campaign_id` = ?",
 			[$communityCampaignData['stop_time'], $communityCampaignData['campaign_id']]);
 		$campaignUpdate->execute();
-		$campaignUpdate->close();		
+		$campaignUpdate->close();
+		
+		/**
+		 * Reset all of the countries to an inactive state
+		 */
+		$logger->info('Marking all countries as inactive for intermission.');
+		$gazetteDb->execute("UPDATE `countries` SET `is_active` = 0, `activated_at` = NULL");
 	}
 }
 else
