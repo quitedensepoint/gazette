@@ -135,4 +135,22 @@ class dbhelper {
 		return $types;
 	}
 	
+	/**
+	 * Prepares and executes a prepared statement
+	 * @param string		$sql		The sql query to execute as a prepared statement
+	 * @param array			$params		The parameters for the prepared statement
+	 * @throws Exception
+	 */
+	public function execute($sql, array $params = array())
+	{
+		
+		if(($stmt = $this->prepare($sql, $params)) === false)
+		{
+			throw new Exception(mysqli_error($this->dbconn));
+		}
+		
+		$stmt->execute();
+		$stmt->close();
+	}
+	
 }
