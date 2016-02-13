@@ -135,4 +135,53 @@ class dbhelper {
 		return $types;
 	}
 	
+	/**
+	 * Prepares and executes a prepared statement
+	 * @param string		$sql		The sql query to execute as a prepared statement
+	 * @param array			$params		The parameters for the prepared statement
+	 * @throws Exception
+	 */
+	public function execute($sql, array $params = array())
+	{
+		
+		if(($stmt = $this->prepare($sql, $params)) === false)
+		{
+			throw new Exception(mysqli_error($this->dbconn));
+		}
+		
+		$stmt->execute();
+		$stmt->close();
+	}
+	
+	/**
+	 * Execute a SQL statement and return a result set
+	 * 
+	 * @param string		$sql		The sql query to execute as a prepared statement
+	 * @param array			$params		The parameters for the prepared statement
+	 * @return array|null
+	 */
+	public function get($sql, array $params = array())
+	{
+		$stmt = $this->prepare($sql);
+		
+		return $this->getAsArray($stmt);		
+	}
+	
+	/**
+	 * Execute a SQL statement and return the first row
+	 * 
+	 * @param string		$sql		The sql query to execute as a prepared statement
+	 * @param array			$params		The parameters for the prepared statement
+	 * @return array|null
+	 */	
+	public function first($sql, array $params = array()) {
+		
+		$results = $this->get($sql, $params);
+		if($results == null)
+		{
+			return $results;
+		}
+		return $results[0];
+	}
+	
 }

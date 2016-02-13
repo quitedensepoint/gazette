@@ -671,5 +671,22 @@ abstract class StoryBase
 		$result = $dbHelper->getAsArray($query);
 		
 		return count($result) == 1 ? $result[0] : null;		
-	}	
+	}
+	
+	/**
+	 * Get a list of all countries that are marked as is_active
+	 * 
+	 * Return an array of arrays, or an empty array if there are no active countries
+	 * 
+	 * @return array
+	 */
+	public function getActiveCountries()
+	{
+		$dbHelper = new dbhelper($this->dbConn);
+
+		$query = $dbHelper
+			->prepare("SELECT * FROM `countries` WHERE `is_active` = 1");	
+		
+		return $dbHelper->getAsArray($query);
+	}
 }
