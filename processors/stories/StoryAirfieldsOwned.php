@@ -1,5 +1,7 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Facility;
+
 /**
  * Executes the logic to generate a story from the 
  * "Airfields Owned" source.
@@ -11,7 +13,7 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 		/**
 		 * Go through each country and see whom has the most firebases
 		 */
-		$countries = $this->getCountries();
+		$countries = $this->getActiveCountries();
 		
 		$airfieldCounts =[];
 		$total = 0;
@@ -74,21 +76,6 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 	}
 	
 	/**
-	 * Get the countries that are in the papers system
-	 * 
-	 * @return array
-	 */
-	public function getCountries()
-	{
-		$gameDbHelper = new dbhelper($this->dbConn);
-		
-		$query = $gameDbHelper
-			->prepare("SELECT country_id, name, adjective, side FROM countries");	
-		
-		return $gameDbHelper->getAsArray($query);					
-	}
-	
-	/**
 	 * Get the total number of airfields by country
 	 * 
 	 * @param integer $countryId
@@ -100,7 +87,7 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 		
 		$query = $gameDbHelper
 			->prepare("SELECT count(facility_oid) as airbase_count FROM strat_facility "
-				. "where facility_type = 8 and open = 1 and country = ?", [$countryId]);	
+				. "where facility_type = ? and open = 1 and country = ?", [Facility::TYPE_AIRBASE, $countryId]);	
 		
 		return $gameDbHelper->getAsArray($query)[0]['airbase_count'];					
 	}
