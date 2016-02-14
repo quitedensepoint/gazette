@@ -63,5 +63,8 @@ $dbConnCommunity->query("SET SESSION time_zone = 'America/Chicago'");
 $options = [
 	// if true, Google Analytics will be added to the bottom of the page
 	// This should only be set to true on the live server
-	'ga-active' => false 
+	'ga-active' => false,
+	
+	// Keep the campaign check log retention limited to this many days
+	'campaigncheck_log_retention_days' => 14
 ];

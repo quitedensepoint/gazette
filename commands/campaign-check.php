@@ -24,9 +24,11 @@ $wwiiOnlineDb = new dbhelper($dbConnWWIIOL);
 
 /**
  * This allows us to log script output to the console or to a file or wherever
+ * 
+ * Check the options value in DBConn.php for the retention value
  */
 $logger = new Logger("gazette");
-$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/campaign-check.log', Logger::INFO));
+$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/campaign-check.log', $options['campaigncheck_log_retention_days'], Logger::INFO));
 
 /**
  * NOTE:: This script assumes that all dates in the database
@@ -36,9 +38,8 @@ $logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/campaign-check.
  */
 $serverTimezone = new DateTimeZone(date_default_timezone_get());
 
-$gazetteCampaignQuery = $gazetteDb
-	->prepare("SELECT `campaign_id` FROM `campaigns` WHERE `status` = ? LIMIT 1", ['Running']);
-$gazetteCampaignData = $gazetteDb->getAsArray($gazetteCampaignQuery);
+$gazetteCampaignData = $gazetteDb
+	->get("SELECT `campaign_id` FROM `campaigns` WHERE `status` = ? LIMIT 1", ['Running']);
 
 $isGazetteCampaignRunning = false;
 $gazetteCampaignID = null;
@@ -54,11 +55,9 @@ else
 	$logger->info('Gazette reports it is in intermission');
 }
 
-
 // Now check the wwiionline database to see what is running
-$wwiiolCampaignQuery = $wwiiOnlineDb
-	->prepare("SELECT `value` FROM `wwii_config` WHERE `variableName` = ? LIMIT 1", ['arena.intermission']);
-$wwiiolCampaignState = $wwiiOnlineDb->getAsArray($wwiiolCampaignQuery);
+$wwiiolCampaignState = $wwiiOnlineDb
+	->get("SELECT `value` FROM `wwii_config` WHERE `variableName` = ? LIMIT 1", ['arena.intermission']);
 
 $logger->info(sprintf('GameDB reports campaign status as %d', intval($wwiiolCampaignState[0]['value'])));
 
@@ -71,12 +70,10 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 	
 	if($isWwiiOnlineCampaignRunning)
 	{
-
 		$logger->debug('Retrieving new campaign information');
 		
 		// Get the campaign data from the wwiionline db
-		$wwiionlineStartQuery = $wwiiOnlineDb->prepare("SELECT `name`,`value` FROM `wwii_arena` WHERE `name` IN ('campaign_id','campaign_start')");
-		$wwiionlineStartData = $wwiiOnlineDb->getAsArray($wwiionlineStartQuery);
+		$wwiionlineStartData = $wwiiOnlineDb->get("SELECT `name`,`value` FROM `wwii_arena` WHERE `name` IN ('campaign_id','campaign_start')");
 		
 		$newCampaignId = null;
 		$newStartTime = null;
@@ -102,14 +99,12 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 		/**
 		 * Create a new campaign to represent the one just started
 		 */
-		$campaignCreate = $gazetteDb->prepare("INSERT INTO `campaigns` (`start_time`, `status`, `campaign_id`) VALUES (?,?,?)",
+		$gazetteDb->execute("INSERT INTO `campaigns` (`start_time`, `status`, `campaign_id`) VALUES (?,?,?)",
 			[$newStartTime->format('Y-m-d H:i:s'), 'Running', $newCampaignId]);
-		$campaignCreate->execute();
-		$campaignCreate->close();
 		
 		/** At campaign start, we mark all initial countries in the campaign as active */
 		$logger->info('Marking all initially active countries as active for campaign start.');
-		$gazetteDb->execute("UPDATE `countries` SET `is_active` = `is_active_initially`, `activated_at` = NOW()");		
+		$gazetteDb->execute("UPDATE `countries` SET `is_active` = `is_active_initially`, `activated_at` = NOW() WHERE `is_active_initially` = 1");		
 		
 	}
 	else {
@@ -120,18 +115,15 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 		 * 
 		 * @todo Eventually this needs to be pulled from the GameDB once a way becomes available
 		 */
-		$communityCampaignQuery = $communityDb->prepare("SELECT `campaign_id`, `stop_time` FROM `scoring_campaigns` WHERE `campaign_id` = "
+		$communityCampaignData = $communityDb->first("SELECT `campaign_id`, `stop_time` FROM `scoring_campaigns` WHERE `campaign_id` = "
 			. "(SELECT MAX(`campaign_id`) FROM `scoring_campaigns`) LIMIT 1");
-		$communityCampaignData = $communityDb->getAsArray($communityCampaignQuery)[0];
 		
 		$logger->info(sprintf('Campaign %d in gazette will be marked as Completed, stopping at %s',
 			$communityCampaignData['campaign_id'], $communityCampaignData['stop_time']));
 		
 		// Update the campaign pulled from CSR
-		$campaignUpdate = $gazetteDb->prepare("UPDATE `campaigns` SET `stop_time` = ?, `status` = 'Completed' WHERE `campaign_id` = ?",
+		$gazetteDb->execute("UPDATE `campaigns` SET `stop_time` = ?, `status` = 'Completed' WHERE `campaign_id` = ?",
 			[$communityCampaignData['stop_time'], $communityCampaignData['campaign_id']]);
-		$campaignUpdate->execute();
-		$campaignUpdate->close();
 		
 		/**
 		 * Reset all of the countries to an inactive state
@@ -145,38 +137,54 @@ else
 	$logger->info('No changes required for the campaign.');
 }
 
-/**
- * Now we need to check if there are any sorties for countries that are not marked as
- * active. If so, we need to mark those countries as active
- */
-$activeCountries = $gazetteDb->get("SELECT `country_id` FROM `countries` WHERE `is_active` = 1");
-$activeCountryArray = [];
-foreach($activeCountries as $activeCountry)
+if($isWwiiOnlineCampaignRunning) 
 {
-	array_push($activeCountryArray, $activeCountry['country_id']);
-}
-
-/**
- * Note the query joins a zero on the NOT IN. This is due to bad data occasionally appearing sorties that is not connected
- * to anything.
- */
-$newCountries = $wwiiOnlineDb->get("SELECT `vcountry` as `country_id` FROM wwii_sortie WHERE `vcountry` NOT IN (" . 
-	join(",", array_values($activeCountryArray)) . ", 0) GROUP BY `vcountry` HAVING COUNT(sortie_id) > 0");
-
-$newCountriesArray = [];
-foreach($newCountries as $newCountry)
-{
-	array_push($newCountriesArray, $newCountry['country_id']);
-}
-
-/**
- * Now we set the included countries as active if there are any to be updated
- */
-if(count($newCountriesArray) > 0)
-{
-	$logger->info(sprintf('Countries with IDs %d have entered the war!',join(",", array_values($newCountriesArray))));
+	$logger->info('Checking to see if there are any new countries in the war.');
 	
-	$gazetteDb->execute("UPDATE `countries` SET `is_active` = 1, `activated_at` = NOW() WHERE `country_id` IN (" . join(",", array_values($newCountriesArray)) . ")");
+	/**
+	 * Now we need to check if there are any sorties for countries that are not marked as
+	 * active. If so, we need to mark those countries as active
+	 */
+	$activeCountries = $gazetteDb->get("SELECT `country_id` FROM `countries` WHERE `is_active` = 1");
+	$activeCountryArray = [];
+	foreach($activeCountries as $activeCountry)
+	{
+		array_push($activeCountryArray, $activeCountry['country_id']);
+	}
+
+	/**
+	 * If we get to this state, there is a problem so we log the error. Then we set
+	 * up the entries correctly for the next run and then finish
+	 */
+	if(count($activeCountryArray) == 0)
+	{
+		$logger->error("No active countries in campaign. Setting defaults.");
+		$gazetteDb->execute("UPDATE `countries` SET `is_active` = `is_active_initially`, `activated_at` = NOW() WHERE `is_active_initially` = 1");
+		exit(0);
+	}
+
+	/**
+	 * Note the query joins a zero on the NOT IN. This is due to bad data occasionally appearing sorties that is not connected
+	 * to anything.
+	 */
+	$newCountries = $wwiiOnlineDb->get("SELECT `vcountry` as `country_id` FROM wwii_sortie WHERE `vcountry` NOT IN (" . 
+		join(",", array_values($activeCountryArray)) . ", 0) GROUP BY `vcountry` HAVING COUNT(sortie_id) > 0");
+
+	$newCountriesArray = [];
+	foreach($newCountries as $newCountry)
+	{
+		array_push($newCountriesArray, $newCountry['country_id']);
+	}
+
+	/**
+	 * Now we set the included countries as active if there are any to be updated
+	 */
+	if(count($newCountriesArray) > 0)
+	{
+		$logger->info(sprintf('Countries with IDs %d have entered the war!',join(",", array_values($newCountriesArray))));
+
+		$gazetteDb->execute("UPDATE `countries` SET `is_active` = 1, `activated_at` = NOW() WHERE `country_id` IN (" . join(",", array_values($newCountriesArray)) . ")");
+	}
 }
 
 exit(0);

@@ -162,7 +162,7 @@ class dbhelper {
 	 */
 	public function get($sql, array $params = array())
 	{
-		$stmt = $this->prepare($sql);
+		$stmt = $this->prepare($sql, $params);
 		
 		return $this->getAsArray($stmt);		
 	}
