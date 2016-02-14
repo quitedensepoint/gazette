@@ -1,4 +1,7 @@
 <?php
+/*
+ * Copyright Playnet 2016
+ */
 
 use Playnet\WwiiOnline\WwiiOnline\Models\Facility;
 
