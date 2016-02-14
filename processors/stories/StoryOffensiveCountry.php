@@ -1,5 +1,7 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Facility;
+
 /**
  * Executes the logic to generate a story from the 
  * "Offensive Country" source.
@@ -11,7 +13,7 @@ class StoryOffensiveCountry extends StoryBase implements StoryInterface {
 		/**
 		 * Go through each country and see whom has the most firebases
 		 */
-		$countries = $this->getCountries();
+		$countries = $this->getActiveCountries();
 		
 		$fireBaseCount = 0;
 		
@@ -66,7 +68,7 @@ class StoryOffensiveCountry extends StoryBase implements StoryInterface {
 		
 		$query = $gameDbHelper
 			->prepare("SELECT count(facility_oid) as fb_count FROM strat_facility "
-				. "where facility_type = 7 and open = 1 and country = ?", [$countryId]);	
+				. "where facility_type = ? and open = 1 and country = ?", [Facility::TYPE_FIREBASE, $countryId]);	
 		
 		return $gameDbHelper->getAsArray($query)[0]['fb_count'];					
 	}
