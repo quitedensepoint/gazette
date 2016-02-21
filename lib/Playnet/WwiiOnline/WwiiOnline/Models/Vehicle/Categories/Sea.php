@@ -5,14 +5,14 @@
 
 namespace Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Categories;
 
-use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Branches\Sea;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Branches\Navy;
 
 /**
  * Represents an a sea vehicle belonging to the navy
  *
  * @author Jason
  */
-abstract class Sea extends Sea implements CategoryInterface {
+abstract class Sea extends Navy implements CategoryInterface {
 		
 	use CategoryTrait;
 	
