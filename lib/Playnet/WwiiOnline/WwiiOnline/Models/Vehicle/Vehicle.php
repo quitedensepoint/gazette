@@ -3,7 +3,7 @@
  * Copyright Playnet 2016
  */
 
-namespace Playnet\WwiiOnline\WwiiOnline\Models;
+namespace Playnet\WwiiOnline\WwiiOnline\Models\Vehicle;
 
 /**
  * Model for the Vehicle game object. A vehicle object represents the in-game avatar
@@ -13,7 +13,7 @@ namespace Playnet\WwiiOnline\WwiiOnline\Models;
  *
  * @author Jason "drloon" Rout
  */
-class Vehicle {
+abstract class Vehicle {
 	
 	/**
 	 * Vehicle categorisation types.
