@@ -1,5 +1,7 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
+
 /**
  * Executes the logic to generate a story from the 
  * "Chokepoints Owned" source.
@@ -11,7 +13,7 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 		/**
 		 * Go through each country and see whom has the most firebases
 		 */
-		$countries = $this->getCountries();
+		$countries = $this->getActiveCountries();
 		
 		$chokepointCounts =[];
 		$total = $this->getTotalChokepointCount();
@@ -77,21 +79,6 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 	}
 	
 	/**
-	 * Get the countries that are in the papers system
-	 * 
-	 * @return array
-	 */
-	public function getCountries()
-	{
-		$gameDbHelper = new dbhelper($this->dbConn);
-		
-		$query = $gameDbHelper
-			->prepare("SELECT country_id, name, adjective, side FROM countries");	
-		
-		return $gameDbHelper->getAsArray($query);					
-	}
-	
-	/**
 	 * Get the total number of airfields by country
 	 * 
 	 * @param integer $countryId
@@ -99,12 +86,14 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 	 */
 	public function getChokepointsCount($countryId)
 	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("SELECT count(*) as chokepoint_count FROM strat_cp WHERE country = ? and cp_type != 5", [$countryId]);	
+		$params = [$countryId, Bridge::getTypeId()];
 		
-		return $gameDbHelper->getAsArray($query)[0]['chokepoint_count'];					
+		$result = $dbHelper
+			->first("SELECT count(*) as chokepoint_count FROM strat_cp WHERE country = ? and cp_type != ?", $params);	
+		
+		return $result['chokepoint_count'];					
 	}
 	
 	/**
@@ -114,12 +103,13 @@ class StoryChokepointsOwned extends StoryBase implements StoryInterface {
 	 */
 	public function getTotalChokepointCount() {
 		
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("select count(*) as chokepoint_count from strat_cp where cp_type != 5");	
+		$params = [Bridge::getTypeId()];
 		
-		return $gameDbHelper->getAsArray($query)[0]['chokepoint_count'];
+		$result = $dbHelper->first("SELECT count(*) as chokepoint_count from strat_cp WHERE cp_type != ?", $params);	
+		
+		return $result['chokepoint_count'];
 	}
 
 }
