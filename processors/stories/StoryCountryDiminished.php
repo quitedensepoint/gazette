@@ -1,10 +1,24 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
+
 /**
  * Executes the logic to generate a story from the 
  * "Country Diminished" source.
  */
 class StoryCountryDiminished extends StoryBase implements StoryInterface {
+	
+	/**
+	 * The minimum number of cps to be owned to be valid
+	 * @var integer 
+	 */
+	protected static $minTotalCpCount = 1;
+	
+	/**
+	 * The maximum percentage of ownership of all chokepoints to be valid
+	 * @var float 
+	 */
+	protected static $maxCpOwnershipPercent = 10;
 	
 	public function isValid() {
 
@@ -27,7 +41,7 @@ class StoryCountryDiminished extends StoryBase implements StoryInterface {
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
 		
-		return ($totalCps > 0 && ($cpOwnershipPercent < 10));
+		return ($totalCps >= self::$minTotalCpCount && ($cpOwnershipPercent < self::$maxCpOwnershipPercent));
 		
 	}
 
@@ -39,28 +53,35 @@ class StoryCountryDiminished extends StoryBase implements StoryInterface {
 	 */
 	public function getTotalGameCPCount()
 	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5");	
+		$params = [Bridge::getTypeId()];
 		
-		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
+		$result = $dbHelper
+			->first("select count(*) as cp_count from strat_cp where cp_type != ?", $params);	
+		
+		return $result['cp_count'];					
 	}
 	
 	/**
 	 * Get the total number of CPs owned by a nominated country
 	 * 
 	 * @param integer $countryId
-	 * @return type
+	 * @return integer
 	 */
 	public function getOwnedGameCPCount($countryId)
 	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5 and country = ?", [$countryId]);	
+		$params = [
+			Bridge::getTypeId(),
+			$countryId
+		];
 		
-		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
+		$result = $dbHelper
+			->first("select count(*) as cp_count from strat_cp where cp_type != ? and country = ?", $params);	
+		
+		return $result['cp_count'];					
 	}
 
 

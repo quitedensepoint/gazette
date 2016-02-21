@@ -33,6 +33,6 @@ class StoryCountryCaptured extends StoryBase implements StoryInterface {
 		
 		$result = $dbHelper->first("select count(*) as cp_count from strat_cp where cp_type != ? and country = ?", $params);	
 		
-		return $result[0]['cp_count'] == 0;					
+		return $result['cp_count'] == 0;					
 	}
 }
