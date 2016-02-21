@@ -6,6 +6,13 @@
  */
 class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterface {
 	
+	/**
+	 * The minimum number of kills needed to make this story valid
+	 * 
+	 * @var integer
+	 */
+	protected static $minKills = 2;		
+	
 	public function isValid() {
 
 		/**
@@ -60,15 +67,15 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $dbHelper
-			->prepare("SELECT s.mission_id, s.player_id, s.vcountry as country_id, s.rtb, s.kills, s.vehicles_hit, p.customerid as customer_id, p.callsign, "
+		$params = [$time, self::$minKills, $countryId];
+		
+		return $dbHelper->get("SELECT s.mission_id, s.player_id, s.vcountry as country_id, s.rtb, s.kills, s.vehicles_hit, p.customerid as customer_id, p.callsign, "
 				. "UNIX_TIMESTAMP(s.spawn_time) as spawned, UNIX_TIMESTAMP(s.return_time) as returned "
 				. "FROM wwii_sortie s INNER JOIN wwii_player p ON s.player_id = p.playerid "
 				. "WHERE s.added > FROM_UNIXTIME(?) AND s.spawn_time IS NOT NULL AND s.return_time IS NOT NULL "
-				. "AND s.mission_id > 0 AND kills > 2 AND s.vcountry = ? "
-				. "ORDER BY s.score DESC",[$time, $countryId]);	
-		
-		return $dbHelper->getAsArray($query);					
+				. "AND s.mission_id > 0 AND kills > ? AND s.vcountry = ? "
+				. "ORDER BY s.score DESC", $params);	
+				
 	}
 	
 	
