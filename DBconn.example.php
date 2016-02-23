@@ -35,6 +35,11 @@ if (mysqli_connect_errno()){
     echo "Failed to connect to the Community database: " . mysqli_connect_error();
 }
 
+$dbConnWebmap = mysqli_connect("p:db_host", "db_user", "db_password", "webmap");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Webmap database: " . mysqli_connect_error();
+}
+
 /**
  * IF you are running on a development system outside of the CST timezone,
  * you'll need to be sure you are doing queries against that timezone as
