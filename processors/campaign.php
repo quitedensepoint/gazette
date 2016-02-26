@@ -23,6 +23,9 @@ $ver=$vers->fetch_assoc();
  $start = new DateTime($row['start_time']);
  $days = $start->diff($today);
 
-
+ // Get the latest WebMap update DateTime
+$datetime=$dbConnWebmap->query("SELECT datetime FROM captures ORDER BY datetime DESC LIMIT 1");
+$row=$datetime->fetch_assoc();
+$fileDt = date('Y-m-d_H-i', strtotime($row['datetime']));
 
 ?>

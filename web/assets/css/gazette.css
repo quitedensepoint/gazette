@@ -181,12 +181,23 @@ html, body {
     padding: 5px;
 }
 
-#map {
+#mapContainer {
     position: absolute;
     top: 175px;   
 	width: 516px; 
     left: 185px;
     
+}
+
+.mapCountryNames {
+	color: white;
+	opacity: 0.75;
+	font: bold 25px arial;
+	text-shadow: 2px 2px 0 #000,
+					   -1px -1px 0 #000,  
+						1px -1px 0 #000,
+					   -1px  1px 0 #000,
+						1px  1px 0 #000;
 }
 
 #mapText {

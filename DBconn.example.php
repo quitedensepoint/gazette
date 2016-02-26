@@ -15,19 +15,29 @@ if (mysqli_connect_errno()){
     echo "Failed to connect to WWII database: " . mysqli_connect_error();
 }
 
-$dbConnWWIIOL = mysqli_connect("p:localhost","root","","wwiionline");
+$dbConnWWIIOL = mysqli_connect("p:db_host","db_user","db_password","wwiionline");
 if (mysqli_connect_errno()){
     echo "Failed to connect to WWIIOnline database: " . mysqli_connect_error();
 }
 
-$dbconnAuth = mysqli_connect("p:localhost", "root", "", "auth");
+$dbconnAuth = mysqli_connect("p:db_host", "db_user", "db_password", "auth");
 if (mysqli_connect_errno()){
     echo "Failed to connect to the Auth database: " . mysqli_connect_error();
 }
 
-$dbConnToe = mysqli_connect("p:localhost", "root", "", "toe");
+$dbConnToe = mysqli_connect("p:db_host", "db_user", "db_password", "toe");
 if (mysqli_connect_errno()){
     echo "Failed to connect to the Toe database: " . mysqli_connect_error();
+}
+
+$dbConnCommunity = mysqli_connect("p:db_host", "db_user", "db_password", "community");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Community database: " . mysqli_connect_error();
+}
+
+$dbConnWebmap = mysqli_connect("p:db_host", "db_user", "db_password", "webmap");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Webmap database: " . mysqli_connect_error();
 }
 
 /**
@@ -44,7 +54,7 @@ $dbConnWWII->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnWWIIOnline->query("SET SESSION time_zone = 'America/Chicago'");
 $dbconnAuth->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnToe->query("SET SESSION time_zone = 'America/Chicago'");
- * 
+$dbConnCommunity->query("SET SESSION time_zone = 'America/Chicago'"); 
  */
 
 /**
@@ -58,5 +68,8 @@ $dbConnToe->query("SET SESSION time_zone = 'America/Chicago'");
 $options = [
 	// if true, Google Analytics will be added to the bottom of the page
 	// This should only be set to true on the live server
-	'ga-active' => false 
+	'ga-active' => false,
+	
+	// Keep the campaign check log retention limited to this many days
+	'campaigncheck_log_retention_days' => 14
 ];

@@ -15,6 +15,7 @@
 require(__DIR__ . '/../DBconn.php');
 require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/story-processor.php');
+require(__DIR__ . '/../vendor/autoload.php');
 
 /**
  * Allow us to do DB queries in one line instead of five
@@ -29,7 +30,7 @@ $gazetteDbHelper = new dbhelper($dbconn);
  */
 $serverTimezone = new DateTimeZone(date_default_timezone_get());
 
-$options = getopt('', ['list:', 'expire:', 'help:', 'generate:', 'sourceid:', 'templateid:']);
+$options = getopt('', ['list:', 'expire:', 'help:', 'generate:', 'sourceid:', 'templateid:', 'reportonly:']);
 
 if(count($options) == 0 || isset($options['help']))
 {
@@ -38,6 +39,7 @@ if(count($options) == 0 || isset($options['help']))
 		. "\n  --generate=all|expired|story_name\tWill generate a new story for the option providede, or new stories for all stories that have expired if no option given."
 		. "\n  --sourceid\tForces a specific story of the id passed in to be generated.\n"
 		. "\n  --templateid\tForces a specific template for the source to be used.\n"
+		. "\n  --reportonly\tForces the text of the story to the command line rather than a file.\n"
 		);
 }
 
@@ -61,8 +63,15 @@ $storyProcessor = new StoryProcessor($dbconn, $dbConnWWII, $dbConnWWIIOL, $dbCon
 
 $sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
 $templateId = (isset($options['templateid']) && ctype_digit($options['templateid'])) ? intval($options['templateid']) : null;
+$reportOnly = isset($options['reportonly']);
 
 if(isset($options['generate'])) {
+	
+	$opts = [
+		'sourceId' => $sourceId, 
+		'templateId' => $templateId,
+		'reportOnly' => $reportOnly
+	];
 	
     /**
      * Any provided key that isn't "expired" or "all" will look
@@ -72,10 +81,11 @@ if(isset($options['generate'])) {
 		/**
 		 * Generate a new story for the entry provided
 		 */
-		$storyProcessor->process($options['generate'], $sourceId, $templateId);
+		$storyProcessor->process($options['generate'], $opts);
 	}
 	else
 	{
+				
 		/**
          * Load in all the stories and generate new ones
 		 */
@@ -93,8 +103,8 @@ if(isset($options['generate'])) {
 		$storyKeysData = $gazetteDbHelper->getAsArray($storyKeysQuery);
 		
 		foreach ($storyKeysData as $storyKey)
-		{
-			$storyProcessor->process($storyKey['story_key'], $sourceId, $templateId);
+		{		
+			$storyProcessor->process($storyKey['story_key'], $opts);
 		}
 	}
 	
