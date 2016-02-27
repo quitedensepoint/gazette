@@ -15,7 +15,9 @@ namespace Playnet\WwiiOnline\WwiiOnline\Traits;
 trait Allied {
 	
 	protected static $sideId = 1;
-	protected static $sideName = 'Allied';
+	protected static $sideKey = 'allied';	
+	protected static $sideName = 'Allies';
+	protected static $sideAdjective = 'Allied';
 	
 	/**
 	 * Get the game of the side
@@ -28,8 +30,18 @@ trait Allied {
 		return self::$sideId;
 	}
 	
+	public function getSideKey()		
+	{
+		return self::$sideKey;
+	}	
+	
 	public function getSideName()		
 	{
 		return self::$sideName;
+	}
+	
+	public function getSideAdjective()		
+	{
+		return self::$sideAdjective;
 	}	
 }
