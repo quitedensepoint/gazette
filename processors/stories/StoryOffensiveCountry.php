@@ -1,6 +1,6 @@
 <?php
 
-use Playnet\WwiiOnline\WwiiOnline\Models\Facility;
+use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Firebase\Firebase;
 
 /**
  * Executes the logic to generate a story from the 
@@ -42,21 +42,6 @@ class StoryOffensiveCountry extends StoryBase implements StoryInterface {
 	}
 	
 	/**
-	 * Get the countries that are in the papers system
-	 * 
-	 * @return array
-	 */
-	public function getCountries()
-	{
-		$gameDbHelper = new dbhelper($this->dbConn);
-		
-		$query = $gameDbHelper
-			->prepare("SELECT country_id, name, adjective, side FROM countries");	
-		
-		return $gameDbHelper->getAsArray($query);					
-	}
-	
-	/**
 	 * Get the total number of firebases by country
 	 * 
 	 * @param integer $countryId
@@ -64,13 +49,13 @@ class StoryOffensiveCountry extends StoryBase implements StoryInterface {
 	 */
 	public function getFirebaseCount($countryId)
 	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("SELECT count(facility_oid) as fb_count FROM strat_facility "
-				. "where facility_type = ? and open = 1 and country = ?", [Facility::TYPE_FIREBASE, $countryId]);	
+		$result = $dbHelper
+			->first("SELECT count(facility_oid) as fb_count FROM strat_facility "
+				. "where facility_type = ? and open = 1 and country = ?", [Firebase::getTypeId(), $countryId]);	
 		
-		return $gameDbHelper->getAsArray($query)[0]['fb_count'];					
+		return $result['fb_count'];					
 	}
 
 }
