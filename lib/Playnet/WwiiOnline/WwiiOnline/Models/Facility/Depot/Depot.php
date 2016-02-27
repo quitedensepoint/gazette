@@ -33,10 +33,10 @@ use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Facility;
  */
 class Depot extends Facility {
 	
-	const TYPE_ID = 4;
-	
-	public function __construct() 
-	{
-		self::$typeId = self::TYPE_ID;
-	}
+	/**
+	 * Overrides the static value in the base class
+	 * 
+	 * @var integer
+	 */
+	protected static $typeId = 4;
 }

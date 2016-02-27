@@ -16,10 +16,10 @@ use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Facility;
  */
 class Omt extends Facility {
 	
-	const TYPE_ID = 5;
-	
-	public function __construct() 
-	{
-		self::$typeId = self::TYPE_ID;
-	}
+	/**
+	 * Overrides the static value in the base class
+	 * 
+	 * @var integer
+	 */
+	protected static $typeId = 5;
 }

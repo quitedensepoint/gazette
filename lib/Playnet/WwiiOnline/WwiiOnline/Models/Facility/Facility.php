@@ -38,46 +38,30 @@ abstract class Facility {
 	 */
 	const UNDEFINED	= 0;
 	
+	/**
+	 * The facility type. This is usually overridden in the derived classes, however some database
+	 * entries do appear as zero, hence the undefined value set
+	 * 
+	 * @var integer
+	 */
 	protected static $typeId = self::UNDEFINED;
 	
+	/**
+	 * The facility subtype. This is usually overridden in the derived classes, however some database
+	 * entries do appear as zero, hence the undefined value set
+	 * 
+	 * @var integer 
+	 */
 	protected static $subtypeId = self::UNDEFINED;
-	
-	const TYPE_CITY			= 1;
-	const TYPE_FACTORY		= 2;
-	
-	/**
-	 * Flak batteries according to the, at the time of writing, strat_facility table
-	 * 
-	 * @todo Determine usages and maybe rename from "base"
-	 */
-	const TYPE_BASE			= 3;
-	const TYPE_DEPOT		= 4;
-	
-	/**
-	 * Type OMT is currently unknown. At the time of writing, there were no
-	 * facilities using it.
-	 * 
-	 * @todo Determine an accurate description
-	 */
-	const TYPE_OMT			= 5;
-	const TYPE_SHIPYARD		= 6;
-	
-	/**
-	 * Represents the forward bases where players spawn for attacks on town
-	 */
-	const TYPE_FIREBASE		= 7;
-	const TYPE_AIRBASE		= 8;
-	const TYPE_ARMYBASE		= 9;
-	const TYPE_NAVALBASE	= 10;
 	
 	/**
 	 * Returns the facility type ID
 	 * 
 	 * @return integer
 	 */
-	protected static function getTypeId()
+	public static function getTypeId()
 	{
-		return self::$typeId;
+		return static::$typeId;
 	}
 	
 	/**
@@ -85,9 +69,9 @@ abstract class Facility {
 	 * 
 	 * @return integer
 	 */	
-	protected static function getSubtypeId()
+	public static function getSubtypeId()
 	{
-		return self::$subtypeId;
+		return static::$subtypeId;
 	}	
 	
 }

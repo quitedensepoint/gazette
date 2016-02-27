@@ -6,6 +6,7 @@
 namespace Playnet\WwiiOnline\WwiiOnline\Models\Facility\Factory;
 
 /**
+ * Represents a Factory that makes Vehicles
  * 
  * This model maps to the wwiionline.strat_facility table
  *
@@ -13,12 +14,11 @@ namespace Playnet\WwiiOnline\WwiiOnline\Models\Facility\Factory;
  */
 class Vehicle extends Factory {
 	
-	const SUBTYPE_ID = 7;
-	
-	public function __construct() 
-	{
-		parent::__construct();
-		
-		self::$subtypeId = self::SUBTYPE_ID;
-	}
+	/**
+	 * Overrides the static value in the base class
+	 * 
+	 * @var integer
+	 */	
+	protected static $subtypeId = 7;
+
 }

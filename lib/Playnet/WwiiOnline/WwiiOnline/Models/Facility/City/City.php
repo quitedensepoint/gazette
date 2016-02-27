@@ -17,10 +17,10 @@ use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Facility;
  */
 class City extends Facility {
 	
-	const TYPE_ID = 1;
-	
-	public function __construct() 
-	{
-		self::$typeId = self::TYPE_ID;
-	}
+	/**
+	 * Overrides the static value in the base class
+	 * 
+	 * @var integer
+	 */
+	protected static $typeId = 1;
 }

@@ -14,12 +14,10 @@ namespace Playnet\WwiiOnline\WwiiOnline\Models\Facility\City;
  */
 class RailwayStation extends City {
 	
-	const SUBTYPE_ID = 2;
-	
-	public function __construct() 
-	{
-		parent::__construct();
-		
-		self::$subTypeId = self::SUBTYPE_ID;
-	}
+	/**
+	 * Overrides the static value in the base class
+	 * 
+	 * @var integer
+	 */	
+	protected static $subtypeId = 2;
 }
