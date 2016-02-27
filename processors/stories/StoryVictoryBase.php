@@ -51,7 +51,6 @@ class StoryVictoryBase extends StoryBase  {
 	 */
 	public function getOwnedGameCPCount($sideId)
 	{
-		return $sideId = 1 ? 464 : 81;
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$params = [Bridge::getTypeId(), $sideId];
