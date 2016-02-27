@@ -1,17 +1,19 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
+
 /**
  * Executes the logic to generate a story from the 
  * "Victory" source.
  */
-class StoryVictory extends StoryBase implements StoryInterface {
+class StoryVictory extends StoryVictoryBase implements StoryInterface {
+	
+	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
+		parent::__construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData);
+		self::$minOwnershipPercent = 94;			
+	}
 	
 	public function isValid() {
-		
-		/**
-		 * Needs more thinky time to work out what victory means
-		 */
-		return false;
 
 		/**
 		 * Retrieve the strat_cp data from the current game database
@@ -32,7 +34,9 @@ class StoryVictory extends StoryBase implements StoryInterface {
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
 		
-		return ($totalCps > 0 && ($cpOwnershipPercent > 87 and $cpOwnershipPercent < 91));
+		var_dump($cpOwnershipPercent);
+		
+		return ($totalCps > self::$minTotalCps && ($cpOwnershipPercent >= self::$minOwnershipPercent));
 		
 	}
 
@@ -47,37 +51,10 @@ class StoryVictory extends StoryBase implements StoryInterface {
 	}	
 	
 	/**
-	 * Get the total number of capturable CPs in the campaign
-	 * 
-	 * @return integer
-	 */
-	public function getTotalGameCPCount()
-	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
-		
-		$query = $gameDbHelper
-			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5 and country in (1,3,4)");	
-		
-		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
-	}
-	
-	/**
-	 * Get the total number of CPs owned by a nominated side
-	 * 
-	 * @param integer $sideId
+	 * @todo Is this necessary?
+	 * @param type $name
 	 * @return type
 	 */
-	public function getOwnedGameCPCount($sideId)
-	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
-		
-		$query = $gameDbHelper
-			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5"
-				. " and country in (1,3,4) and side = ?", [$sideId]);	
-		
-		return $gameDbHelper->getAsArray($query)[0]['cp_count'];					
-	}
-	
 	public function getControl($name)
 	{
 		$dbHelper = new dbhelper($this->dbConn);
@@ -88,6 +65,9 @@ class StoryVictory extends StoryBase implements StoryInterface {
 		return $dbHelper->getAsArray($query)[0]['value'];					
 	}
 	
+	/**
+	 * @todo Is this necessary?
+	 */
 	public function setControl($name, $value)
 	{
 		$dbHelper = new dbhelper($this->dbConn);
