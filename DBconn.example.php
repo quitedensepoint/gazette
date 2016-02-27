@@ -1,4 +1,9 @@
 <?php 
+
+// Extra brackets important!
+(require_once(__DIR__ . '/include/error-handlers.php')) ||
+	die('Cannot find the error handler file located at "' . __DIR__ . '/include/error-handlers.php".');
+
 /**
  * This file allows connections to the wwii database required by the gazette
  * for information
