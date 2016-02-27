@@ -3,7 +3,7 @@
  * Copyright Playnet 2016
  */
 
-use Playnet\WwiiOnline\WwiiOnline\Models\Facility;
+use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Airbase\Airbase;
 
 /**
  * Executes the logic to generate a story from the 
@@ -86,13 +86,14 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 	 */
 	public function getAirfieldsCount($countryId)
 	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("SELECT count(facility_oid) as airbase_count FROM strat_facility "
-				. "where facility_type = ? and open = 1 and country = ?", [Facility::TYPE_AIRBASE, $countryId]);	
+		$params = [Airbase::getTypeId(), $countryId];
 		
-		return $gameDbHelper->getAsArray($query)[0]['airbase_count'];					
+		$result = $dbHelper->first("SELECT count(facility_oid) as airbase_count FROM strat_facility "
+				. "where facility_type = ? and open = 1 and country = ?", $params);	
+		
+		return $result['airbase_count'];					
 	}
 
 }
