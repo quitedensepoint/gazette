@@ -71,5 +71,8 @@ $options = [
 	'ga-active' => false,
 	
 	// Keep the campaign check log retention limited to this many days
-	'campaigncheck_log_retention_days' => 14
+	'campaigncheck_log_retention_days' => 14,
+	
+	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
+	'webmap-environment' => 'dev'
 ];
