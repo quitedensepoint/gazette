@@ -158,6 +158,8 @@ class StoryProcessor {
 		
 		foreach($storyTypes as $storyType)
 		{
+			echo sprintf("    Checking Story Type %s\n", $storyType['name']);
+			
 			if(($content = $this->prepareStory($storyData, $storyType, $sourceId, $templateId)))
 			{
 				return $content;

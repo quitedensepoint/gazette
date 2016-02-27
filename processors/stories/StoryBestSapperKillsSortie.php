@@ -1,5 +1,11 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Sapper\British;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Sapper\French;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Sapper\German;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Sapper\Us;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Classes\Tank;
+
 /**
  * Executes the logic to generate a story from the 
  * "Best Sapper Kills Sortie" source.
@@ -15,20 +21,23 @@
  */
 class StoryBestSapperKillsSortie extends StoryBestSortieBase implements StoryInterface {
 	
+	/**
+	 * The minimum number of kills needed to make this story valid
+	 * 
+	 * @var integer
+	 */
+	protected static $minKills = 1;	
+	
 	public function isValid() {
 
 		/**
-		 * Gte the best kills from the strat.kills
+		 * Get the best kills from the strat.kills
 		 */
-		$kill = $this->getMostRecentBestKill($this->creatorData['country_id']);
-		
-		if(count($kill) != 1)
+		if(!($kill = $this->getMostRecentBestKill($this->creatorData['country_id'])))
 		{
-			// Nobody meets the criteria
 			return false;
 		}
-		$kill = $kill[0];
-		
+
 		/**
 		 * Get the player who did the kills
 		 */
@@ -60,19 +69,26 @@ class StoryBestSapperKillsSortie extends StoryBestSortieBase implements StoryInt
 		if(count($spawnFacility) == 0)
 		{
 			return false;
-		}		
+		}
+
 		$spawnFacility = $spawnFacility[0];
 		$this->creatorData['template_vars']['spawn'] = $spawnFacility['name'];
-	
+		
 		/**
 		 * Get the vehicle the player was using as their avatar
 		 */
 		$killerVehicle = $this->getVehicleByClassification($sortie['vcountry'], $sortie['vcategory'], $sortie['vclass'], $sortie['vtype']);
+		
+		/**
+		 * @todo Rework how to pull in the vehicle data for this story as we do not have a consistent set in the gazette
+		 * See Redmine Issue #1358
+		 */
+		//$killerVehicle = $this->getVehicleById($kill['killer_vehtype_oid']);
 		if(count($killerVehicle) == 0)
 		{
 			return false;
 		}
-	
+
 		$killerVehicle = $killerVehicle[0];
 		$this->creatorData['template_vars']['vehicle'] = $killerVehicle['name'];
 		$this->creatorData['template_vars']['vehicle_short'] = $killerVehicle['short_name'];
@@ -104,18 +120,23 @@ class StoryBestSapperKillsSortie extends StoryBestSortieBase implements StoryInt
 	 */
 	public function getMostRecentBestKill($countryId)
 	{
-		$wwiiHelper = new dbhelper($this->dbConnWWII);
 		
-		$query = $wwiiHelper
-			->prepare("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
-				. "FROM kills "
-				. "WHERE killer_class = 9 AND killer_category = 4 AND killer_type = 3 "
-				. "AND victim_class = 4 and victim_category = 2 "
-				. "GROUP BY killer_sortie_id, killer_player_0, killer_vehtype_oid HAVING count(kill_id) >= 1 "
-				. "ORDER BY kill_time DESC , kill_count DESC "
-				. "LIMIT 1", [$countryId]);	
+		$dbHelper = new dbhelper($this->dbConnWWII);
+		
+		$params = [
+			French::OBJECT_ID,  German::OBJECT_ID, British::OBJECT_ID, Us::OBJECT_ID,
+			Tank::getClassId(),
+			$countryId, self::$minKills];
 
-		return $wwiiHelper->getAsArray($query);					
+		return $dbHelper
+			->first("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
+				. "FROM kills "
+				. "WHERE killer_vehtype_oid IN (?,?,?,?) "
+				. "AND victim_class = ? AND killer_country = ? "
+				. "GROUP BY killer_sortie_id, killer_player_0, killer_vehtype_oid "
+				. "HAVING count(kill_id) >= ? "
+				. "ORDER BY kill_time DESC , kill_count DESC "
+				. "LIMIT 1", $params);				
 	}
 	
 }

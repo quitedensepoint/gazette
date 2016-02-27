@@ -10,6 +10,8 @@ abstract class StoryBase
 	const STORY_FORMAT_HEADLINE		= 'headline';
 	const STORY_FORMAT_TABLE		= 'table';
 	
+	const DAY_IN_SECONDS			= 86400;
+	
 	/**
 	 * A database connection to the gazette DB
 	 * @var resource 

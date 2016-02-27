@@ -1,4 +1,9 @@
 <?php
+/*
+ * Copyright Playnet 2016
+ */
+
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle;
 
 /**
  * Executes the logic to generate a story from the 
@@ -102,16 +107,14 @@ class StoryBestATGunSortie extends StoryBestSortieBase implements StoryInterface
 	 */
 	public function getMostRecentBestKill($countryId)
 	{
-		$wwiiHelper = new dbhelper($this->dbConnWWII);
+		$dbHelper = new dbhelper($this->dbConnWWII);
 		
-		$query = $wwiiHelper
-			->prepare("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
+		return $dbHelper
+			->get("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
 				. "FROM kills "
-				. "WHERE killer_class = 7 AND victim_class IN (6,4)"
+				. "WHERE killer_class = ? AND victim_class IN (?,?) AND killer_country = ? "
 				. "ORDER BY kill_time DESC , kill_count DESC "
-				. "LIMIT 1", [$countryId]);	
-
-		return $wwiiHelper->getAsArray($query);					
+				. "LIMIT 1", [Vehicle::CLASS_GUN, Vehicle::CLASS_TRUCK, Vehicle::CLASS_TANK, $countryId]);					
 	}
 	
 }
