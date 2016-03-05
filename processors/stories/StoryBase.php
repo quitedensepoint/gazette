@@ -1,5 +1,7 @@
 <?php
 
+use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+
 /**
  * An abstract class to help parse the stories
  */
@@ -48,6 +50,11 @@ abstract class StoryBase
 	 */
 	protected $creatorData;
 	
+	/**
+	 * The ID of the player who is the protaganist (subject) of a story, if any
+	 * @var integer
+	 */
+	protected $protagonistId = null;
 	
 	/**
 	 * An array of directions  for entering into stories.
@@ -87,14 +94,39 @@ abstract class StoryBase
 	 */
 	public static $timezone;
 	
-	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
-		$this->dbConn = $dbConn;
-		$this->dbHelper = new dbhelper($dbConn);
-		$this->dbConnWWII = $dbConnWWII;
-		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
-		$this->dbConnToe = $dbConnToe;
-		$this->creatorData = $creatorData;
+	/**
+	 * An array of database connections
+	 * 
+	 * @var array
+	 */
+	protected $dbConnections;
+	
+	/**
+	 * The object that handles the generation and sending of customer emails
+	 * 
+	 * @var HandlerInterface 
+	 */
+	protected $playerMailHandler;
+	
+	/**
+	 * Is the story revolving around a player?
+	 * 
+	 * @var boolean 
+	 */
+	protected $isPlayerCentric = false;
+	
+	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
 		
+		$this->creatorData = $creatorData;
+		$this->playerMailHandler = $playerMailHandler;
+		
+		$this->dbConnections = $dbConnections;
+		$this->dbConn = $dbConnections['dbConn'];
+		$this->dbConnWWII = $dbConnections['dbConnWWII'];
+		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
+		$this->dbConnToe = $dbConnections['dbConnToe'];		
+		$this->dbHelper = new dbhelper($this->dbConn);
+
 		self::$timezone = new DateTimeZone('America/Chicago');
 	}
 	
@@ -691,4 +723,31 @@ abstract class StoryBase
 		
 		return $dbHelper->getAsArray($query);
 	}
+	
+	public function isPlayerCentric()
+	{
+		return $this->isPlayerCentric;
+	}
+	
+	public function getProtagonistId()
+	{
+		return $this->protagonistId;
+	}
+	
+	public function generateHtmlContent($template) 
+	{
+		$story = $this->makeStory($template);
+
+		return $story['title'] . $story['body'];
+
+	}
+	
+	public function generateTextContent($template) 
+	{
+		// Strip out the HTML where we can.
+		$story = $this->makeStory($template);
+		
+		return strip_tags($story['title']) . "\r\n\r\n" . strip_tags($story['body']);
+
+	}	
 }

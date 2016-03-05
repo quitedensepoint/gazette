@@ -17,6 +17,7 @@ require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/story-processor.php');
 require(__DIR__ . '/../vendor/autoload.php');
 
+
 /**
  * Allow us to do DB queries in one line instead of five
  */
@@ -30,9 +31,9 @@ $gazetteDbHelper = new dbhelper($dbconn);
  */
 $serverTimezone = new DateTimeZone(date_default_timezone_get());
 
-$options = getopt('', ['list:', 'expire:', 'help:', 'generate:', 'sourceid:', 'templateid:', 'reportonly:']);
+$storyOptions = getopt('', ['list:', 'expire:', 'help:', 'generate:', 'sourceid:', 'templateid:', 'reportonly:']);
 
-if(count($options) == 0 || isset($options['help']))
+if(count($storyOptions) == 0 || isset($storyOptions['help']))
 {
 	exit("\nusage: php command/stories.php [--help] [--expire=story-key] [--generate] [--sourceid=] [--templateid=]"
 		. "\n\n  --expire=key\tWill expire the story with the specified key which will be processed on the next call."
@@ -59,13 +60,25 @@ if(!isset($dbConnToe)) {
 	throw new Exception('Please ensure you have defined a connection "$dbConnToe" to toe DB in the DBConn file');
 }
 
-$storyProcessor = new StoryProcessor($dbconn, $dbConnWWII, $dbConnWWIIOL, $dbConnToe);
+// Retrieves the classname used to handle player email notifications from the dbConn options
+// Note that the double slash is needed at the end of the class path
+$playerMailHandlerClass = 'Playnet\WwiiOnline\Common\PlayerMail\\' . $options['playerMail']['handler'];
+$playerMailHandler = new $playerMailHandlerClass($options['playerMail']['options']);
 
-$sourceId = (isset($options['sourceid']) && ctype_digit($options['sourceid'])) ? intval($options['sourceid']) : null;
-$templateId = (isset($options['templateid']) && ctype_digit($options['templateid'])) ? intval($options['templateid']) : null;
-$reportOnly = isset($options['reportonly']);
+// We are passing in the database connections as an array rather than separators
+// we end up with too manay parameters
+$storyProcessor = new StoryProcessor($playerMailHandler, [
+	'dbConn' => $dbconn, 
+	'dbConnWWII' => $dbConnWWII, 
+	'dbConnWWIIOnline' => $dbConnWWIIOL, 
+	'dbConnToe' => $dbConnToe]
+	);
 
-if(isset($options['generate'])) {
+$sourceId = (isset($storyOptions['sourceid']) && ctype_digit($storyOptions['sourceid'])) ? intval($storyOptions['sourceid']) : null;
+$templateId = (isset($storyOptions['templateid']) && ctype_digit($storyOptions['templateid'])) ? intval($storyOptions['templateid']) : null;
+$reportOnly = isset($storyOptions['reportonly']);
+
+if(isset($storyOptions['generate'])) {
 	
 	$opts = [
 		'sourceId' => $sourceId, 
@@ -77,11 +90,11 @@ if(isset($options['generate'])) {
      * Any provided key that isn't "expired" or "all" will look
      * for a story of that key
      */
-    if(!in_array(trim($options['generate']), ['expired', 'all'])) {
+    if(!in_array(trim($storyOptions['generate']), ['expired', 'all'])) {
 		/**
 		 * Generate a new story for the entry provided
 		 */
-		$storyProcessor->process($options['generate'], $opts);
+		$storyProcessor->process($storyOptions['generate'], $opts);
 	}
 	else
 	{
@@ -94,7 +107,7 @@ if(isset($options['generate'])) {
         /**
          * If we nominated expired, we'll only update the expired stories
          */		
-		if($options['generate'] == 'expired')
+		if($storyOptions['generate'] == 'expired')
 		{
 			$query .= 'WHERE expire = 1 OR expires <= NOW()';
 		}
@@ -109,13 +122,18 @@ if(isset($options['generate'])) {
 	}
 	
 }
+		
+/**
+ * Send out the player stories
+ */
+$playerMailHandler->send();
 
 /**
  * If we have asked for a specific area to be expired, it will regenerate on
  * the next run
  */
-if(isset($options['expire'])) {
-	$storyProcessor->forceStoryExpiry($options['expire']);
+if(isset($storyOptions['expire'])) {
+	$storyProcessor->forceStoryExpiry($storyOptions['expire']);
 }
 
 exit(0);

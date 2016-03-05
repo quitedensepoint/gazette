@@ -24,5 +24,30 @@ interface StoryInterface {
 	 * @return array
 	 */
 	public function makeStory($template);
+	
+	/**
+	 * Check to see if the story centers around the actions of a player
+	 * 
+	 * @return boolean
+	 */
+	public function isPlayerCentric();
+	
+	/**
+	 * @return integer|null A player Id
+	 */
+	public function getProtagonistId();
+	
+	/**
+	 * Format and retrieve the information from the story to go into the email sender
+	 * 
+	 * @param type $template
+	 */
+	public function generateHtmlContent($template);
+	
+	/**
+	 * 
+	 * @param type $template
+	 */
+	public function generateTextContent($template);
 }
 

@@ -74,5 +74,18 @@ $options = [
 	'campaigncheck_log_retention_days' => 14,
 	
 	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
-	'webmap-environment' => 'dev'
+	'webmap-environment' => 'dev',
+	
+	// Options for the player mailer (see Confluence Documentation)
+	'playerMail' => [
+		
+		// The subject to go out on the emails
+		'subject' => 'World War II Online Gazette: You\'ve been mentioned!',
+		
+		// The classname (in the Playnet\WiiOnline\Common\PlayerMail namespace
+		'handler' => 'IgnoreHandler',
+		
+		// The options to pass into the constructor of the handler
+		'options' => []		
+	]	
 ];

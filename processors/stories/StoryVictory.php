@@ -1,6 +1,7 @@
 <?php
 
 use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
+use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
 
 /**
  * Executes the logic to generate a story from the 
@@ -8,8 +9,8 @@ use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
  */
 class StoryVictory extends StoryVictoryBase implements StoryInterface {
 	
-	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
-		parent::__construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData);
+	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
+		parent::__construct($creatorData, $playerMailHandler, $dbConnections);
 		self::$minOwnershipPercent = 94;			
 	}
 	
@@ -33,8 +34,6 @@ class StoryVictory extends StoryVictoryBase implements StoryInterface {
 		$totalCps		= $totalCps - 9;		
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
-		
-		var_dump($cpOwnershipPercent);
 		
 		return ($totalCps > self::$minTotalCps && ($cpOwnershipPercent >= self::$minOwnershipPercent));
 		
