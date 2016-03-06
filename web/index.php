@@ -48,7 +48,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 <!-- Header: Allied casualties | Camp info | Axis causualties --> 
 		<div id='top' >
 			<img src='assets/img/header.gif'  id='headerMiddle'>
-			<span id="version">Version: 2.0</span>
+			<span id="version">Version: 2.1</span>
 <!-- Allied Deaths --> 
 			<table id='alliedDeaths'>
 				<tr>
@@ -80,9 +80,9 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
         <div id='info'>
             <table id='infoBar'>
                 <tr>
-				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.15</span></td>
+				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.16</span></td>
 					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days->format('%a'); ?></span></td> 
-					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href="allied.php">ALLIED Section</a> & AXIS Section</span></td>
+					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'>ALLIED Section & AXIS Section</span></td>
 			    </tr>
 		    </table>
         </div>
