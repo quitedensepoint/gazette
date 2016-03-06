@@ -506,7 +506,7 @@ class StoryProcessor {
 	private function getSourcesForType($typeId)
 	{
 		$query = $this->dbHelper
-		->prepare("SELECT s.source_id,s.name, s.weight,s.life "
+		->prepare("SELECT s.source_id, s.type_id, s.name, s.weight, s.life"
 			." FROM sources AS s "
 			." WHERE s.type_id = ? ORDER BY RAND()", [$typeId]);
 
