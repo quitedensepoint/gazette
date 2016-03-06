@@ -140,7 +140,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 					echo file_get_contents("$webmapEnv/FrontLines/FrontLineBDEs_$fileDt.txt");
 				?>
 				
-				L.marker([51.6, 4.4], {
+				L.marker([51.65, 4.4], {
 					icon: L.divIcon({
 						className: 'mapCountryNames',
 						html: 'Netherlands'
@@ -161,7 +161,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 					})
 				}).addTo(map);
 				
-				L.marker([49.9, 5.9], {
+				L.marker([49.82, 5.98], {
 					icon: L.divIcon({
 						className: 'mapCountryNames',
 						html: 'Lux'
