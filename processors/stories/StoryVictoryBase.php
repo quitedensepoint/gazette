@@ -1,6 +1,8 @@
 <?php
 
 use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
+use Playnet\WwiiOnline\WwiiOnline\Models\Side\Allied\Allied;
+use Playnet\WwiiOnline\WwiiOnline\Models\Side\Axis\Axis;
 
 /**
  * Executes the logic to generate a story from the 
@@ -47,7 +49,7 @@ class StoryVictoryBase extends StoryBase  {
 	 * Get the total number of CPs owned by a nominated side
 	 * 
 	 * @param integer $sideId
-	 * @return type
+	 * @return integer
 	 */
 	public function getOwnedGameCPCount($sideId)
 	{
@@ -58,8 +60,7 @@ class StoryVictoryBase extends StoryBase  {
 		$result = $dbHelper->first("SELECT count(*) AS cp_count FROM strat_cp WHERE cp_type != ?"
 				. " AND country IN (" . $this->getActiveCountryIdsForJoin() . ") AND side = ?", $params);	
 		
-		return $result['cp_count'];		
-					
+		return $result['cp_count'];					
 	}
 	
 	/**
@@ -78,4 +79,23 @@ class StoryVictoryBase extends StoryBase  {
 		
 		return count($ids) > 0 ? implode(",", $ids) : '0';
 	}
+	
+	/**
+	 * Overrides the makeStory function of the StoryBase class
+	 * 
+	 * @param array $template
+	 * @return string
+	 */
+	public function makeStory($template) {
+		
+		$template_vars = $this->creatorData['template_vars'];
+
+		$template_vars['side_adj'] = strtolower($template_vars['side']) == 
+			strtolower(Allied::getSideName()) ? Allied::getSideAdjective() : Axis::getSideAdjective();
+		
+		$template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 
+			strtolower(Allied::getSideName()) ? Axis::getSideAdjective() : Allied::getSideAdjective();
+		
+		return $this->parseStory($template_vars, $template['title'], $template['body'] );
+	}	
 }

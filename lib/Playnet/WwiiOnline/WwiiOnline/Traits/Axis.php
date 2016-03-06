@@ -15,7 +15,9 @@ namespace Playnet\WwiiOnline\WwiiOnline\Traits;
 trait Axis {
 	
 	protected static $sideId = 2;
+	protected static $sideKey = 'axis';
 	protected static $sideName = 'Axis';
+	protected static $sideAdjective = 'Axis';	
 	
 	/**
 	 * Get the game of the side
@@ -28,8 +30,18 @@ trait Axis {
 		return self::$sideId;
 	}
 	
+	public function getSideKey()		
+	{
+		return self::$sideKey;
+	}	
+	
 	public function getSideName()		
 	{
 		return self::$sideName;
+	}
+	
+	public function getSideAdjective()		
+	{
+		return self::$sideAdjective;
 	}	
 }

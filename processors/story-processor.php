@@ -12,6 +12,9 @@
 require_once(__DIR__ . "/../include/dbhelper.php");
 require_once(__DIR__ . "/stories/require.php");
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Side\Allied\Allied;
+use Playnet\WwiiOnline\WwiiOnline\Models\Side\Axis\Axis;
+
 class StoryProcessor {
 	
 	/**
@@ -221,6 +224,12 @@ class StoryProcessor {
 			 */
 			foreach($organisedSources[$weight] as $source)
 			{
+				if($source['type_id'] != $typeId)
+				{
+					echo sprintf("  source type mismatch %s : %s\n", $source['type_id'], $typeId);
+					continue;
+				}
+				
 				if(($content = $this->processSource($storyData, $source, $templateId)) !== false) {
 					return $content;
 				}
@@ -291,7 +300,9 @@ class StoryProcessor {
 			'template_vars' => [
 				'country' => $activeCountry['name'],
 				'side' => $activeCountry['side'],
-				'enemy_side' => strtolower($activeCountry['side']) == 'allied' ? 'axis' : 'allied',
+				'side_adj' => $activeCountry['side'] == Allied::getSideKey() ? Axis::getSideAdjective() : Allied::getSideAdjective(),
+				'enemy_side' => strtolower($activeCountry['side']) == Allied::getSideKey() ? Axis::getSideName() : Allied::getSideName(),
+				'enemy_side_adj' => strtolower($activeCountry['side']) == Allied::getSideKey() ? Axis::getSideAdjective() : Allied::getSideAdjective(),
 				'country_adj' => $activeCountry['adjective'],
 				'side_id' => $activeCountry['side_id'],
 				'country_id' => $activeCountry['country_id'],				
@@ -396,10 +407,9 @@ class StoryProcessor {
 	 */
 	private function getStorySource($sourceId)
 	{
-		$query = $this->dbHelper
-			->prepare("SELECT s.source_id, s.name, s.weight, s.life FROM `sources` as s WHERE s.source_id = ? limit 1", [$sourceId]);
-
-		return $this->dbHelper->getAsArray($query);		
+		return $this->dbHelper
+			->get("SELECT s.source_id, s.type_id, s.name, s.weight, s.life FROM `sources` as s WHERE s.source_id = ? limit 1", [$sourceId]);
+	
 	}
 	
 	/**
