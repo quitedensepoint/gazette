@@ -22,19 +22,21 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 		$total = 0;
 		$rank = 1;
 
+		$rankingCountries  = [];
 		foreach($countries as $country)
 		{
+			$rankingCountries[$country['country_id']] = $country;
 			$airfieldCounts[$country['country_id']] =  $this->getAirfieldsCount($country['country_id']);
 			
 			$total += $airfieldCounts[$country['country_id']];
 		}
 		
 		// Rank the airfields from most to least
-		sort($airfieldCounts);
-		
+		arsort($airfieldCounts);
+
 		foreach($airfieldCounts as $key => $count)
 		{
-			$country = $countries[$key];
+			$country = $rankingCountries[$key];
 			$name = $country['name'];
 			$side = $country['side'];
 			$percent = intval(($count / $total) * 100);

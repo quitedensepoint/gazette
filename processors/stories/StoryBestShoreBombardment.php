@@ -94,7 +94,7 @@ class StoryBestShoreBombardment extends StoryBestSortieBase implements StoryInte
 		}
 		$this->creatorData['template_vars']['list'] = join(", ", $killList);
 		
-		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side'];
+		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side_adj'];
 		
 		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
 		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');

@@ -3,7 +3,7 @@
  * Copyright Playnet 2016
  */
 
-namespace Playnet\WwiiOnline\WwiiOnline\Models\Facility\Armybase;
+namespace Playnet\WwiiOnline\WwiiOnline\Models\Facility\Airbase;
 
 use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Facility;
 
@@ -14,12 +14,12 @@ use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Facility;
  *
  * @author Jason "drloon" Rout
  */
-class Armybase extends Facility {
+class Airbase extends Facility {
 	
 	/**
 	 * Overrides the static value in the base class
 	 * 
 	 * @var integer
 	 */
-	protected static $typeId = 9;
+	protected static $typeId = 8;
 }

@@ -30,8 +30,6 @@ class Message {
 	
 	private $textContent = '';
 	
-	private $subject = '';
-	
 	public function __construct() 
 	{
 		$this->players = new SplObjectStorage();		
@@ -74,20 +72,6 @@ class Message {
 		}
 		$this->textContent = $value;
 	}
-	
-	public function getSubject()
-	{
-		return $this->subject;
-	}
-	
-	public function setSubject($value)
-	{
-		if(!is_string($value))
-		{
-			trigger_error("Subject must be a string.", E_USER_ERROR);
-		}
-		$this->subject = $value;
-	}	
 	
 	public function toJson()
 	{

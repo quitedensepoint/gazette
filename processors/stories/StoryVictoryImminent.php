@@ -1,6 +1,5 @@
 <?php
 
-use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
 use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
 
 /**
@@ -11,8 +10,9 @@ class StoryVictoryImminent extends StoryVictoryBase implements StoryInterface {
 	
 	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
 		parent::__construct($creatorData, $playerMailHandler, $dbConnections);
-		self::$maxOwnershipPercent = 93;
+
 		self::$minOwnershipPercent = 91;			
+		self::$maxOwnershipPercent = 93;	
 	}
 	
 	public function isValid() {
@@ -31,22 +31,12 @@ class StoryVictoryImminent extends StoryVictoryBase implements StoryInterface {
 		 * 
 		 * @todo Figure out and document why these calculations are here
 		 */
-		$ownedCps		= ($this->creatorData['side_id'] == 1) ? $ownedCps - 6: $ownedCps - 3;
-		$totalCps		= $totalCps - 9;		
+		//$ownedCps		= ($this->creatorData['side_id'] == 1) ? $ownedCps - 6: $ownedCps - 3;
+		//$totalCps		= $totalCps - 9;		
 		
 		$cpOwnershipPercent = intval(($ownedCps / $totalCps) * 100);
 
 		return ($totalCps >= self::$minTotalCps && ($cpOwnershipPercent >= self::$minOwnershipPercent and $cpOwnershipPercent <= self::$maxOwnershipPercent));
 	}
 
-	public function makeStory($template) {
-		
-		$template_vars = $this->creatorData['template_vars'];
-		
-		$template_vars['side_adj'] = strtolower($template_vars['side']) == 'allied' ? 'Allied' : 'Axis';
-		$template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 'allied' ? 'Axis' : 'Allied';
-		
-		return $this->parseStory($template_vars, $template['title'], $template['body'] );
-
-	}
 }
