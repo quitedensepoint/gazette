@@ -3,7 +3,7 @@
  * Copyright Playnet 2016
  */
 
-use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Vehicle;
 
 /**
  * Executes the logic to generate a story from the 
