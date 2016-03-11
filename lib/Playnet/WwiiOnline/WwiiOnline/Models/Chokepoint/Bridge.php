@@ -5,8 +5,6 @@
 
 namespace Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint;
 
-use Playnet\WwiiOnline\WwiiOnline\Models\CountryInterface;
-
 /**
  * Represents a chokepoint that is a bridge
  *
