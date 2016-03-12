@@ -7,6 +7,18 @@
  */
 class StoryFrontLines extends StoryBase implements StoryInterface {
 	
+	/**
+	 * Converting a set of metres to miles
+	 */
+	const METRES_TO_MILES = 0.00062137;
+	
+	/**
+	 * The maximum number of cities to show in the front line list
+	 * 
+	 * @var integer
+	 */
+	protected static $maxFrontlineCityCount = 3;
+	
 	public function isValid() {
 
 		/**
@@ -15,7 +27,7 @@ class StoryFrontLines extends StoryBase implements StoryInterface {
 		$frontlineCity = $this->getRandomFrontlineCityForCountry($this->creatorData['country_id']);
 		$this->creatorData['template_vars']['any_front_city'] = $frontlineCity[0]['name'];
 		//meters to miles
-		$this->creatorData['template_vars']['distance'] = intval($frontlineCity[0]['distance'] * 0.00062137);
+		$this->creatorData['template_vars']['distance'] = intval($frontlineCity[0]['distance'] * self::METRES_TO_MILES);
 		
 		$vehicleData = $this->getRandomVehicle($this->creatorData['country_id']);
 		$this->creatorData['template_vars']['vehicle_short'] = $vehicleData != null ? $vehicleData['short_name'] : 'more';		
@@ -36,7 +48,7 @@ class StoryFrontLines extends StoryBase implements StoryInterface {
 				array_push($frontlineList, $frontline['name']);
 			}
 			
-			if(count($frontlineList) == 3)
+			if(count($frontlineList) == self::$maxFrontlineCityCount)
 			{
 				break;
 			}

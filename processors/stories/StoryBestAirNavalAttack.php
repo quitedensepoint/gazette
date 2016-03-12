@@ -1,5 +1,8 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Categories\Aircraft;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Categories\Sea;
+
 /**
  * Executes the logic to generate a story from the 
  * "Best Air Ground Attack" source.
@@ -15,19 +18,22 @@
  */
 class StoryBestAirNavalAttack extends StoryBestSortieBase implements StoryInterface {
 	
+	/**
+	 * The minimum number of kills needed to make this story valid
+	 * 
+	 * @var integer
+	 */
+	protected static $minKills = 1;
+	
 	public function isValid() {
 
 		/**
-		 * Gte the best kills from the strat.kills
+		 * Get the best kills from the strat.kills
 		 */
-		$kill = $this->getMostRecentBestKill($this->creatorData['country_id']);
-		
-		if(count($kill) != 1)
+		if(!($kill = $this->getMostRecentBestKill($this->creatorData['country_id'])))
 		{
-			// Nobody meets the criteria
 			return false;
 		}
-		$kill = $kill[0];
 		
 		/**
 		 * Get the player who did the kills
@@ -102,18 +108,22 @@ class StoryBestAirNavalAttack extends StoryBestSortieBase implements StoryInterf
 	 */
 	public function getMostRecentBestKill($countryId)
 	{
-		$wwiiHelper = new dbhelper($this->dbConnWWII);
+	
+		$dbHelper = new dbhelper($this->dbConnWWII);
 		
-		$query = $wwiiHelper
-			->prepare("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
+		$params = [
+			Aircraft::getCategoryId(),
+			Sea::getCategoryId(),
+			$countryId, self::$minKills];
+		
+		return $dbHelper
+			->first("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
 				. "FROM kills "
-				. "WHERE killer_country = ? AND killer_category = 1 AND victim_category  IN (3) "
+				. "WHERE killer_category = ? AND victim_category = ? AND killer_country = ? "
 				. "GROUP by killer_sortie_id, killer_player_0, killer_vehtype_oid "
-				. "HAVING count(kill_id) > 0 "
+				. "HAVING count(kill_id) >= ? "
 				. "ORDER BY kill_time DESC "
-				. "LIMIT 1", [$countryId]);	
-
-		return $wwiiHelper->getAsArray($query);					
+				. "LIMIT 1", $params);			
 	}
 	
 }

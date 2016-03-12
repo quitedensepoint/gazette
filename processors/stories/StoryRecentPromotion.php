@@ -6,6 +6,8 @@
  */
 class StoryRecentPromotion extends StoryBase implements StoryInterface {
 	
+	
+	
 	public function isValid() {
 
 		/**
@@ -13,7 +15,7 @@ class StoryRecentPromotion extends StoryBase implements StoryInterface {
 		 */
 		$time = new DateTime();
 		$time->setTimezone(self::$timezone);
-		$time->setTimestamp(time() - 86400);
+		$time->setTimestamp(time() - self::DAY_IN_SECONDS);
 		
 		$promotions = $this->getRecentPromotions($this->creatorData['country_id'], $time->getTimestamp());
 		foreach($promotions as $promotion)

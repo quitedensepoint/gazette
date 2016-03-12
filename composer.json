@@ -14,5 +14,10 @@
             "name": "Jason Rout",
             "email": "drloon@playnet.com"
         }        
-    ]
+    ],
+    "autoload" : {
+        "psr-4": {
+            "Playnet\\" : "lib/Playnet"
+        }
+    }
 }

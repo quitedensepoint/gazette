@@ -1,5 +1,8 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Classes\Sea;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Classes\Riverine;
+
 /**
  * Executes the logic to generate a story from the 
  * "Best Destroyer Sortie" source.
@@ -15,19 +18,22 @@
  */
 class StoryBestDestroyerSortie extends StoryBestSortieBase implements StoryInterface {
 	
+	/**
+	 * The minimum number of kills needed to make this story valid
+	 * 
+	 * @var integer
+	 */
+	protected static $minKills = 1;	
+	
 	public function isValid() {
 
 		/**
-		 * Gte the best kills from the strat.kills
+		 * Get the best kills from the strat.kills
 		 */
-		$kill = $this->getMostRecentBestKill($this->creatorData['country_id']);
-		
-		if(count($kill) != 1)
+		if(!($kill = $this->getMostRecentBestKill($this->creatorData['country_id'])))
 		{
-			// Nobody meets the criteria
 			return false;
 		}
-		$kill = $kill[0];
 		
 		/**
 		 * Get the player who did the kills
@@ -85,7 +91,7 @@ class StoryBestDestroyerSortie extends StoryBestSortieBase implements StoryInter
 		}
 		$this->creatorData['template_vars']['list'] = join(", ", $killList);
 		
-		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side'];
+		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side_adj'];
 		
 		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
 		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');	
@@ -103,18 +109,22 @@ class StoryBestDestroyerSortie extends StoryBestSortieBase implements StoryInter
 	 *  
 	 */
 	public function getMostRecentBestKill($countryId)
-	{
-		$wwiiHelper = new dbhelper($this->dbConnWWII);
+	{	
+		$dbHelper = new dbhelper($this->dbConnWWII);
 		
-		$query = $wwiiHelper
-			->prepare("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
+		$params = [
+			Sea::getClassId(),
+			Sea::getClassId(), Riverine::getClassId(),
+			$countryId, self::$minKills];
+		
+		return $dbHelper
+			->first("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
 				. "FROM kills "
-				. "WHERE killer_class IN (13) AND victim_class IN (12, 13) "
-				. "GROUP BY killer_sortie_id, killer_player_0, killer_vehtype_oid HAVING count(kill_id) >= 1 "
+				. "WHERE killer_class IN (?) AND victim_class IN (?, ?) AND killer_country = ? "
+				. "GROUP BY killer_sortie_id, killer_player_0, killer_vehtype_oid "
+				. "HAVING count(kill_id) >= ? "
 				. "ORDER BY kill_time DESC , kill_count DESC "
-				. "LIMIT 1", [$countryId]);	
-
-		return $wwiiHelper->getAsArray($query);					
+				. "LIMIT 1", $params);			
 	}
 	
 }

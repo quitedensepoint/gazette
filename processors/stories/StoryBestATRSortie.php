@@ -1,5 +1,15 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Atr\GermanAirborne;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Atr\FrenchAirborne;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Atr\BritishAirborne;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Atr\German;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Atr\French;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types\Atr\British;
+
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Classes\Tank;
+use Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Classes\Truck;
+
 /**
  * Executes the logic to generate a story from the 
  * "Best ATR Sortie" source.
@@ -20,14 +30,10 @@ class StoryBestATRSortie extends StoryBestSortieBase implements StoryInterface {
 		/**
 		 * Gte the best kills from the strat.kills
 		 */
-		$kill = $this->getMostRecentBestKill($this->creatorData['country_id']);
-		
-		if(count($kill) != 1)
+		if(!($kill = $this->getMostRecentBestKill($this->creatorData['country_id'])))
 		{
-			// Nobody meets the criteria
 			return false;
 		}
-		$kill = $kill[0];
 		
 		/**
 		 * Get the player who did the kills
@@ -86,7 +92,7 @@ class StoryBestATRSortie extends StoryBestSortieBase implements StoryInterface {
 		}
 		$this->creatorData['template_vars']['list'] = join(", ", $killList);
 		
-		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side'];
+		$this->creatorData['template_vars']['side_adj'] = $this->creatorData['template_vars']['enemy_side_adj'];
 	
 		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
 		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');	
@@ -105,17 +111,21 @@ class StoryBestATRSortie extends StoryBestSortieBase implements StoryInterface {
 	 */
 	public function getMostRecentBestKill($countryId)
 	{
-		$wwiiHelper = new dbhelper($this->dbConnWWII);
+		$dbHelper = new dbhelper($this->dbConnWWII);
 		
-		$query = $wwiiHelper
-			->prepare("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
+		$params = [
+					GermanAirborne::OBJECT_ID, FrenchAirborne::OBJECT_ID, BritishAirborne::OBJECT_ID,
+					German::OBJECT_ID, French::OBJECT_ID, British::OBJECT_ID,
+					Tank::getClassId(), Truck::getClassId(),
+					$countryId];
+		
+		return $dbHelper->first("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
 				. "FROM kills "
-				. "WHERE killer_vehtype_oid IN (189, 183, 177, 118, 119, 120) AND victim_class IN (6,4) "
+				. "WHERE killer_vehtype_oid IN (?,?,?,?,?,?) AND victim_class IN (?,?) AND killer_country = ? "
 				. "GROUP BY killer_sortie_id, killer_player_0, killer_vehtype_oid HAVING  count(kill_id) > 0 "
 				. "ORDER BY kill_time DESC , kill_count DESC "
-				. "LIMIT 1", [$countryId]);	
-
-		return $wwiiHelper->getAsArray($query);					
+				. "LIMIT 1", $params );	
+				
 	}
 	
 }

@@ -7,7 +7,8 @@
  * This checks all of the factory towns for a side, and checks to see if
  * all of the factories reduced in capacity.
  */
-class StoryFactoryCaptured extends StoryBase implements StoryInterface {
+class StoryFactoryCaptured extends StoryFactoryBase implements StoryInterface {
+	
 		
 	public function isValid() {
 
@@ -85,28 +86,6 @@ class StoryFactoryCaptured extends StoryBase implements StoryInterface {
 		}
 		
 		return false;		
-	}
-	
-	/**
-	 * Retrieve the factory output data
-	 * 
-	 * @param integer $sideId
-	 * @return array
-	 */
-	public function getFactoryOutputs($sideId)
-	{
-		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
-		
-		$query = $dbHelper
-			->prepare("select f.facility_oid, f.cp_oid, f.side, f.originalside, o.damage_pctg, sc.name as cp_name, wc.fullName as country_name, wc.countryID as country_id "
-				. "from  strat_facility f "
-				. "left join strat_factory_outputs o on f.country = o.country "
-				. "inner join strat_cp sc on sc.cp_oid = f.cp_oid "
-				. "inner join wwii_country wc on wc.countryID = sc.country "
-				. "where (f.facility_oid = o.facility_oid or o.facility_oid is null) and o.side = ? and facility_type = 2 and facility_subtype = 7 "
-				. "AND output_time >= (SELECT DATE_SUB(MAX(output_time),INTERVAL 1 MINUTE) FROM strat_factory_outputs)",[$sideId]);	
-		
-		return $dbHelper->getAsArray($query);				
 	}
 
 }

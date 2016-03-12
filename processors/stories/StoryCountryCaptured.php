@@ -1,5 +1,7 @@
 <?php
 
+use Playnet\WwiiOnline\WwiiOnline\Models\Chokepoint\Bridge;
+
 /**
  * Executes the logic to generate a story from the 
  * "Latest Intel" source.
@@ -22,11 +24,15 @@ class StoryCountryCaptured extends StoryBase implements StoryInterface {
 	 */
 	public function isCountryOwnedBy($country_id)
 	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("select count(*) as cp_count from strat_cp where cp_type != 5 and country = ?",[$country_id]);	
+		$params = [
+			Bridge::getTypeId(),
+			$country_id
+		];
 		
-		return $gameDbHelper->getAsArray($query)[0]['cp_count'] == 0;					
+		$result = $dbHelper->first("select count(*) as cp_count from strat_cp where cp_type != ? and country = ?", $params);	
+		
+		return $result['cp_count'] == 0;					
 	}
 }

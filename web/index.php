@@ -10,6 +10,7 @@ require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/casualty-processor.php');
 require(__DIR__ . '/../processors/campaign.php');
 require(__DIR__ . '/../processors/aocap.php');
+require(__DIR__ . '/../processors/webmap.php');
 
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
@@ -38,8 +39,8 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
     <title>World@War Gazette</title>
 	<link rel='stylesheet' href='assets/css/gazette.css'>
 	<link rel="shortcut icon" href="assets/img/favicon.ico" />
-	<link rel="stylesheet" href="https://webmap.wwiionline.com/Library/leaflet.css" />	
-	<script src="https://webmap.wwiionline.com/Library/jquery-1.10.2.js"></script>
+	<link rel="stylesheet" href="<?php echo $webmapEnv; ?>/Library/leaflet.css" />	
+	<script src="<?php echo $webmapEnv; ?>/Library/jquery-1.10.2.js"></script>
 </head>
 
 <body>
@@ -47,7 +48,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 <!-- Header: Allied casualties | Camp info | Axis causualties --> 
 		<div id='top' >
 			<img src='assets/img/header.gif'  id='headerMiddle'>
-			<span id="version">Version: 2.0</span>
+			<span id="version">Version: 2.1</span>
 <!-- Allied Deaths --> 
 			<table id='alliedDeaths'>
 				<tr>
@@ -79,9 +80,9 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
         <div id='info'>
             <table id='infoBar'>
                 <tr>
-				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.15</span></td>
+				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.16</span></td>
 					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days->format('%a'); ?></span></td> 
-					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href="allied.php">ALLIED Section</a> & AXIS Section</span></td>
+					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'>ALLIED Section & AXIS Section</span></td>
 			    </tr>
 		    </table>
         </div>
@@ -100,11 +101,11 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 <!-- map -->
             <div id="mapContainer">
 				<div id="map" style="width: 535px; height: 356px;"></div>
-				<script src="https://webmap.wwiionline.com/Library/leaflet_v0.7.7.js"></script>
+				<script src="<?php echo $webmapEnv; ?>/Library/leaflet_v0.7.7.js"></script>
 				<script>
 				var map = L.map('map').setView([50.478166, 4.4], 7);
 					
-				L.tileLayer('https://webmap.wwiionline.com/{z}/{x}/{y}.png', {
+				L.tileLayer('<?php echo $webmapEnv; ?>/{z}/{x}/{y}.png', {
 						noWrap: true,
 						tms: true,
 						zoomControl: false,
@@ -119,7 +120,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 				$(".leaflet-control-zoom").css("visibility", "hidden");
 				
 				map.on('click', function(e) {        
-					window.open('http://webmap.wwiionline.com','_blank');
+					window.open('<?php echo $webmapEnv; ?>','_blank');
 				});
 				
 				// Borders https://github.com/mledoze/countries/tree/bb61a1cddfefd09ad5c92ad0a1effbfceba39930/data
@@ -136,17 +137,17 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 				L.geoJson(france, {"color": "white", "weight": 1, "opacity": .75, "fill": false}).addTo(map);
 				
 				<?php					
-					echo file_get_contents("https://webmap.wwiionline.com/FrontLines/FrontLineBDEs_$fileDt.txt");
+					echo file_get_contents("$webmapEnv/FrontLines/FrontLineBDEs_$fileDt.txt");
 				?>
 				
-				L.marker([51.6, 4.4], {
+				L.marker([51.65, 4.4], {
 					icon: L.divIcon({
 						className: 'mapCountryNames',
 						html: 'Netherlands'
 					})
 				}).addTo(map);
 				
-				L.marker([50.5, 6.45], {
+				L.marker([50.85, 6.2], {
 					icon: L.divIcon({
 						className: 'mapCountryNames',
 						html: 'Germany'
@@ -160,7 +161,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 					})
 				}).addTo(map);
 				
-				L.marker([49.9, 5.9], {
+				L.marker([49.82, 5.98], {
 					icon: L.divIcon({
 						className: 'mapCountryNames',
 						html: 'Lux'
@@ -174,7 +175,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 					})
 				}).addTo(map);
 				</script>
-				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='https://webmap.wwiionline.com' style="color: yellow;" target="_blank">CLICK FOR FULL SIZE</a></span>
+				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='<?php echo $webmapEnv; ?>' style="color: yellow;" target="_blank">CLICK FOR FULL SIZE</a></span>
             </div>
 <!-- AO info -->
             <div id="ao">

@@ -1,4 +1,9 @@
 <?php
+/*
+ * Copyright Playnet 2016
+ */
+
+use Playnet\WwiiOnline\WwiiOnline\Models\Facility\Airbase\Airbase;
 
 /**
  * Executes the logic to generate a story from the 
@@ -11,25 +16,27 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 		/**
 		 * Go through each country and see whom has the most firebases
 		 */
-		$countries = $this->getCountries();
+		$countries = $this->getActiveCountries();
 		
 		$airfieldCounts =[];
 		$total = 0;
 		$rank = 1;
 
+		$rankingCountries  = [];
 		foreach($countries as $country)
 		{
+			$rankingCountries[$country['country_id']] = $country;
 			$airfieldCounts[$country['country_id']] =  $this->getAirfieldsCount($country['country_id']);
 			
 			$total += $airfieldCounts[$country['country_id']];
 		}
 		
 		// Rank the airfields from most to least
-		sort($airfieldCounts);
-		
+		arsort($airfieldCounts);
+
 		foreach($airfieldCounts as $key => $count)
 		{
-			$country = $countries[$key];
+			$country = $rankingCountries[$key];
 			$name = $country['name'];
 			$side = $country['side'];
 			$percent = intval(($count / $total) * 100);
@@ -74,21 +81,6 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 	}
 	
 	/**
-	 * Get the countries that are in the papers system
-	 * 
-	 * @return array
-	 */
-	public function getCountries()
-	{
-		$gameDbHelper = new dbhelper($this->dbConn);
-		
-		$query = $gameDbHelper
-			->prepare("SELECT country_id, name, adjective, side FROM countries");	
-		
-		return $gameDbHelper->getAsArray($query);					
-	}
-	
-	/**
 	 * Get the total number of airfields by country
 	 * 
 	 * @param integer $countryId
@@ -96,13 +88,14 @@ class StoryAirfieldsOwned extends StoryBase implements StoryInterface {
 	 */
 	public function getAirfieldsCount($countryId)
 	{
-		$gameDbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $gameDbHelper
-			->prepare("SELECT count(facility_oid) as airbase_count FROM strat_facility "
-				. "where facility_type = 8 and open = 1 and country = ?", [$countryId]);	
+		$params = [Airbase::getTypeId(), $countryId];
 		
-		return $gameDbHelper->getAsArray($query)[0]['airbase_count'];					
+		$result = $dbHelper->first("SELECT count(facility_oid) as airbase_count FROM strat_facility "
+				. "where facility_type = ? and open = 1 and country = ?", $params);	
+		
+		return $result['airbase_count'];					
 	}
 
 }

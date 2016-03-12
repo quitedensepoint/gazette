@@ -1,4 +1,9 @@
 <?php 
+
+// Extra brackets important!
+(require_once(__DIR__ . '/include/error-handlers.php')) ||
+	die('Cannot find the error handler file located at "' . __DIR__ . '/include/error-handlers.php".');
+
 /**
  * This file allows connections to the wwii database required by the gazette
  * for information
@@ -71,5 +76,8 @@ $options = [
 	'ga-active' => false,
 	
 	// Keep the campaign check log retention limited to this many days
-	'campaigncheck_log_retention_days' => 14
+	'campaigncheck_log_retention_days' => 14,
+	
+	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
+	'webmap-environment' => 'dev'
 ];
