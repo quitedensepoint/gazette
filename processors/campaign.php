@@ -10,7 +10,7 @@
 require(__DIR__ . '/../DBconn.php');
 	
 // Delect the campaign that is currently running.  	
-$currcamp=$dbconn->query("SELECT id, start_time FROM `campaigns` WHERE `status`='Running'");
+$currcamp=$dbconn->query("SELECT `campaign_id` as id, start_time FROM `campaigns` WHERE `status`='Running'");
 $row=$currcamp->fetch_assoc();
 
 // Find Current Version PC
