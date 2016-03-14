@@ -21,18 +21,18 @@ trait French {
 	protected static $countryName = 'France';
 	protected static $countryAdjective = 'French';
 	
-	public function getCountryId()		
+	public static function getCountryId()		
 	{
-		return self::$countryId;
+		return static::$countryId;
 	}
 	
-	public function getCountryName()		
+	public static function getCountryName()		
 	{
-		return self::$countryName;
+		return static::$countryName;
 	}
 	
-	public function getCountryAdjective()		
+	public static function getCountryAdjective()		
 	{
-		return self::$countryAdjective;
+		return static::$countryAdjective;
 	}	
 }

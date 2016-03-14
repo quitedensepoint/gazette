@@ -14,10 +14,10 @@ namespace Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Branches;
 trait BranchTrait {
 	
 	public static function getBranchId() {
-		return self::BRANCH_ID;
+		return static::BRANCH_ID;
 	}
 	
 	public static function getBranchName() {
-		return self::BRANCH_NAME;
+		return static::BRANCH_NAME;
 	}
 }

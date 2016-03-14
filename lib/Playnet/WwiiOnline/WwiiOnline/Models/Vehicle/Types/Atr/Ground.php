@@ -17,8 +17,8 @@ abstract class Ground extends Troop implements TypeInterface {
 	
 	const TYPE_ID = 9;
 	
-	public function getTypeId() {
-		return self::CLASS_ID;
+	public static function getTypeId() {
+		return static::TYPE_ID;
 	}
 
 }

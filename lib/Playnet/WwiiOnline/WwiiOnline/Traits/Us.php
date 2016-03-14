@@ -21,18 +21,18 @@ trait Us {
 	protected static $countryName = 'United States';
 	protected static $countryAdjective = 'US';
 	
-	public function getCountryId()		
+	public static function getCountryId()		
 	{
-		return self::$countryId;
+		return static::$countryId;
 	}
 	
-	public function getCountryName()		
+	public static function getCountryName()		
 	{
-		return self::$countryName;
+		return static::$countryName;
 	}
 	
-	public function getCountryAdjective()		
+	public static function getCountryAdjective()		
 	{
-		return self::$countryAdjective;
+		return static::$countryAdjective;
 	}	
 }

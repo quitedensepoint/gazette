@@ -19,26 +19,26 @@ interface SideInterface {
 	 * 
 	 * @return integer
 	 */
-	public function getSideId();
+	public static function getSideId();
 	
 	/**
 	 * Retrieve the identifying key for the side (e.g. "allied" or "axis")
 	 * 
 	 * return @string
 	 */
-	public function getSideKey();	
+	public static function getSideKey();	
 	
 	/**
 	 * Retrieve the name of the side the object belongs to (e.g. "Allies" or "Axis")
 	 * 
 	 * return @string
 	 */
-	public function getSideName();
+	public static function getSideName();
 	
 	/**
 	 * Retrieve an adjective describing the side (e.g. "Allied" or "Axis")
 	 * 
 	 * return @string
 	 */
-	public function getSideAdjective();	
+	public static function getSideAdjective();	
 }

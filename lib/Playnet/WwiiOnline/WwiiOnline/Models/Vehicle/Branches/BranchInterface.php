@@ -16,10 +16,10 @@ interface BranchInterface {
 	 * 
 	 * @return integer Numeric GameID of the database
 	 */
-	public function getBranchId();
+	public static function getBranchId();
 	
 	/**
 	 * Retrieve the name of the branch
 	 */
-	public function getBranchName();
+	public static function getBranchName();
 }

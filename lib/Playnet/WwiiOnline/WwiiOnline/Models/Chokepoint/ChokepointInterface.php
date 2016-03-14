@@ -17,6 +17,6 @@ interface ChokepointInterface {
 	 * 
 	 * @return integer Numeric GameID in the database
 	 */
-	public function getTypeId();
+	public static function getTypeId();
 	
 }

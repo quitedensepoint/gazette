@@ -17,10 +17,10 @@ interface ClassInterface {
 	 * 
 	 * @return integer Numeric GameID of the database
 	 */
-	public function getClassId();
+	public static function getClassId();
 	
 	/**
 	 * Retrieve the name of the class
 	 */
-	public function getClassName();
+	public static function getClassName();
 }

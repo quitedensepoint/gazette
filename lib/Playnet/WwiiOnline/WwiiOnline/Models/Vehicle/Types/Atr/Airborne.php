@@ -17,8 +17,8 @@ abstract class Airborne extends Para implements TypeInterface {
 	
 	const TYPE_ID = 9;
 	
-	public function getTypeId() {
-		return self::TYPE_ID;
+	public static function getTypeId() {
+		return static::TYPE_ID;
 	}
 
 }

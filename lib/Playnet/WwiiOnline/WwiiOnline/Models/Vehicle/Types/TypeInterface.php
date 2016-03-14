@@ -20,6 +20,6 @@ interface TypeInterface {
 	 * 
 	 * @return integer Numeric GameID of the database
 	 */
-	public function getTypeId();
+	public static function getTypeId();
 
 }

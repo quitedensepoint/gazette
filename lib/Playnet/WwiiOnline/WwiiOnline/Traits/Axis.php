@@ -25,23 +25,23 @@ trait Axis {
 	 * @return integer
 	 * 
 	 */
-	public function getSideId()		
+	public static function getSideId()		
 	{
-		return self::$sideId;
+		return static::$sideId;
 	}
 	
-	public function getSideKey()		
+	public static function getSideKey()		
 	{
-		return self::$sideKey;
+		return static::$sideKey;
 	}	
 	
-	public function getSideName()		
+	public static function getSideName()		
 	{
-		return self::$sideName;
+		return static::$sideName;
 	}
 	
-	public function getSideAdjective()		
+	public static function getSideAdjective()		
 	{
-		return self::$sideAdjective;
+		return static::$sideAdjective;
 	}	
 }
