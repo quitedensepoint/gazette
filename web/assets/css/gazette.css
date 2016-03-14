@@ -6,7 +6,7 @@ body, tr, td, p, li {
 }
 
 html, body {
-	//background-image: url("/assets/img/background.jpg");
+	
 	background-attachment: fixed;
 	background-position: center;
 	background-color: black;
@@ -209,22 +209,14 @@ html, body {
 	margin-top: -3px;
 }
 
-#ao {
+#topRightStory {
     position: absolute;
 	width: 172px;
     top: 175px;
     left: 729px;
 	text-align: center;
 }
-/*
-#middleTopRightStory {
-    position: relative;
-    top: 15px;
-	width: 172px;
-	text-align: center;
-    left: 710px;
-}
-*/
+
 #underNews {
     position: absolute;
 	top: 555px;
@@ -257,7 +249,7 @@ html, body {
     right: 5px;
 }
 
-#belowNews {
+#ao {
     position: absolute;
 	width: 535px;
     top: 205px;
@@ -338,18 +330,28 @@ html, body {
     font-weight: bold;
 }
 
-/* #storyA {
+#caps {
+
+    border-left:1px solid black;
+}
+
+ #bottomLeft {
+    position:relative;
+    top: 255px;
 	width: 178px;
 	text-align: center;
     vertical-align: top;
-	border-right: 1px black solid;
-    border-left: 1px black solid;
+	
 	padding: 5px;
-} */
+} 
 
-/* #storyB {
-	width: 178px;
+ #bottomRight {
+	position:relative;
+    left:720px;
+    top: 60px;
+    width: 178px;
 	text-align: center;
     vertical-align: top;
     padding: 5px;
-} */
+
+} 

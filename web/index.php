@@ -24,12 +24,11 @@ $casualtyData = $casualtyProcessor->process();
 $indexMainHeadline = file_get_contents(__DIR__ .'/../cache/index_main_headline.php');
 $indexAlliedStats2 = file_get_contents(__DIR__ .'/../cache/index_allied_stats2.php');
 $indexAlliedStats1 = file_get_contents(__DIR__ .'/../cache/index_allied_stats1.php');
-$indexAlliedBritishRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_british_rdp1.php');
-$indexAlliedFrenchRDP1 = file_get_contents(__DIR__ .'/../cache/index_allied_french_rdp1.php');
 $indexRandomStat = file_get_contents(__DIR__ .'/../cache/index_randomstats.php');
 $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php');
-
-
+$indexAxisStats1 = file_get_contents(__DIR__ .'/../cache/index_axis_stats1.php');
+$indexGeneral1 = file_get_contents(__DIR__ .'/../cache/index_general1.php');
+$indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 
 
 ?>
@@ -81,7 +80,7 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
             <table id='infoBar'>
                 <tr>
 				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.34.16</span></td>
-					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$row['id']." Day: ".$days->format('%a'); ?></span></td> 
+					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$campRow['id']." Day: ".$days->format('%a'); ?></span></td> 
 					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href="allied.php">ALLIED Section</a> & AXIS Section</a></span></td>
 			    </tr>
 		    </table>
@@ -177,16 +176,95 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 				</script>
 				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='<?php echo $webmapEnv; ?>' style="color: yellow;" target="_blank">CLICK FOR FULL SIZE</a></span>
             </div>
-<!-- AO info -->
-            <div id="ao">
+<!-- German Story R side of map -->
+            <div id="topRightStory">
 				<hr style="width: 90%; margin-top: 0;">
 				<table width="172px">
 					<tr>
 						<td>
+                            <?php echo $indexAxisStats1	 ?>
+                        </td>
+					</tr>		    
+				</table>
+            <!-- Poster @ R lower edge of map -->
+                    <div id='middleBottomRightPic'>
+						<hr style="width: 90%;">
+						<!-- Code for image rotation -->
+						<?php
+							$iDir='assets/img/post/';
+							$image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
+							$selImage = $image[array_rand($image)];
+						?>
+						<!-- End rotation Code -->
+						<img id="poster" src="<?php echo $selImage ?>" style="width: 170px;"> 
+                    </div>
+                    <div id='top'>  </div>  
+<!-- Article Below Poster Right Side-->
+			<div  id='bottomRightStory' class="story-detail">
+                <?= $indexAxisStats2 ?>
+            </div>
+        </div>
+<!-- Row 2: Left (image) Middle Top Left pic | | -->
+<!-- Poster @ Lower Left of Map Image -->
+        <div id='middleTopLeftpic'>
+            <hr style='width: 90%;'>
+						    <!-- Code for image rotation -->
+						    <?php
+							    $iDir='assets/img/post/';
+							    $image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
+							    $selImage = $image[array_rand($image)];
+						    ?>
+						    <!-- End rotation Code -->
+						    <img id="poster" src="<?php echo $selImage ?>"> 
+         </div>
+<!-- Article Below Poster Left Side-->
+			<div  id='middleBottomLeftStory' class="story-detail">
+                <?= $indexAlliedStats1 ?>
+            </div>
+        </div>
+
+
+
+        <div id='underNews'>
+            
+<!-- latest community event/News -->
+            <div id="news">    
+					    <?php
+						    $newsPage = file_get_contents("http://www.battlegroundeurope.com/index.php");
+								    preg_match('/<table class="contentpaneopen">(.+?)<span class="article_separator">/s',$newsPage,$firstArticle);
+						    $firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
+						    $firstArticle = str_replace('<a href="/index.php', '<a href="http://www.battlegroundeurope.com/index.php', $firstArticle);
+						    $firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
+						    echo $firstArticle;
+					    ?>
+            
+            </div>
+<!-- Story | Current AO | Recent Captures | Story -->
+<!-- Bottom Left Story -->
+            <div id="bottomLeft">
+                <hr style="width: 90%;">
+                <?php echo $indexGeneral1 ?>
+            </div>
+<!-- Game Info (Ao's recent captures) -->
+            <div id='ao'>
+            <table style='width: 537px'>
+				<tr>
+					<td>
+						<table style="width: 100%; cellspacing: 0; cellpadding: 0;">
+							<tr>
+								<td><hr width="90%"></td>
+							</tr>
+							 
+							<tr>
+								<td>
+									<table>
+										<tr align='center'>
+<!-- Current AO's -->
+											<td width='268px'>
 							<b><span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
 							<br><br>
 							<b>Allied</b><br>
-							<table style="width:100%">
+							<table style="width:100%" >
 								<?php 
 									while($row=$aoals->fetch_assoc()){
 										echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";
@@ -213,9 +291,11 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 									}
 								?>
 							</table>
-	<!-- Recent Captures under AO's to allow for capture cell to shift up/down for Ao # changes -->
-							<hr style="width: 90%;">
-							<span class='paperarialbig'><b>Most Recent Captures:</b></span>
+											</td>
+<!-- Recent Captured cities --> 
+											<td style="text-align: center; width:268px;"> 
+                                                <div id="caps">
+												<span class='paperarialbig'><b>Most Recent Captures:</b></span>
 							<br><br>
 							<table style='width:100%'>
 								<tr align='center'>
@@ -234,103 +314,9 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 								?>
 							</table>
 						</td>
-					</tr>		    
-				</table>
-            <!-- Poster @ R lower edge of map -->
-                    <div id='middleBottomRightPic'>
-						<hr style="width: 90%;">
-						<!-- Code for image rotation -->
-						<?php
-							$iDir='assets/img/post/';
-							$image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
-							$selImage = $image[array_rand($image)];
-						?>
-						<!-- End rotation Code -->
-						<img id="poster" src="<?php echo $selImage ?>" style="width: 170px;"> 
-                    </div>
-                     <div id='top'>  </div>  
-<!-- Article Below Poster Right Side-->
-			<div  id='bottomRightStory' class="story-detail">
-                <?= $indexAxisStats2 ?>
-            </div>
-         </div>
-<!-- Row 2: Left (image) Middle Top Left pic | | -->
-<!-- Poster @ Lower Left of Map Image -->
-            <div id='middleTopLeftpic'>
-            <hr style='width: 90%;'>
-						    <!-- Code for image rotation -->
-						    <?php
-							    $iDir='assets/img/post/';
-							    $image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
-							    $selImage = $image[array_rand($image)];
-						    ?>
-						    <!-- End rotation Code -->
-						    <img id="poster" src="<?php echo $selImage ?>"> 
-            </div><div id='top'>
-<!-- Article Below Poster Left Side-->
-			<div  id='middleBottomLeftStory' class="story-detail">
-                <?= $indexAlliedStats1 ?>
-            </div>
-        </div>
-
-
-
-        <div id='underNews'>
-            
-<!-- latest community event/News -->
-            <div id="news">    
-					    <?php
-						    $newsPage = file_get_contents("http://www.battlegroundeurope.com/index.php");
-								    preg_match('/<table class="contentpaneopen">(.+?)<span class="article_separator">/s',$newsPage,$firstArticle);
-						    $firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
-						    $firstArticle = str_replace('<a href="/index.php', '<a href="http://www.battlegroundeurope.com/index.php', $firstArticle);
-						    $firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
-						    echo $firstArticle;
-					    ?>
-            
-            </div>
-
-<!-- START ALLIED RDP -->
-            <div id='belowNews'>
-            <table style='width: 537px'>
-				<tr>
-					<td>
-						<table border="0" style="width: 100%; cellspacing: 0; cellpadding: 0;">
-							<tr>
-								<td><hr width="90%"></td>
-							</tr>
-							 <tr>
-								<td colspan="2" class="paperarialhuge" style="text-align: center;"><b>Allied Industry Answers the Call</b></td>
-							</tr>
-							<tr>
-								<td>
-									<table>
-										<tr>
-<!--Allied British RDP Story #1 -->
-											<td style="text-align: center;"> 
-												<span class="papertimesbig">British Notes</span>
-												<br>
-												<span class="paperarialmedium story-detail"><?= $indexAlliedBritishRDP1 ?></span>
-											</td>
-<!--Allied French RDP Note --> 
-											<td style="text-align: center;"> 
-												<span class="papertimesbig">French Notes</span>
-												<br>
-												<span class="paperarialmedium story-detail"><?= $indexAlliedFrenchRDP1 ?></span>
-										   </td>
 										</tr>
-										<?php /*
-							<!-- comment out until allied page is complete
-										<tr>
-											<td align='center' colspan='2'> <a href='allied.php' class='paperarialmedium'><b>[See 'RDP Reports' in Allied Section]</b></a> </td>
-										</tr>
-										<tr>
-											<td colspan='2' align='center'><hr width='90%'>
-	<!--Random Stats Story ----- Commented out as the story has to be short... longer stories throw the page off. 
-												<span class='paperdefault' style='text-align:center'><?= $indexRandomStat?></span>
-												</td>
-												</tr>*/?>
-									</table> 
+
+									</table></div> 
 								</td>
 							</tr>
 						</table> 
@@ -342,8 +328,12 @@ $indexAxisStats2 = file_get_contents(__DIR__ .'/../cache/index_axis_stats2.php')
 
 			 </tr>  
         </table>
-        </div>   
-<!-- END ALLIED RDP REPORT -->
+        </div> 
+<!-- Bottom R Stories -->  
+        <div id="bottomRight">
+                <hr style="width: 90%;">
+                <?php echo $indexGeneral2 ?>
+            </div>
             </div>
  <?php /*
 			</tr>
