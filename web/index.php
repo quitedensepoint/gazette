@@ -177,13 +177,66 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='<?php echo $webmapEnv; ?>' style="color: yellow;" target="_blank">CLICK FOR FULL SIZE</a></span>
             </div>
 <!-- German Story R side of map -->
-            <div id="topRightStory">
+            <div id="ao">
 				<hr style="width: 90%; margin-top: 0;">
 				<table width="172px">
 					<tr>
-						<td>
-                            <?php echo $indexAxisStats1	 ?>
-                        </td>
+                        <td width='268px'>
+							<b><span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
+							<br><br>
+							<b>Allied</b><br>
+							<table style="width:100%" >
+								<?php 
+									while($row=$aoals->fetch_assoc()){
+										echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";
+										if(isset($row['alcon']) && $row['alcon']=='1'){
+											echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";
+										}else{
+											echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";
+										}
+									}
+								?>
+							</table>
+							<br>
+							<b>Axis</b>
+							<br>
+							<table style="width:100%">
+								<?php 
+									while($row=$aoaxs->fetch_assoc()){
+										echo "<tr><td style='width:50%; text-align:center; '>".$row['name']."</td>"; 
+										if(isset($row['axcon']) && $row['axcon']=='1'){
+											echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";
+										}else{
+											echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";
+										}
+									}
+								?>
+							</table>
+                            <tr>
+                            <td style="text-align: center; width:268px;"> 
+                                                
+												<span class='paperarialbig'><b>Most Recent Captures:</b></span>
+							<br><br>
+							<table style='width:100%'>
+								<tr align='center'>
+									<th>City</th>
+									<th>By</th>
+								</tr>
+								<?php 
+									while($row=$caps->fetch_assoc())
+						 
+									If (($row['fullName'])=='GERMANY')
+									{
+										echo "<tr style='text-align: center;'><td>".$row['name']."</td><td style='color: red; text-align: center'><i>".$row['fullName']."</i></td></tr>"; 
+									}
+									else
+									{   echo "<tr><td style='text-align: center;'>".$row['name']."</td><td style='color: blue; text-align: center'><i>".$row['fullName']."</i></td></tr>";}
+								?>
+							</table>
+						</td>
+										</tr>
+											</td>
+						
 					</tr>		    
 				</table>
             <!-- Poster @ R lower edge of map -->
@@ -245,8 +298,8 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
                 <hr style="width: 90%;">
                 <?php echo $indexGeneral1 ?>
             </div>
-<!-- Game Info (Ao's recent captures) -->
-            <div id='ao'>
+<!-- Frames below the news -->
+            <div id='belowNews'>
             <table style='width: 537px'>
 				<tr>
 					<td>
@@ -260,58 +313,14 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 									<table>
 										<tr align='center'>
 <!-- Current AO's -->
-											<td width='268px'>
-							<b><span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
-							<br><br>
-							<b>Allied</b><br>
-							<table style="width:100%" >
-								<?php 
-									while($row=$aoals->fetch_assoc()){
-										echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";
-										if(isset($row['alcon']) && $row['alcon']=='1'){
-											echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";
-										}else{
-											echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";
-										}
-									}
-								?>
-							</table>
-							<br>
-							<b>Axis</b>
-							<br>
-							<table style="width:100%">
-								<?php 
-									while($row=$aoaxs->fetch_assoc()){
-										echo "<tr><td style='width:50%; text-align:center; '>".$row['name']."</td>"; 
-										if(isset($row['axcon']) && $row['axcon']=='1'){
-											echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";
-										}else{
-											echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";
-										}
-									}
-								?>
-							</table>
+											<td>
+                            <?php echo $indexAxisStats1	 ?>
+                        </td>
 											</td>
 <!-- Recent Captured cities --> 
 											<td style="text-align: center; width:268px;"> 
-                                                <div id="caps">
-												<span class='paperarialbig'><b>Most Recent Captures:</b></span>
-							<br><br>
-							<table style='width:100%'>
-								<tr align='center'>
-									<th>City</th>
-									<th>By</th>
-								</tr>
-								<?php 
-									while($row=$caps->fetch_assoc())
-						 
-									If (($row['fullName'])=='GERMANY')
-									{
-										echo "<tr style='text-align: center;'><td>".$row['name']."</td><td style='color: red; text-align: center'><i>".$row['fullName']."</i></td></tr>"; 
-									}
-									else
-									{   echo "<tr><td style='text-align: center;'>".$row['name']."</td><td style='color: blue; text-align: center'><i>".$row['fullName']."</i></td></tr>";}
-								?>
+                                                <?php echo $indexGeneral2 ?>
+                                            </td>
 							</table>
 						</td>
 										</tr>
@@ -330,10 +339,10 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
         </table>
         </div> 
 <!-- Bottom R Stories -->  
-        <div id="bottomRight">
+  <?php /*       <div id="bottomRight">
                 <hr style="width: 90%;">
-                <?php echo $indexGeneral2 ?>
-            </div>
+               echo $indexGeneral2 
+            </div> */ ?>
             </div>
  <?php /*
 			</tr>
