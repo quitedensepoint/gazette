@@ -3,7 +3,7 @@
 
 //include 'testkills.php';
 include'assets/alliedstats.php';
-require(__DIR__ . '/../DBconn.php');
+require(__DIR__ . '../DBconn.php');
 
 
 $stat1 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats1.php');
