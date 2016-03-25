@@ -36,7 +36,7 @@ $dtaa = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                    FROM `scoring_campaign_sorties` s 
                                         JOIN wwii_player w ON s.player_id=w.playerid 
                                             WHERE s.vehicle_id IN(85,109,201,78,79,259)
-                                            AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
+                                            AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                    GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.taaaquery_LINE_);
 /*Daily Top AAA */
 while ($row = $dtaa->fetch_assoc())
@@ -61,7 +61,7 @@ $dtatg = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid 
                                         WHERE s.vehicle_id IN(156,124,207,202,69,17,18,154,7,123)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.datg_LINE_);
 /* DAILY TOP ATG */
 while ($row = $dtatg->fetch_assoc())
@@ -86,7 +86,7 @@ $dtatr = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(120,121,166,172,260)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.datr_LINE_);
 /* DAILY TOP ATR */
 while ($row = $dtatr->fetch_assoc())
@@ -111,7 +111,7 @@ $dteng = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(10,21,205,265)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.dengquery_LINE_);
 /* DAILY TOP Engineer */
 while ($row = $dteng->fetch_assoc())
@@ -138,7 +138,7 @@ $dtgren = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(112,113)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.grenadierquery_LINE_);
 /* DAILY TOP GRENADIER */
 while ($row = $dtgren->fetch_assoc())
@@ -165,7 +165,7 @@ $dtlmg = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(105,104,165,171)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.lmgquery_LINE_);
 /* DAILY TOP LMG */ 
 while ($row = $dtlmg->fetch_assoc())
@@ -191,7 +191,7 @@ $dtmort = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(161,162,174,168,261)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.mortquery_LINE_);
 /* DAILY TOP MORTAR */ 
 while ($row = $dtmort->fetch_assoc())
@@ -218,7 +218,7 @@ $dtrifle = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(8,19,188,169,163)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.testriflequery_LINE_);
 /* DAILY TOP RIFLE */
 while ($row = $dtrifle->fetch_assoc())
@@ -244,7 +244,7 @@ $dtsmg = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(269,170,164,20,9,272,268)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.smgquery_LINE_);
 /* DAILY TOP SMG */
 while ($row = $dtsmg->fetch_assoc())
@@ -272,7 +272,7 @@ $dtsniper = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(167,173,149,203,151)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.atr_LINE_);
 /* DAILY TOP SNIPER */
 while ($row = $dtsniper->fetch_assoc())
@@ -299,7 +299,7 @@ $dttank = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(4,14,68,152,146,87,126,89,96,147,206,200,198,73,81,5,67,15,129,153,107,250,256,84)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.tankquery_LINE_);
 /* DAILY TOP TANK */
 while ($row = $dttank->fetch_assoc())
@@ -326,7 +326,7 @@ $dttruck = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(16,6,190,77,83,258)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.truckquery_LINE_);
 /* DAILY TOP TRUCK */
 while ($row = $dttruck->fetch_assoc())
@@ -353,7 +353,7 @@ $dtfight = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid 
                                         WHERE s.vehicle_id IN(72,86,94,158,11,2,13,159,204,131,12,1,90,138)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
 /* DAILY TOP FIGHTER */
 while ($row = $dtfight->fetch_assoc())
@@ -380,7 +380,7 @@ $dtbomb = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(65,70,95,97)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
 /* DAILY TOP BOMBER */
 while ($row = $dtbomb->fetch_assoc())
@@ -406,7 +406,7 @@ $dtdd = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(98,99)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.dd_LINE_);
 /* DAILY TOP DESTROYER */
 while ($row = $dtdd->fetch_assoc())
@@ -433,7 +433,7 @@ $dtpb = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(62,63)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.pb_LINE_);
 /* DAILY TOP PATROL BOATS */ 
 while ($row = $dtpb->fetch_assoc())
@@ -460,7 +460,7 @@ $dttt = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                     FROM scoring_campaign_sorties s
                                     JOIN wwii_player w ON s.player_id=w.playerid 
                                         WHERE s.vehicle_id IN(100,101)
-                                        AND DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.ttquery_LINE_);
 /* DAILY TOP FREIGHTER  */
 while ($row = $dttt->fetch_assoc())
@@ -546,13 +546,13 @@ $dallykd = mysqli_query($dbConnCommunity, "SELECT callsign,
                                       FROM scoring_campaign_sorties s 
                                       LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
                                       WHERE wwii_persona.personaid = s.persona_id 
-                                        AND DATE(s.`sortie_start`) = DATE_SUB(CURDATE(), INTERVAL 0 DAY ) 
+                                        AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                         AND wwii_player.playerid = wwii_persona.playerid 
                                         AND wwii_persona.countryid !='4' 
                                         AND (isnull(c.bans) OR c.bans = 0) 
                                       GROUP BY callsign ORDER BY kd DESC LIMIT 100") or die ($dbConnCommunity->error.kdget_LINE_);
 while ($row = $dallykd->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,kdcallsign,kd) VALUES ('1','day','".$row['callsign']."','".$row['kd']."')") or die ($dbconn->error.kdinsert_LINE_);  }
+    { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,kdcallsign,kd) VALUES ('1','day','".$row['callsign']."','".$row['kd']."')") or die ($dbconn->error.kdinsert_LINE_); }
 
 /* Allied MOST Time On Mission */
 $allytom = mysqli_query($dbConnCommunity, "SELECT callsign, p.tom AS tom 
@@ -571,7 +571,7 @@ while ($row = $allytom->fetch_assoc())
 $dallytom = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(s.tom) AS tom 
                                        FROM scoring_campaign_sorties s 
                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                       WHERE DATE(s.sortie_start) = DATE_SUB(CURDATE(), INTERVAL 0 DAY ) 
+                                       WHERE DATE(s.sortie_start) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                             AND wwii_persona.personaid = s.persona_id 
                                             AND wwii_player.playerid = wwii_persona.playerid 
                                             AND wwii_persona.countryid !='4' 
@@ -599,7 +599,7 @@ while ($row = $tkrow->fetch_assoc())
 $dtkrow = mysqli_query($dbConnCommunity, "SELECT DISTINCT(callsign) as callsign, streak_id, current as value2 
                                     FROM scoring_campaign_streaks s, wwii_player, wwii_persona 
                                     WHERE s.streak_id = 4
-                                        AND DATE(s.achieved) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.achieved >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                         AND wwii_persona.personaid = s.persona_id
                                         AND wwii_player.playerid = wwii_persona.playerid 
                                         ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
@@ -625,7 +625,7 @@ while ($row = $tcrow->fetch_assoc())
 $dtcrow = mysqli_query($dbConnCommunity, "SELECT DISTINCT(callsign) as callsign, streak_id, current as value2 
                                     FROM scoring_campaign_streaks s, wwii_player, wwii_persona 
                                     WHERE s.streak_id = 5
-                                        AND DATE(s.achieved) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                        AND s.achieved >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                         AND wwii_persona.personaid = s.persona_id
                                         AND wwii_player.playerid = wwii_persona.playerid 
                                         ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
@@ -651,7 +651,7 @@ $dallysks = mysqli_query($dbConnCommunity, "SELECT callsign,
                                             s.kills as kills 
                                        FROM scoring_campaign_sorties s 
                                        LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c
-                                       WHERE DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                                       WHERE s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                             AND s.persona_id=c.persona_id
                                             AND s.country_id!='4'  
                                             AND (isnull(c.bans) OR c.bans=0)
@@ -663,7 +663,7 @@ while ($row = $dallysks->fetch_assoc())
 
 /* Allied Top Captures -- MOST CAPTURES IN 1 SORTIE */
 $sortallycaps = mysqli_query($dbConnCommunity, "SELECT callsign, 
-                                            captures as caps 
+                                            s.captures as caps 
                                       FROM scoring_campaign_sorties s 
                                       LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
                                       WHERE s.persona_id=c.persona_id 
@@ -678,10 +678,10 @@ while ($row = $sortallycaps->fetch_assoc())
 
 /* Daily Allied Top Captures -- MOST CAPTURES IN 1 SORTIE */
 $dsortallycaps = mysqli_query($dbConnCommunity, "SELECT callsign, 
-                                            captures as caps 
+                                            s.captures as caps 
                                       FROM scoring_campaign_sorties s 
                                       LEFT JOIN wwii_player w ON (s.player_id=w.playerid) 
-                                      WHERE DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
+                                      WHERE s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                         AND s.country_id!='4' 
                                       ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.capstreaksget_LINE_);
 
