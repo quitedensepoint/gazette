@@ -64,7 +64,7 @@ class MessagePlayer {
 	public function toArray()
 	{
 		return [
-			'id' => $this->id
+			'id' => $this->getId()
 		];
 	}
 }

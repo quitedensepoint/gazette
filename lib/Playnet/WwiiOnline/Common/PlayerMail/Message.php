@@ -28,7 +28,17 @@ class Message {
 	 */
 	private $content = '';
 	
+	/**
+	 *
+	 * @var string 
+	 */
 	private $textContent = '';
+	
+	/**
+	 * The subject for the message
+	 * @var string 
+	 */
+	private $subject;
 	
 	public function __construct() 
 	{
@@ -45,11 +55,19 @@ class Message {
 		$this->players->detach($player);
 	}	
 	
+	/**
+	 * 
+	 * @return string
+	 */
 	public function getContent()
 	{
 		return $this->content;
 	}
 	
+	/**
+	 * 
+	 * @param string $value
+	 */
 	public function setContent($value)
 	{
 		if(!is_string($value))
@@ -59,11 +77,19 @@ class Message {
 		$this->content = $value;
 	}
 	
+	/**
+	 * Get the content for the text portion of the email
+	 * @return string
+	 */
 	public function getTextContent()
 	{
 		return $this->textContent;
 	}
 	
+	/**
+	 * Set the content for the text portion of the email
+	 * @param string $value
+	 */
 	public function setTextContent($value)
 	{
 		if(!is_string($value))
@@ -73,23 +99,55 @@ class Message {
 		$this->textContent = $value;
 	}
 	
+	/**
+	 * Get the email subject
+	 * @return string
+	 */
+	public function getSubject()
+	{
+		return $this->subject;
+	}
+	
+	/**
+	 * Set the email subject
+	 * @param string $value
+	 */
+	public function setSubject($value)
+	{
+		if(!is_string($value))
+		{
+			trigger_error("Subject must be a string.", E_USER_ERROR);
+		}
+		$this->subject = $value;
+	}	
+	
+	/**
+	 * Returns a json formatted string for the array
+	 * @return string
+	 */
 	public function toJson()
 	{
 		return json_encode($this->toArray());
 	}
 	
+	/**
+	 * Returns an array of detail matching the spec for a single email
+	 * @return array
+	 */
 	public function toArray()
 	{
 		$result = [
 			'players' => [],
 			'subject' => utf8_encode($this->subject),
 			'content' => utf8_encode($this->content),
-			'textContent' => utf8_encode($this->textContent),
+			'text' => utf8_encode($this->textContent),
 		];
 		
-		foreach($this->players as $player)
+		$this->players->rewind();
+		while($player = $this->players->current())
 		{
 			$result['players'][] = $player->toArray();
+			$this->players->next();
 		}
 		
 		return $result;			

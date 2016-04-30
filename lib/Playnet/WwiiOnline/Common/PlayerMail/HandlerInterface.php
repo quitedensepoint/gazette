@@ -26,4 +26,10 @@ interface HandlerInterface {
 	 * Send the message to the appropriate service
 	 */
 	public function send();
+	
+	/**
+	 * Retrieve a specific option passed into the object constructor
+	 * @param string $key
+	 */
+	public function getOption($key);
 }

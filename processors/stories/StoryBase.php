@@ -724,30 +724,70 @@ abstract class StoryBase
 		return $dbHelper->getAsArray($query);
 	}
 	
+	/**
+	 * Is this story about a specific player?
+	 * 
+	 * @return boolean
+	 */
 	public function isPlayerCentric()
 	{
 		return $this->isPlayerCentric;
 	}
 	
+	/**
+	 * Get the player id associated with the story, if any
+	 * @return integer|null
+	 */
 	public function getProtagonistId()
 	{
 		return $this->protagonistId;
 	}
 	
-	public function generateHtmlContent($template) 
+	/**
+	 * Generates the HTML content for the player email from file
+	 * 
+	 * @param array $template
+	 * @return string
+	 */
+	public function generateHtmlContent($template, array $extraData = []) 
 	{
 		$story = $this->makeStory($template);
+		
+		$emailTemplate = file_get_contents(__DIR__ . '/../../templates/email/player-story.html');
+		
+		$emailTemplate = str_replace('%TITLE%', $story['title'], $emailTemplate);
+		$emailTemplate = str_replace('%STORY_CONTENT%', $story['body'], $emailTemplate);
+		
+		foreach($extraData as $key => $value)
+		{
+			$emailTemplate = str_replace('%' . strtoupper($key) . '%', trim($value), $emailTemplate);
+		}		
 
-		return $story['title'] . $story['body'];
+		return $emailTemplate;
 
 	}
 	
-	public function generateTextContent($template) 
+	/**
+	 * Generates the text content for the player email from a file
+	 * 
+	 * @param array $template
+	 * @return string
+	 */
+	public function generateTextContent($template, array $extraData = []) 
 	{
 		// Strip out the HTML where we can.
 		$story = $this->makeStory($template);
 		
-		return strip_tags($story['title']) . "\r\n\r\n" . strip_tags($story['body']);
+		$emailTemplate = file_get_contents(__DIR__ . '/../../templates/email/player-story.txt');
+		
+		$emailTemplate = str_replace('%TITLE%', strip_tags($story['title']), $emailTemplate);
+		$emailTemplate = str_replace('%STORY_CONTENT%', strip_tags($story['body']), $emailTemplate);
+		foreach($extraData as $key => $value)
+		{
+			$emailTemplate = str_replace('%' . strtoupper($key) . '%', strip_tags(trim($value)), $emailTemplate);
+		}
+		
+		return $emailTemplate;
 
 	}	
 }

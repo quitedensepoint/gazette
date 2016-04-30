@@ -6,6 +6,10 @@
 namespace Playnet\WwiiOnline\Common\PlayerMail;
 
 use Swift_Message;
+use Swift_MailTransport;
+use Swift_SmtpTransport;
+use Swift_TransportException;
+use Swift_Mailer;
 
 use SplObjectStorage;
 
@@ -33,42 +37,80 @@ class TestHandler implements HandlerInterface {
 		$this->messages = new SplObjectStorage();
 	}
 	
+	/**
+	 * {@inheritdoc}
+	 */	
 	public function addMessage(Message $message) 
 	{
 		$this->messages->attach($message);
 	}
-
+	
+	/**
+	 * {@inheritdoc}
+	 */
 	public function send() 
 	{
-		// Send the email to noreply, add the test recipients to the
-		// Bcc list
-		$to = 'noreply@playnet.com';
-		$from = 'noreply@playnet.com';
+		// This transport is used for sending out to local mailer for development
+		$mailTransport = Swift_MailTransport::newInstance();
 		
-		$headers = 'To: ' . $to . PHP_EOL;
-		$headers .= 'From: ' . $from . PHP_EOL;
-		foreach($this->options['test_recipients'] as $recipient)
+		// This transport is for sending to third parties
+		$smtpTransport = null;
+		if($this->options['smtp']['active'])
 		{
-			$headers .= 'Bcc: ' . $recipient . PHP_EOL;			
+			$smtpTransport = Swift_SmtpTransport::newInstance(trim($this->options['smtp']['host']), 25)
+				->setUsername($this->options['smtp']['username'])
+				->setPassword($this->options['smtp']['password'])
+				;
 		}
-		$subject = $this->options['subject'];
-		$headers .= 'Subject: ' . $subject . PHP_EOL;
-
+		
 		$this->messages->rewind();
 		
 		while($message = $this->messages->current())
 		{
-			var_dump($headers);
+			$swiftMessage = Swift_Message::newInstance();
+
+			$swiftMessage->setSubject(trim($this->options['subject']));
 			/* @var Message $message */
+			$swiftMessage->setBody($message->getContent(), 'text/html');
+			//$swiftMessage->addPart($message->getText(), 'text/plain');
 			
-			$content = $message->getContent();
-			if(!mail($to, $subject, $content, $headers))
+			$swiftMessage->setSender($this->options['smtp']['username']);
+			//$swiftMessage->setFrom('noreply@playnet.com');
+			$swiftMessage->setFrom($this->options['smtp']['from']);
+			$swiftMessage->setTo($this->options['smtp']['to']);
+			
+			if(trim($this->options['dev_recipient']) !== '')
 			{
-				echo "WTF";
-			
+				$swiftMessage->addBcc(trim($this->options['dev_recipient']));
 			}
+			
+			$mailTransport->send($swiftMessage);
+			
+			// If SMTP is active, send to third party email accounts
+			if($this->options['smtp']['active'])
+			{
+				$mailer = Swift_Mailer::newInstance($smtpTransport);
+				
+				$swiftMessage->setBcc($this->options['smtp']['test_recipients']);
+				try {
+					$mailer->send($swiftMessage, $failedRecipients);
+				}
+				catch(Swift_TransportException $ex)
+				{
+					echo $ex->getMessage();
+				}
+			}
+			
 			$this->messages->next();
 		}
 		
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getOption($key) {
+		return $this->options[$key];
+	}
+
 }

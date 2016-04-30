@@ -91,6 +91,60 @@ $options = [
 		'handler' => 'IgnoreHandler',
 		
 		// The options to pass into the constructor of the handler
-		'options' => []		
+		'options' => [
+			
+			// Only used by the TestMailHandler (see the Confluence documentation)
+			'smtp' => [
+				// If Active, will send out test emails to third parties via a standard SMTP gateway
+				'active' => true,
+				
+				// SMTP Gateway host (mailgun.org is good for sandbox testing
+				'host' => 'smtp.mailgun.org',
+				
+				// Username of your SMTP account
+				'username' => 'example@my-sandbox-key.mailgun.org',
+				// Password for your SMTP account
+				'password' => 'a nice strong password',
+				// The email address that the message will appear to be from
+				'from' => 'you@example.org',
+				// The email address that the email will be sent to
+				'to' => 'you@example.org',
+				
+				// The array of third parties who are to receive your dev and test emails
+				'test_recipients' => [ 
+					'xoom@playnet.com',
+					'foo@playnet.com'
+				]				
+			],
+			
+			// Emails may have image references in them to external assets. This is the base URL to use
+			'assets_base_url' => 'http://playnet.com/example-path/gazette/',
+			
+			// The subject line of the outgoing email
+			'subject' => 'World War II Online Gazette: You\'ve been mentioned!',
+			
+			// When developing, the local account to send the emails to. Leave it blank to skip local emails
+			'dev_recipient' => 'developer@localhost',
+			
+			'api' => [
+				// The URL base of gadgets API to send player notifications. Must end in a slash
+				'base_uri' => 'https://internal-api.community-dev.playnet.com/router.php/v1/',
+
+				// The path where logging of API calls and errors is sent to
+				'log_path' => __DIR__ . '/logs/',
+				
+				// Logging level
+				'log_level' => 100, // Monolog\Logger::DEBUG, - can't use Monolog setting in DBCONN as the autoloader hasn't kicked in yet
+
+				/**
+				 * The credentials used to authenticate against the API
+				 */
+				'auth_credentials' => [
+					'username' => 'foo',
+					'password' => 'bar'
+				]				
+			]
+
+		]		
 	]	
 ];

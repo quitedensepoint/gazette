@@ -41,6 +41,14 @@ class StoryBestShoreBombardment extends StoryBestSortieBase implements StoryInte
 		/**
 		 * Get the player who did the kills
 		 */
+		if(!$this->setProtagonist($kill['killer_id']))
+		{
+			return false;
+		}		
+		
+		/**
+		 * Get the player who did the kills
+		 */
 		$player = $this->getPlayerById($kill['killer_id']);
 		if(count($player) == 0)
 		{

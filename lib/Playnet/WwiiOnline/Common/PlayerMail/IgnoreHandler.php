@@ -29,5 +29,9 @@ class IgnoreHandler implements HandlerInterface {
 		return;
 	}
 
+	public function getOption($key) {
+		return '';
+	}
+
 //put your code here
 }

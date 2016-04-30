@@ -37,6 +37,14 @@ class StoryBestSapperKillsSortie extends StoryBestSortieBase implements StoryInt
 		{
 			return false;
 		}
+		
+		/**
+		 * Get the player who did the kills
+		 */
+		if(!$this->setProtagonist($kill['killer_id']))
+		{
+			return false;
+		}		
 
 		/**
 		 * Get the player who did the kills
