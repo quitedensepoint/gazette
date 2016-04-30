@@ -12,9 +12,6 @@
 require_once(__DIR__ . "/../include/dbhelper.php");
 require_once(__DIR__ . "/stories/require.php");
 
-use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
-use Playnet\WwiiOnline\Common\PlayerMail\Message;
-use Playnet\WwiiOnline\Common\PlayerMail\MessagePlayer;
 use Playnet\WwiiOnline\WwiiOnline\Models\Side\Allied\Allied;
 use Playnet\WwiiOnline\WwiiOnline\Models\Side\Axis\Axis;
 
@@ -62,29 +59,12 @@ class StoryProcessor {
 	 */
 	private $countryStories = [];
 	
-	/**
-	 *
-	 * @var Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface 
-	 */
-	private $playerMailHandler;
-	
-	/**
-	 * An array of the database connections the story generation can use
-	 * 
-	 * @var array
-	 */
-	private $dbConnections;
-	
-	public function __construct(HandlerInterface $playerMailHandler, array $dbConnections = array()) 
-	{
-		$this->dbConnections = $dbConnections;
-		$this->dbConn = $dbConnections['dbConn'];
-		$this->dbConnWWII = $dbConnections['dbConnWWII'];
-		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
-		$this->dbConnToe = $dbConnections['dbConnToe'];
-		
+	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe) {
+		$this->dbConn = $dbConn;
+		$this->dbConnWWII = $dbConnWWII;
+		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
+		$this->dbConnToe = $dbConnToe;
 		$this->dbHelper = new dbhelper($this->dbConn);
-		$this->playerMailHandler = $playerMailHandler;
 		
 		$this->init();
 	}
@@ -352,7 +332,7 @@ class StoryProcessor {
 		}
 
 		/* @var $storyCreator StoryInterface */
-		$storyCreator = new $storyCreatorClass($creatorData, $this->playerMailHandler, $this->dbConnections);
+		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWII, $this->dbConnWWIIOnline, $this->dbConnToe, $creatorData);
 		echo sprintf("          Checking story %s\n" , $storyCreatorClass);
 
 		if($storyCreator->isValid())
@@ -381,8 +361,6 @@ class StoryProcessor {
 			$content['debug_data'] = ['source_id' => $source['source_id'], 'template_id' => $template['template_id']];
 			
 			$this->updateStory($storyData['story_key'], $source['life'], $template['template_id']);
-			
-			$this->checkPlayerStory($storyCreator, $template);
 			
 			return $content;
 		}
@@ -528,7 +506,7 @@ class StoryProcessor {
 	private function getSourcesForType($typeId)
 	{
 		$query = $this->dbHelper
-		->prepare("SELECT s.source_id, s.name, s.weight,s.life "
+		->prepare("SELECT s.source_id, s.type_id, s.name, s.weight, s.life"
 			." FROM sources AS s "
 			." WHERE s.type_id = ? ORDER BY RAND()", [$typeId]);
 
@@ -659,28 +637,9 @@ class StoryProcessor {
 			}
 		}
 		
-		return $output;
-	}
-	
-	/**
-	 * Checks the story to confirm it is about a player and prepares to send the
-	 * email to that player
-	 * 
-	 * @param StoryBase $storyCreator
-	 * @param array $template
-	 */
-	public function checkPlayerStory(StoryBase $storyCreator, $template)
-	{
-		if($storyCreator->isPlayerCentric())
-		{
-			$message = new Message();
-			$message->setContent($storyCreator->generateHtmlContent($template));
-			$message->setTextContent($storyCreator->generateTextContent($template));
-			$message->addPlayer(new MessagePlayer($storyCreator->getProtagonistId()));
-			// $content['playerMailData'] = $storyCreator->getPlayerEmailData($template);
 
-			$this->playerMailHandler->addMessage($message);
-		}
+		
+		return $output;
 	}
 	
 	/**

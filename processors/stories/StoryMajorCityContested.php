@@ -6,6 +6,13 @@
  */
 class StoryMajorCityContested extends StoryMajorCityBase implements StoryInterface {
 	
+	/**
+	 * The minimum number of facilities in a town that are contested in order to be valid
+	 * 
+	 * @var integer
+	 */
+	protected static $minContestedFacilities = 10;
+	
 	public function isValid() {
 
 		/**

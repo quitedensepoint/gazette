@@ -16,10 +16,10 @@ interface CategoryInterface {
 	 * 
 	 * @return integer Numeric GameID of the database
 	 */
-	public function getCategoryId();
+	public static function getCategoryId();
 	
 	/**
 	 * Retrieve the name of the category
 	 */
-	public function getCategoryName();
+	public static function getCategoryName();
 }

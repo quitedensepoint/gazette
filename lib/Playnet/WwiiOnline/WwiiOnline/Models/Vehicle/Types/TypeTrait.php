@@ -14,6 +14,6 @@ namespace Playnet\WwiiOnline\WwiiOnline\Models\Vehicle\Types;
 trait TypeTrait {
 	
 	public static function getTypeId() {
-		return self::$typeId;
+		return static::$typeId;
 	}
 }

@@ -19,19 +19,19 @@ interface CountryInterface extends SideInterface {
 	 * 
 	 * @return integer
 	 */
-	public function getCountryId();
+	public static function getCountryId();
 	
 	/**
 	 * Retrieve the name of the country the object belongs to
 	 * 
 	 * return @string
 	 */
-	public function getCountryName();
+	public static function getCountryName();
 	
 	/**
 	 * Retrieve the adjectove of the country the object belongs to
 	 * 
 	 * return @string
 	 */
-	public function getCountryAdjective();	
+	public static function getCountryAdjective();	
 }

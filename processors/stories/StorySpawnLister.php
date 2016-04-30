@@ -26,7 +26,7 @@ class StorySpawnLister extends StoryBase implements StoryInterface {
 				continue;
 			}
 			
-			$list .= $vehicle[0]['name'] . "<br >";
+			$list .= $vehicle[0]['short_name'] . "<br >";
 		}
 		
 		$this->creatorData['template_vars']['list'] = $list;

@@ -21,18 +21,18 @@ trait German {
 	protected static $countryName = 'Germany';
 	protected static $countryAdjective = 'German';
 	
-	public function getCountryId()		
+	public static function getCountryId()		
 	{
-		return self::$countryId;
+		return static::$countryId;
 	}
 	
-	public function getCountryName()		
+	public static function getCountryName()		
 	{
-		return self::$countryName;
+		return static::$countryName;
 	}
 	
-	public function getCountryAdjective()		
+	public static function getCountryAdjective()		
 	{
-		return self::$countryAdjective;
+		return static::$countryAdjective;
 	}	
 }

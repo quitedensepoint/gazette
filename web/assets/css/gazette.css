@@ -6,7 +6,7 @@ body, tr, td, p, li {
 }
 
 html, body {
-	//background-image: url("/assets/img/background.jpg");
+	
 	background-attachment: fixed;
 	background-position: center;
 	background-color: black;
@@ -14,20 +14,11 @@ html, body {
 	margin: 0;
 }
 
-/* .story {
-    border-color: black;
-} */
-
 .paperdefault {
 	font-size: 8pt;
 	color: #000000 !important;
     text-align: center;
 }
-
-/* .papertimessmall {
-	font-size: 8pt;
-	color: #000000;
-} */
 
 .papertimesmedium {
 	font-size: 10pt;
@@ -40,11 +31,6 @@ html, body {
     text-align: center;
 }
 
-/* .papertimeshuge {
-	font-size: 16pt;
-	color: #000000;
-}
- */
 .paperarialsmall {
 	font-size: 8pt;
 	color: #000000;
@@ -76,21 +62,6 @@ html, body {
 	color: #000000;
 }
 
-/* .paperservernews {
-	font-size: 12pt;
-	color: #CCCC00;
-} */
-
-/* .paperserverheader {
-	font-size: 8pt;
-	color: #CCCCCC;
-} */
-
-/* .paperbarlink {
-	font-size: 8pt;
-	color: #000000 !important;
-} */
-
 .paperwhite {
 	background-color: #333333;
 	font-size: 8pt;
@@ -115,7 +86,7 @@ html, body {
 }
 
 #container {
-	height: 950px;
+	height: 1000px;
 	width: 905px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	display: block;
@@ -216,15 +187,7 @@ html, body {
     left: 729px;
 	text-align: center;
 }
-/*
-#middleTopRightStory {
-    position: relative;
-    top: 15px;
-	width: 172px;
-	text-align: center;
-    left: 710px;
-}
-*/
+
 #underNews {
     position: absolute;
 	top: 555px;
@@ -338,18 +301,25 @@ html, body {
     font-weight: bold;
 }
 
-/* #storyA {
+
+
+ #bottomLeft {
+    position:relative;
+    top: 255px;
 	width: 178px;
 	text-align: center;
     vertical-align: top;
-	border-right: 1px black solid;
-    border-left: 1px black solid;
+	
 	padding: 5px;
-} */
+} 
 
-/* #storyB {
-	width: 178px;
+ #bottomRight {
+	position:relative;
+    left:720px;
+    top: 60px;
+    width: 178px;
 	text-align: center;
     vertical-align: top;
     padding: 5px;
-} */
+
+} 
