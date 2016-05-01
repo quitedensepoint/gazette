@@ -1,15 +1,15 @@
 <?php
 /*
 For collecting stats and updating the Top_players tables for both CSR and Gazette top player lists DB's as follows:
-scoring_campaign_sorties = s
-scoring_campaign_personas = p 
+scoring_campaign_sorties= s
+scoring_campaign_personas = p wwiionline.wwiionline.wwii_player
 scoring_persona_configs = c
-wwii_player = w
+wwiionline.wwii_player = w
 
 */
 
-
-include '/../DBconn.php';
+set_time_limit(1500);
+include '../DBconn.php';
 
 /* Truncate table */
 mysqli_query($dbconn, "TRUNCATE scoring_top_players");
@@ -20,11 +20,11 @@ mysqli_query($dbconn, "TRUNCATE scoring_top_players");
 $taa = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
                                   FROM scoring_campaign_sorties s
-                                        JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c 
+                                        JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c 
                                             WHERE s.vehicle_id IN(85,109,201,78,79,259)
                                             AND s.persona_id=c.persona_id
                                             AND (isnull(c.bans) OR c.bans = 0) 
-                                  GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.taaaquery_LINE_);
+                                  GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.$taa);
 /* TOP AAA */
 while ($row = $taa->fetch_assoc())
     { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, aaacallsign, aaapoints) VALUES ('1','camp','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.taa_LINE_);  } 
@@ -33,24 +33,24 @@ while ($row = $taa->fetch_assoc())
 $dtaa = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                         SUM(s.kills) as kills,
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                   FROM `scoring_campaign_sorties` s 
-                                        JOIN wwii_player w ON s.player_id=w.playerid 
+                                   FROM scoring_campaign_sorties s 
+                                        JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
                                             WHERE s.vehicle_id IN(85,109,201,78,79,259)
                                             AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                   GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.taaaquery_LINE_);
+                                   GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.$dtaa);
 /*Daily Top AAA */
 while ($row = $dtaa->fetch_assoc())
-    { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, aaacallsign, aaapoints) VALUES ('1','day','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.taa_LINE_);  } 
+    { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, aaacallsign, aaapoints) VALUES ('1','day','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.dtaa_LINE_);  } 
 
 /* Top ATG by points -- point formula = KILLS * KD    --- FOR ALLIED SIDE -- Need Sortie counts*/
 $tatg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
                                     FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(156,124,207,202,69,17,18,154,7,123)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
-                                    GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.tatg_LINE_);
+                                    GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.$tatg);
 /* TOP ATG */
 while ($row = $tatg->fetch_assoc())
     { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, atgcallsign, atgpoints) VALUES ('1','camp','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.tatg_LINE_); } 
@@ -59,10 +59,10 @@ while ($row = $tatg->fetch_assoc())
 $dtatg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
                                     FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
                                         WHERE s.vehicle_id IN(156,124,207,202,69,17,18,154,7,123)
                                         AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR)
-                                    GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.datg_LINE_);
+                                    GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.$datg);
 /* DAILY TOP ATG */
 while ($row = $dtatg->fetch_assoc())
     { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, atgcallsign, atgpoints) VALUES ('1','day','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.datg_LINE_);} 
@@ -71,8 +71,8 @@ while ($row = $dtatg->fetch_assoc())
 $tatr = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
                                     FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(120,121,166,172,260)
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(120,121,166,172,260,193,196,197)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.atr_LINE_);
@@ -83,9 +83,9 @@ while ($row = $tatr->fetch_assoc())
 /* Daily Top ATR by points -- point formula = (KILLS + CAPS )) * KD    --- FOR ALLIED SIDE*/
 $dtatr = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(120,121,166,172,260)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(120,121,166,172,260,193,196,197)
                                         AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.datr_LINE_);
 /* DAILY TOP ATR */
@@ -95,9 +95,9 @@ while ($row = $dtatr->fetch_assoc())
 /* Top Engineer by points -- point formula = (KILLS + (CAPS * 5)) * KD    --- FOR ALLIED SIDE*/
 $teng = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(10,21,205,265)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(10,21,205,265,266,274)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.engquery_LINE_);
@@ -108,9 +108,9 @@ while ($row = $teng->fetch_assoc())
 /* Daily Top Engineer by points -- point formula = (KILLS + (CAPS * 5)) * KD    --- FOR ALLIED SIDE*/
 $dteng = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                               IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(10,21,205,265)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(10,21,205,265,266,274)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.dengquery_LINE_);
 /* DAILY TOP Engineer */
@@ -121,8 +121,8 @@ while ($row = $dteng->fetch_assoc())
 $tgren = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(112,113)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -135,8 +135,8 @@ while ($row = $tgren->fetch_assoc())
 $dtgren = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(112,113)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.grenadierquery_LINE_);
@@ -148,8 +148,8 @@ while ($row = $dtgren->fetch_assoc())
 $tlmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(105,104,165,171)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -162,8 +162,8 @@ while ($row = $tlmg->fetch_assoc())
 $dtlmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(105,104,165,171)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.lmgquery_LINE_);
@@ -174,8 +174,8 @@ while ($row = $dtlmg->fetch_assoc())
 /* Top Mortar by points -- point formula = (KILLS + (CAPS * 2)) * KD    --- FOR ALLIED SIDE*/
 $tmort = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(161,162,174,168,261)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -188,8 +188,8 @@ while ($row = $tmort->fetch_assoc())
 $dtmort = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(161,162,174,168,261)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.mortquery_LINE_);
@@ -201,9 +201,9 @@ while ($row = $dtmort->fetch_assoc())
 $trifle = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(8,19,188,169,163)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(8,19,188,169,163,189,191,262,264)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.testriflequery_LINE_);
@@ -215,9 +215,9 @@ while ($row = $trifle->fetch_assoc())
 $dtrifle = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(8,19,188,169,163)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(8,19,188,169,163,189,191,262,264)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.testriflequery_LINE_);
 /* DAILY TOP RIFLE */
@@ -228,9 +228,9 @@ while ($row = $dtrifle->fetch_assoc())
 $tsmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(269,170,164,20,9,272,268)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(269,170,164,20,9,272,268,199,270,271,273)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.smgquery_LINE_);
@@ -241,9 +241,9 @@ while ($row = $tsmg->fetch_assoc())
 $dtsmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(269,170,164,20,9,272,268)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(269,170,164,20,9,272,268,199,270,271,273)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.smgquery_LINE_);
 /* DAILY TOP SMG */
@@ -255,8 +255,8 @@ while ($row = $dtsmg->fetch_assoc())
 $tsniper = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(167,173,149,203,151)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -269,8 +269,8 @@ while ($row = $tsniper->fetch_assoc())
 $dtsniper = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(167,173,149,203,151)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.atr_LINE_);
@@ -282,9 +282,9 @@ while ($row = $dtsniper->fetch_assoc())
 $ttank = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(4,14,68,152,146,87,126,89,96,147,206,200,198,73,81,5,67,15,129,153,107,250,256,84)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(4,14,68,152,146,87,126,89,96,147,206,200,198,73,81,5,67,15,129,153,107,250,256,84,257)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.tankquery_LINE_);
@@ -296,9 +296,9 @@ while ($row = $ttank->fetch_assoc())
 $dttank = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(4,14,68,152,146,87,126,89,96,147,206,200,198,73,81,5,67,15,129,153,107,250,256,84)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(4,14,68,152,146,87,126,89,96,147,206,200,198,73,81,5,67,15,129,153,107,250,256,84,257)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.tankquery_LINE_);
 /* DAILY TOP TANK */
@@ -309,9 +309,9 @@ while ($row = $dttank->fetch_assoc())
 $ttruck = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END) as sortie,
                                         ((SUM(CASE WHEN s.rtb = '0' THEN 1 ELSE 0 END)/COUNT(s.player_id)) * COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END))  as points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(16,6,190,77,83,258)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(16,6,190,77,83,258,110)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.truckquery_LINE_);
@@ -323,9 +323,9 @@ while ($row = $ttruck->fetch_assoc())
 $dttruck = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END) as sortie,
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points  
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(16,6,190,77,83,258)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(16,6,190,77,83,258,110)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.truckquery_LINE_);
 /* DAILY TOP TRUCK */
@@ -336,9 +336,9 @@ while ($row = $dttruck->fetch_assoc())
 $tfight = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             SUM(s.kills)*ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(72,86,94,158,11,2,13,159,204,131,12,1,90,138)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(72,86,94,158,11,2,13,159,204,131,12,1,90,138,91,182,185,108)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
@@ -350,9 +350,9 @@ while ($row = $tfight->fetch_assoc())
 $dtfight = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid 
-                                        WHERE s.vehicle_id IN(72,86,94,158,11,2,13,159,204,131,12,1,90,138)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
+                                        WHERE s.vehicle_id IN(72,86,94,158,11,2,13,159,204,131,12,1,90,138,91,182,185,108)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
 /* DAILY TOP FIGHTER */
@@ -363,9 +363,9 @@ while ($row = $dtfight->fetch_assoc())
 $tbomb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(65,70,95,97)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(65,70,95,97,139,249)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
@@ -377,9 +377,9 @@ while ($row = $tbomb->fetch_assoc())
 $dtbomb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(65,70,95,97)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(65,70,95,97,139,249)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
 /* DAILY TOP BOMBER */
@@ -390,8 +390,8 @@ while ($row = $dtbomb->fetch_assoc())
 $tdd = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(98,99)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -403,8 +403,8 @@ while ($row = $tdd->fetch_assoc())
 $dtdd = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points  
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(98,99)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.dd_LINE_);
@@ -416,8 +416,8 @@ while ($row = $dtdd->fetch_assoc())
 $tpb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(62,63)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -430,8 +430,8 @@ while ($row = $tpb->fetch_assoc())
 $dtpb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(62,63)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.pb_LINE_);
@@ -444,8 +444,8 @@ while ($row = $dtpb->fetch_assoc())
 $ttt = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         
                                         ((SUM(CASE WHEN s.rtb = '0' THEN 1 ELSE 0 END)/COUNT(s.player_id)) * COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END))  as points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(100,101)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0) 
@@ -457,8 +457,8 @@ while ($row = $ttt->fetch_assoc())
 $dttt = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
     
                                         ((SUM(CASE WHEN s.rtb = '0' THEN 1 ELSE 0 END)/COUNT(s.player_id)) * COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END))  as points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid 
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
                                         WHERE s.vehicle_id IN(100,101)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.ttquery_LINE_);
@@ -472,83 +472,83 @@ $allykills = mysqli_query($dbConnCommunity, "SELECT callsign,
                                             SUM(p.kills) AS kills
 
                                         FROM scoring_campaign_personas AS p 
-                                        LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                        WHERE wwii_persona.personaid = p.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid !='4' 
+                                        LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                        WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid !='4' 
                                             AND (ISNULL(c.bans) OR c.bans = 0) 
-                                        GROUP BY callsign ORDER BY kills DESC LIMIT 100") or die ($dbConnCommunity->error.kills_LINE_);
+                                        GROUP BY callsign ORDER BY kills DESC LIMIT 100") or die ($dbConnCommunity->error.allykills);
 /* TOP KILLS  */
 while ($row = $allykills->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,killscallsign,kills) VALUES ('1','camp','".$row['callsign']."','".$row['kills']."')") or die ($dbconn->error.killsinsert_LINE_); }
+    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,killscallsign,kills) VALUES ('1','camp','".$row['callsign']."','".$row['kills']."')") or die ($dbconn->error.allykills); }
 
 
 /* Allied Kills for last 24 hour */
 $dallykills = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             SUM(s.kills) AS kills
                                         FROM scoring_campaign_sorties AS s 
-                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
+                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
                                         WHERE DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                            AND wwii_persona.personaid = s.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid !='4' 
-                                            AND (ISNULL(c.bans) OR c.bans = 0) GROUP BY callsign ORDER BY kills DESC LIMIT 100") or die ($dbConnCommunity->error.kills_LINE_);
+                                            AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid !='4' 
+                                            AND (ISNULL(c.bans) OR c.bans = 0) GROUP BY callsign ORDER BY kills DESC LIMIT 100") or die ($dbConnCommunity->error.dallykills);
 /* DAILY TOP KILLS */
 while ($row = $dallykills->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,killscallsign,kills) VALUES ('1','day','".$row['callsign']."','".$row['kills']."')") or die ($dbconn->error.killsinsert_LINE_);  }
+    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,killscallsign,kills) VALUES ('1','day','".$row['callsign']."','".$row['kills']."')") or die ($dbconn->error.dallykills);  }
 
 /*  top captures info */
 $allycaps = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             SUM(p.captures) AS caps
                                             
                                        FROM scoring_campaign_personas AS p 
-                                       LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                       WHERE wwii_persona.personaid = p.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid !='4' 
+                                       LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                       WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid !='4' 
                                             AND (ISNULL(c.bans) OR c.bans = 0) 
-                                       GROUP BY callsign ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.caps_LINE_);
+                                       GROUP BY callsign ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.allycaps);
 /* MOST CAPTURES */
 while ($row = $allycaps->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('1','camp','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capsinsert_LINE_); }
+    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('1','camp','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.allycaps); }
 
 /* Caps for last 24 hours */
 $dallycaps = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(s.captures) AS caps 
                                         FROM scoring_campaign_sorties AS s 
-                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id),wwii_persona, wwii_player 
+                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id),wwiionline.wwii_persona, wwiionline.wwii_player 
                                         WHERE DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                            AND wwii_persona.personaid = s.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid !='4' 
+                                            AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid !='4' 
                                             AND (ISNULL(c.bans) OR c.bans = 0) 
-                                        GROUP BY callsign ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.dcaps_LINE_);
+                                        GROUP BY callsign ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.dallycaps);
 /* DAILY MOST CAPTURES */
 while ($row = $dallycaps->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('1','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capsinsert_LINE_);  }
+    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('1','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.dallycaps);  }
 
 /* Kills/Death (Kd) */
 $allykd = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(p.kills) as kills, SUM(p.deaths) as deaths, 
                                         SUM(p.kd) as kd
                                      FROM scoring_campaign_personas p 
-                                     LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                     WHERE wwii_persona.personaid = p.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid !='4' 
+                                     LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                     WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid !='4' 
                                             AND (isnull(c.bans) OR c.bans = 0) 
-                                    GROUP BY callsign ORDER BY kd DESC LIMIT 100") or die ($dbConnCommunity->error.kdget_LINE_);
+                                    GROUP BY callsign ORDER BY kd DESC LIMIT 100") or die ($dbConnCommunity->error.allykd);
 /* Top K/D */
 while ($row = $allykd->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,kdcallsign,kd) VALUES ('1','camp','".$row['callsign']."','".$row['kd']."')") or die ($dbconn->error.kdinsert_LINE_); }
+    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,kdcallsign,kd) VALUES ('1','camp','".$row['callsign']."','".$row['kd']."')") or die ($dbconn->error.allykd); }
 
 /* K/D For last 24 Hours */
 $dallykd = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                         ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2) AS kd 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                      WHERE wwii_persona.personaid = s.persona_id 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                      WHERE wwiionline.wwii_persona.personaid = s.persona_id 
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
-                                        AND wwii_persona.countryid !='4' 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.countryid !='4' 
                                         AND (isnull(c.bans) OR c.bans = 0) 
                                       GROUP BY callsign ORDER BY kd DESC LIMIT 100") or die ($dbConnCommunity->error.kdget_LINE_);
 while ($row = $dallykd->fetch_assoc())
@@ -557,10 +557,10 @@ while ($row = $dallykd->fetch_assoc())
 /* Allied MOST Time On Mission */
 $allytom = mysqli_query($dbConnCommunity, "SELECT callsign, p.tom AS tom 
                                       FROM scoring_campaign_personas p 
-                                      LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                      WHERE wwii_persona.personaid = p.persona_id 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
-                                        AND wwii_persona.countryid !='4' 
+                                      LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                      WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.countryid !='4' 
                                         AND (isnull(c.bans) OR c.bans = 0) 
                                       GROUP BY callsign ORDER BY tom DESC LIMIT 100") or die ($dbConnCommunity->error.tomget_LINE_);
 /* TIME ON MISSION */
@@ -569,12 +569,12 @@ while ($row = $allytom->fetch_assoc())
 
 /* Allied MOST Timeon Mission Last 24 Hours */                                  
 $dallytom = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(s.tom) AS tom 
-                                       FROM scoring_campaign_sorties s 
-                                       LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
+                                       FROM scoring_campaign_sorties s  
+                                       LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
                                        WHERE DATE(s.sortie_start) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                            AND wwii_persona.personaid = s.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid !='4' 
+                                            AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid !='4' 
                                             AND (isnull(c.bans) OR c.bans = 0) 
                                        GROUP BY callsign ORDER BY tom DESC LIMIT 100") or die ($dbConnCommunity->error.dtomget_LINE_);
 while ($row = $dallytom->fetch_assoc())
@@ -584,12 +584,12 @@ while ($row = $dallytom->fetch_assoc())
 /* Top Kill Streak -- Number of consecutive Sorties with at least one kill.    --- FOR ALLIED SIDE*/
 $tkrow = mysqli_query($dbConnCommunity, "SELECT callsign, streak_id, best as value2, UNIX_TIMESTAMP(achieved), v.name, 0, 0 
                                     FROM scoring_vehicles v, scoring_campaign_streak_bests s 
-                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_player, wwii_persona 
+                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE v.vehicle_id=s.vehicle_id 
-                                        AND wwii_persona.personaid = s.persona_id 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         AND s.streak_id = 4 
-                                        AND wwii_persona.countryid !='4'  
+                                        AND wwiionline.wwii_persona.countryid !='4'  
                                         AND (isnull(c.bans) OR c.bans = 0) ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* Most consecutive Sorties with a kill */
 while ($row = $tkrow->fetch_assoc())
@@ -597,11 +597,11 @@ while ($row = $tkrow->fetch_assoc())
 
 /* Daily Top Kill Streak -- Top players based on the Consecutive Sorties with a Kill streak.    --- FOR ALLIED SIDE*/
 $dtkrow = mysqli_query($dbConnCommunity, "SELECT DISTINCT(callsign) as callsign, streak_id, current as value2 
-                                    FROM scoring_campaign_streaks s, wwii_player, wwii_persona 
+                                    FROM scoring_campaign_streaks s, wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE s.streak_id = 4
                                         AND s.achieved >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
-                                        AND wwii_persona.personaid = s.persona_id
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* DAILY CONSECUTIVE SORTIES WITH A KILL */
 while ($row = $dtkrow->fetch_assoc())
@@ -610,12 +610,12 @@ while ($row = $dtkrow->fetch_assoc())
 /* Top Capture Streak -- Most sorties in a row with a capture */
 $tcrow = mysqli_query($dbConnCommunity, "SELECT callsign, streak_id, best as value2, UNIX_TIMESTAMP(achieved), v.name, 0, 0 
                                     FROM scoring_vehicles v, scoring_campaign_streak_bests s 
-                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_player, wwii_persona 
+                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE v.vehicle_id=s.vehicle_id 
-                                        AND wwii_persona.personaid = s.persona_id 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         AND s.streak_id = 5 
-                                        AND wwii_persona.countryid !='4' 
+                                        AND wwiionline.wwii_persona.countryid !='4' 
                                         AND (isnull(c.bans) OR c.bans = 0) ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* SORTIES IN A ROW WITH A CAPTURE */
 while ($row = $tcrow->fetch_assoc())
@@ -623,11 +623,11 @@ while ($row = $tcrow->fetch_assoc())
 
 /* Daily Top Capture Streak -- Most sorties in a row with a capture */
 $dtcrow = mysqli_query($dbConnCommunity, "SELECT DISTINCT(callsign) as callsign, streak_id, current as value2 
-                                    FROM scoring_campaign_streaks s, wwii_player, wwii_persona 
+                                    FROM scoring_campaign_streaks s, wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE s.streak_id = 5
                                         AND s.achieved >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
-                                        AND wwii_persona.personaid = s.persona_id
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* DAILY - MOST SORTIES IN A ROW WITH A CAPTURE */
 while ($row = $dtcrow->fetch_assoc())
@@ -636,8 +636,8 @@ while ($row = $dtcrow->fetch_assoc())
 /* Top kills in a sortie (top kills streak) Top players based on the most Kills in a Sortie */
 $allysks = mysqli_query($dbConnCommunity, "SELECT callsign,  
                                             s.kills as kills 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
                                       WHERE s.persona_id=c.persona_id 
                                         AND s.country_id!='4' 
                                         AND (isnull(c.bans) OR c.bans=0) 
@@ -649,8 +649,8 @@ while ($row = $allysks->fetch_assoc())
 /* Daily Top kills in a sortie (top kills streak) Top players based on the most Kills in a Sortie */
 $dallysks = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             s.kills as kills 
-                                       FROM scoring_campaign_sorties s 
-                                       LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c
+                                       FROM scoring_campaign_sorties s  
+                                       LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c
                                        WHERE s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                             AND s.persona_id=c.persona_id
                                             AND s.country_id!='4'  
@@ -664,8 +664,8 @@ while ($row = $dallysks->fetch_assoc())
 /* Allied Top Captures -- MOST CAPTURES IN 1 SORTIE */
 $sortallycaps = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             s.captures as caps 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
                                       WHERE s.persona_id=c.persona_id 
                                         AND (isnull(c.bans) OR c.bans=0)
                                         AND s.country_id!='4'
@@ -679,8 +679,8 @@ while ($row = $sortallycaps->fetch_assoc())
 /* Daily Allied Top Captures -- MOST CAPTURES IN 1 SORTIE */
 $dsortallycaps = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             s.captures as caps 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN wwii_player w ON (s.player_id=w.playerid) 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid) 
                                       WHERE s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                         AND s.country_id!='4' 
                                       ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.capstreaksget_LINE_);
@@ -689,35 +689,7 @@ $dsortallycaps = mysqli_query($dbConnCommunity, "SELECT callsign,
 while ($row = $dsortallycaps->fetch_assoc())
     { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, sortcapscallsign, capstreak) VALUES ('1','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capstreaksinsert_LINE_); }
 
-/* Axis kill data 
-
-$axkills = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(p.kills) AS kills 
-                                        FROM scoring_campaign_personas AS p 
-                                        LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                            WHERE wwii_persona.personaid = p.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid ='4' 
-                                            AND (ISNULL(c.bans) OR c.bans = 0) GROUP BY callsign ORDER BY kills DESC LIMIT 100") or die ($dbConnCommunity->error.kills_LINE_);
  
-while ($row = $axkills->fetch_assoc())
-    {
-       mysqli_query($dbConnCommunity, "INSERT INTO scoring_top_Players (side, period,killscallsign,kills) VALUES ('2','camp','".$row['callsign']."','".$row['kills']."')") or die ($dbConnCommunity->error.killsinsert_LINE_); //echo $row['callsign']." Has ".$row['kills']." Kills.<br>" ;
-    }
-
-/*Axis capture info 
-$axcaps = mysqli_query($dbConnCommunity, "SELECT callsign, sum(p.captures) as caps 
-                                        FROM scoring_campaign_personas p 
-                                        LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                        WHERE wwii_persona.personaid = p.persona_id 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
-                                        AND wwii_persona.countryid ='4'
-                                        AND (isnull(c.bans) OR c.bans = 0) GROUP BY callsign ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.kills_LINE_);
-
-while ($row = $axcaps->fetch_assoc())
-    {
-       mysqli_query($dbConnCommunity, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('2','camp','".$row['callsign']."','".$row['caps']."')") or die ($dbConnCommunity->error.capsinsert_LINE_);
-    }
- */   
  ################# START AXIS STATS SECTION ################################################################
 
 /* Queries */
@@ -725,36 +697,36 @@ while ($row = $axcaps->fetch_assoc())
 /* Top AAA by points -- point formula = KILLS * KD    --- FOR Axis SIDE -- Need Sortie counts*/
 $gtaa = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                  FROM scoring_campaign_sorties s
-                                        JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c 
+                                  FROM scoring_campaign_sorties s 
+                                        JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c 
                                             WHERE s.vehicle_id IN(111, 71)
                                             AND s.persona_id=c.persona_id
                                             AND (isnull(c.bans) OR c.bans = 0) 
-                                  GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.taaaquery_LINE_);
+                                  GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.gtaa);
 /* TOP AAA */
 while ($row = $gtaa->fetch_assoc())
-    { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, aaacallsign, aaapoints) VALUES ('2','camp','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.taa_LINE_);  } 
+    { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, aaacallsign, aaapoints) VALUES ('2','camp','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.gtaa);  } 
 
 /* Daily Top AAA by points -- point formula = KILLS * KD    --- FOR Axis SIDE -- Need Sortie counts*/
 $gdtaa = mysqli_query($dbConnCommunity, "SELECT w.callsign,
                                         SUM(s.kills) as kills,
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                   FROM `scoring_campaign_sorties` s 
-                                        JOIN wwii_player w ON s.player_id=w.playerid 
+                                   FROM scoring_campaign_sorties s 
+                                        JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
                                             WHERE s.vehicle_id IN(111,71)
                                             AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                   GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.taaaquery_LINE_);
+                                   GROUP BY w.callsign ORDER BY points DESC limit 100") or die ($dbConnCommunity->error.$gdtaa);
 /*Daily Top AAA */
 while ($row = $gdtaa->fetch_assoc())
-    { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, aaacallsign, aaapoints) VALUES ('2','day','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.taa_LINE_);  } 
+    { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, aaacallsign, aaapoints) VALUES ('2','day','".$row['callsign']."','".$row['points']."')") or die ($dbconn->error.$gdtaa);  } 
 
 
 /* Top ATG by points -- point formula = KILLS * KD    --- FOR Axis SIDE -- Need Sortie counts*/
 $gtatg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(30, 130, 29, 166)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(30, 130, 29, 166,125,155)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.tatg_LINE_);
@@ -765,9 +737,9 @@ while ($row = $gtatg->fetch_assoc())
 /* Daily Top ATG by points -- point formula = KILLS * KD    --- FOR Axis SIDE -- Need Sortie counts*/
 $gdtatg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid 
-                                        WHERE s.vehicle_id IN(30, 130, 29, 166)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
+                                        WHERE s.vehicle_id IN(30, 130, 29, 166,125,155)
                                         AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.datg_LINE_);
 
@@ -778,9 +750,9 @@ while ($row = $gdtatg->fetch_assoc())
 /* Top ATR by points -- point formula = (KILLS + CAPS )) * KD    --- FOR Axis SIDE*/
 $gtatr = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(120, 189, 2681)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(122,178,195)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.atr_LINE_);
@@ -791,9 +763,9 @@ while ($row = $gtatr->fetch_assoc())
 /* Daily Top ATR by points -- point formula = (KILLS + CAPS )) * KD    --- FOR Axis SIDE*/
 $gdtatr = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(120, 189, 2681)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(122,178,195)
                                         AND s.`sortie_start` > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.datr_LINE_);
 
@@ -803,9 +775,9 @@ while ($row = $gdtatr->fetch_assoc())
 /* Top Engineer by points -- point formula = (KILLS + (CAPS * 5)) * KD    --- FOR Axis SIDE*/
 $gteng = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(33, 18114 )
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(33,267)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.engquery_LINE_);
@@ -816,9 +788,9 @@ while ($row = $gteng->fetch_assoc())
 /* Daily Top Engineer by points -- point formula = (KILLS + (CAPS * 5)) * KD    --- FOR Axis SIDE*/
 $gdteng = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                               IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(33, 18114)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(33,267)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.dengquery_LINE_);
 /* DAILY TOP Engineer */
@@ -829,8 +801,8 @@ while ($row = $gdteng->fetch_assoc())
 $gtgren = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(114)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -843,8 +815,8 @@ while ($row = $gtgren->fetch_assoc())
 $gdtgren = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(114)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.grenadierquery_LINE_);
@@ -856,9 +828,9 @@ while ($row = $gdtgren->fetch_assoc())
 $gtlmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(106, 188)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(106,177)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.lmgquery_LINE_);
@@ -870,9 +842,9 @@ while ($row = $gtlmg->fetch_assoc())
 $gdtlmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(106,188)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(106,177)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.lmgquery_LINE_);
 /* DAILY TOP LMG */ 
@@ -882,9 +854,9 @@ while ($row = $gdtlmg->fetch_assoc())
 /* Top Mortar by points -- point formula = (KILLS + (CAPS * 2)) * KD    --- FOR Axis SIDE*/
 $gtmort = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(169, 191)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(169,180)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.mortquery_LINE_);
@@ -896,9 +868,9 @@ while ($row = $gtmort->fetch_assoc())
 $gdtmort = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*2)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(169, 191)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(160,180)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.mortquery_LINE_);
 /* DAILY TOP MORTAR */ 
@@ -909,9 +881,9 @@ while ($row = $gdtmort->fetch_assoc())
 $gtrifle = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(186, 139, 31, 10921, 2680, 18118, 18117)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(31,175,194,263,277,279)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.testriflequery_LINE_);
@@ -923,9 +895,9 @@ while ($row = $gtrifle->fetch_assoc())
 $gdtrifle = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(186, 139, 31, 10921, 2680, 18118, 18117)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(31,175,194,263,277,279)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.testriflequery_LINE_);
 /* DAILY TOP RIFLE */
@@ -936,9 +908,9 @@ while ($row = $gdtrifle->fetch_assoc())
 $gtsmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(18116, 18115, 32, 187)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(275,276,32,176)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.smgquery_LINE_);
@@ -950,9 +922,9 @@ while ($row = $gtsmg->fetch_assoc())
 $gdtsmg = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+(SUM(s.captures)*5)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(18116, 18115, 32, 187)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(275,276,32,176)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.smgquery_LINE_);
 
@@ -964,9 +936,9 @@ while ($row = $gdtsmg->fetch_assoc())
 $gtsniper = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(190, 162)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(179,150)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.atr_LINE_);
@@ -978,9 +950,9 @@ while ($row = $gtsniper->fetch_assoc())
 $gdtsniper = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, (SUM(s.kills)+SUM(s.captures)) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(190, 162)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(179,150)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.atr_LINE_);
 
@@ -992,9 +964,9 @@ while ($row = $gdtsniper->fetch_assoc())
 $gtank = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(25,26,24,88,75,131,154,82,103,74,132)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(25,26,24,88,75,82,103,74,127,128,144)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.tankquery_LINE_);
@@ -1006,9 +978,9 @@ while ($row = $gtank->fetch_assoc())
 $gdttank = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(25,26,24,88,75,131,154,82,103,74,132)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(25,26,24,88,75,82,103,74,127,128,144)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.tankquery_LINE_);
 
@@ -1019,9 +991,9 @@ while ($row = $gdttank->fetch_assoc())
 $gtruck = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END) as sortie,
                                         ((SUM(CASE WHEN s.rtb = '0' THEN 1 ELSE 0 END)/COUNT(s.player_id)) * COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END))  as points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(27,28)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(27,28,103)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.truckquery_LINE_);
@@ -1033,9 +1005,9 @@ while ($row = $gtruck->fetch_assoc())
 $gdttruck = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END) as sortie,
                                         IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points  
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(27,28)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(27,28,103)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.truckquery_LINE_);
 /* DAILY TOP TRUCK */
@@ -1046,9 +1018,9 @@ while ($row = $gdttruck->fetch_assoc())
 $gfight = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             SUM(s.kills)*ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(193,23,195,197,92,172,66,93,136)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(23,66,92,137,157,181,184,183,186)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
@@ -1060,9 +1032,9 @@ while ($row = $gfight->fetch_assoc())
 $gdtfight = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid 
-                                        WHERE s.vehicle_id IN(193,23,195,197,92,172,66,93,136)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
+                                        WHERE s.vehicle_id IN(23,66,92,137,157,181,184,183,186)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
 
@@ -1073,9 +1045,9 @@ while ($row = $gdtfight->fetch_assoc())
 $gtbomb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
-                                        WHERE s.vehicle_id IN(76,22,196)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                        WHERE s.vehicle_id IN(22,76,93)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
@@ -1087,9 +1059,9 @@ while ($row = $gtbomb->fetch_assoc())
 $gdtbomb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
-                                        WHERE s.vehicle_id IN(76,22,196)
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
+                                        WHERE s.vehicle_id IN(76,22,93)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.bomber_LINE_);
 /* DAILY TOP BOMBER */
@@ -1100,8 +1072,8 @@ while ($row = $gdtbomb->fetch_assoc())
 $gtdd = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(80)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -1113,8 +1085,8 @@ while ($row = $gtdd->fetch_assoc())
 $gdtdd = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points  
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(80)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.dd_LINE_);
@@ -1126,8 +1098,8 @@ while ($row = $gdtdd->fetch_assoc())
 $gtpb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(64)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0)
@@ -1140,8 +1112,8 @@ while ($row = $gtpb->fetch_assoc())
 $gdtpb = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
 
                                             IF(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)>0, SUM(s.kills) * ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2), SUM(s.kills)) AS points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid  
                                         WHERE s.vehicle_id IN(64)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.pb_LINE_);
@@ -1154,8 +1126,8 @@ while ($row = $gdtpb->fetch_assoc())
 $gttt = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
                                         
                                         ((SUM(CASE WHEN s.rtb = '0' THEN 1 ELSE 0 END)/COUNT(s.player_id)) * COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END))  as points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid, scoring_persona_configs c  
                                         WHERE s.vehicle_id IN(102)
                                         AND s.persona_id=c.persona_id
                                         AND (isnull(c.bans) OR c.bans = 0) 
@@ -1167,8 +1139,8 @@ while ($row = $gttt->fetch_assoc())
 $gdttt = mysqli_query($dbConnCommunity, "SELECT w.callsign, 
     
                                         ((SUM(CASE WHEN s.rtb = '0' THEN 1 ELSE 0 END)/COUNT(s.player_id)) * COUNT(CASE WHEN s.player_id = '*' THEN 1 ELSE 0 END))  as points 
-                                    FROM scoring_campaign_sorties s
-                                    JOIN wwii_player w ON s.player_id=w.playerid 
+                                    FROM scoring_campaign_sorties s 
+                                    JOIN wwiionline.wwii_player w ON s.player_id=w.playerid 
                                         WHERE s.vehicle_id IN(102)
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                     GROUP BY w.callsign ORDER BY `points` DESC limit 100") or die ($dbConnCommunity->error.ttquery_LINE_);
@@ -1182,10 +1154,10 @@ $axkills = mysqli_query($dbConnCommunity, "SELECT callsign,
                                             SUM(p.kills) AS kills
 
                                         FROM scoring_campaign_personas AS p 
-                                        LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                        WHERE wwii_persona.personaid = p.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid ='4' 
+                                        LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                        WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid ='4' 
                                             AND (ISNULL(c.bans) OR c.bans = 0) 
                                         GROUP BY callsign ORDER BY kills DESC LIMIT 100") or die ($dbConnCommunity->error.kills_LINE_);
 /* TOP KILLS  */
@@ -1197,11 +1169,11 @@ while ($row = $axkills->fetch_assoc())
 $daxkills = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             SUM(s.kills) AS kills
                                         FROM scoring_campaign_sorties AS s 
-                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
+                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
                                         WHERE DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                            AND wwii_persona.personaid = s.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid ='4' 
+                                            AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid ='4' 
                                             AND (ISNULL(c.bans) OR c.bans = 0) GROUP BY callsign ORDER BY kills DESC LIMIT 100") or die ($dbConnCommunity->error.kills_LINE_);
 /* DAILY TOP KILLS */
 while ($row = $daxkills->fetch_assoc())
@@ -1212,10 +1184,10 @@ $axcaps = mysqli_query($dbConnCommunity, "SELECT callsign,
                                             SUM(p.captures) AS caps
                                             
                                        FROM scoring_campaign_personas AS p 
-                                       LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                       WHERE wwii_persona.personaid = p.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid ='4' 
+                                       LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                       WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid ='4' 
                                             AND (ISNULL(c.bans) OR c.bans = 0) 
                                        GROUP BY callsign ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.caps_LINE_);
 /* MOST CAPTURES */
@@ -1225,11 +1197,11 @@ while ($row = $axcaps->fetch_assoc())
 /* Caps for last 24 hours */
 $daxcaps = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(s.captures) AS caps 
                                         FROM scoring_campaign_sorties AS s 
-                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id),wwii_persona, wwii_player 
+                                        LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id),wwiionline.wwii_persona, wwiionline.wwii_player 
                                         WHERE DATE(s.`sortie_start`) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                            AND wwii_persona.personaid = s.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid ='4' 
+                                            AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid ='4' 
                                             AND (ISNULL(c.bans) OR c.bans = 0) 
                                         GROUP BY callsign ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.dcaps_LINE_);
 /* DAILY MOST CAPTURES */
@@ -1240,10 +1212,10 @@ while ($row = $daxcaps->fetch_assoc())
 $axkd = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(p.kills) as kills, SUM(p.deaths) as deaths, 
                                         SUM(p.kd) as kd
                                      FROM scoring_campaign_personas p 
-                                     LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                     WHERE wwii_persona.personaid = p.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid ='4' 
+                                     LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                     WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid ='4' 
                                             AND (isnull(c.bans) OR c.bans = 0) 
                                     GROUP BY callsign ORDER BY kd DESC LIMIT 100") or die ($dbConnCommunity->error.kdget_LINE_);
 /* Top K/D */
@@ -1253,12 +1225,12 @@ while ($row = $axkd->fetch_assoc())
 /* K/D For last 24 Hours */
 $daxkd = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                         ROUND(SUM(s.kills)/(SUM(CASE s.rtb WHEN 3 THEN 1 ELSE 0 END)),2) AS kd 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                      WHERE wwii_persona.personaid = s.persona_id 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                      WHERE wwiionline.wwii_persona.personaid = s.persona_id 
                                         AND s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
-                                        AND wwii_persona.countryid ='4' 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.countryid ='4' 
                                         AND (isnull(c.bans) OR c.bans = 0) 
                                       GROUP BY callsign ORDER BY kd DESC LIMIT 100") or die ($dbConnCommunity->error.kdget_LINE_);
 while ($row = $daxkd->fetch_assoc())
@@ -1267,10 +1239,10 @@ while ($row = $daxkd->fetch_assoc())
 /* Axis MOST Time On Mission */
 $axtom = mysqli_query($dbConnCommunity, "SELECT callsign, p.tom AS tom 
                                       FROM scoring_campaign_personas p 
-                                      LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwii_persona, wwii_player 
-                                      WHERE wwii_persona.personaid = p.persona_id 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
-                                        AND wwii_persona.countryid ='4' 
+                                      LEFT JOIN scoring_persona_configs c ON (p.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
+                                      WHERE wwiionline.wwii_persona.personaid = p.persona_id 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.countryid ='4' 
                                         AND (isnull(c.bans) OR c.bans = 0) 
                                       GROUP BY callsign ORDER BY tom DESC LIMIT 100") or die ($dbConnCommunity->error.tomget_LINE_);
 /* TIME ON MISSION */
@@ -1279,12 +1251,12 @@ while ($row = $axtom->fetch_assoc())
 
 /* Axis MOST Timeon Mission Last 24 Hours */                                  
 $daxtom = mysqli_query($dbConnCommunity, "SELECT callsign, SUM(s.tom) AS tom 
-                                       FROM scoring_campaign_sorties s 
-                                       LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_persona, wwii_player 
+                                       FROM scoring_campaign_sorties s  
+                                       LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_persona, wwiionline.wwii_player 
                                        WHERE DATE(s.sortie_start) >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
-                                            AND wwii_persona.personaid = s.persona_id 
-                                            AND wwii_player.playerid = wwii_persona.playerid 
-                                            AND wwii_persona.countryid ='4' 
+                                            AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                            AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
+                                            AND wwiionline.wwii_persona.countryid ='4' 
                                             AND (isnull(c.bans) OR c.bans = 0) 
                                        GROUP BY callsign ORDER BY tom DESC LIMIT 100") or die ($dbConnCommunity->error.dtomget_LINE_);
 while ($row = $daxtom->fetch_assoc())
@@ -1294,12 +1266,12 @@ while ($row = $daxtom->fetch_assoc())
 /* Top Kill Streak -- Number of consecutive Sorties with at least one kill.    --- FOR Axis SIDE*/
 $gtkrow = mysqli_query($dbConnCommunity, "SELECT callsign, streak_id, best as value2, UNIX_TIMESTAMP(achieved), v.name, 0, 0 
                                     FROM scoring_vehicles v, scoring_campaign_streak_bests s 
-                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_player, wwii_persona 
+                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE v.vehicle_id=s.vehicle_id 
-                                        AND wwii_persona.personaid = s.persona_id 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         AND s.streak_id = 4 
-                                        AND wwii_persona.countryid ='4'  
+                                        AND wwiionline.wwii_persona.countryid ='4'  
                                         AND (isnull(c.bans) OR c.bans = 0) ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* Most consecutive Sorties with a kill */
 while ($row = $gtkrow->fetch_assoc())
@@ -1307,11 +1279,11 @@ while ($row = $gtkrow->fetch_assoc())
 
 /* Daily Top Kill Streak -- Top players based on the Consecutive Sorties with a Kill streak.    --- FOR Axis SIDE*/
 $gdtkrow = mysqli_query($dbConnCommunity, "SELECT DISTINCT(callsign) as callsign, streak_id, current as value2 
-                                    FROM scoring_campaign_streaks s, wwii_player, wwii_persona 
+                                    FROM scoring_campaign_streaks s, wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE s.streak_id = 4
                                         AND s.achieved >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
-                                        AND wwii_persona.personaid = s.persona_id
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* DAILY CONSECUTIVE SORTIES WITH A KILL */
 while ($row = $gdtkrow->fetch_assoc())
@@ -1320,12 +1292,12 @@ while ($row = $gdtkrow->fetch_assoc())
 /* Top Capture Streak -- Most sorties in a row with a capture */
 $gtcrow = mysqli_query($dbConnCommunity, "SELECT callsign, streak_id, best as value2, UNIX_TIMESTAMP(achieved), v.name, 0, 0 
                                     FROM scoring_vehicles v, scoring_campaign_streak_bests s 
-                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwii_player, wwii_persona 
+                                    LEFT JOIN scoring_persona_configs c ON (s.persona_id = c.persona_id), wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE v.vehicle_id=s.vehicle_id 
-                                        AND wwii_persona.personaid = s.persona_id 
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id 
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         AND s.streak_id = 5 
-                                        AND wwii_persona.countryid ='4' 
+                                        AND wwiionline.wwii_persona.countryid ='4' 
                                         AND (isnull(c.bans) OR c.bans = 0) ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* SORTIES IN A ROW WITH A CAPTURE */
 while ($row = $gtcrow->fetch_assoc())
@@ -1333,11 +1305,11 @@ while ($row = $gtcrow->fetch_assoc())
 
 /* Daily Top Capture Streak -- Most sorties in a row with a capture */
 $gdtcrow = mysqli_query($dbConnCommunity, "SELECT DISTINCT(callsign) as callsign, streak_id, current as value2 
-                                    FROM scoring_campaign_streaks s, wwii_player, wwii_persona 
+                                    FROM scoring_campaign_streaks s, wwiionline.wwii_player, wwiionline.wwii_persona 
                                     WHERE s.streak_id = 5
                                         AND s.achieved >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
-                                        AND wwii_persona.personaid = s.persona_id
-                                        AND wwii_player.playerid = wwii_persona.playerid 
+                                        AND wwiionline.wwii_persona.personaid = s.persona_id
+                                        AND wwiionline.wwii_player.playerid = wwiionline.wwii_persona.playerid 
                                         ORDER BY value2 DESC LIMIT 100") or die ($dbConnCommunity->error.tkrowquery_LINE_);
 /* DAILY - MOST SORTIES IN A ROW WITH A CAPTURE */
 while ($row = $gdtcrow->fetch_assoc())
@@ -1346,8 +1318,8 @@ while ($row = $gdtcrow->fetch_assoc())
 /* Top kills in a sortie (top kills streak) Top players based on the most Kills in a Sortie */
 $axsks = mysqli_query($dbConnCommunity, "SELECT callsign,  
                                             s.kills as kills 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
                                       WHERE s.persona_id=c.persona_id 
                                         AND s.country_id='4' 
                                         AND (isnull(c.bans) OR c.bans=0) 
@@ -1359,8 +1331,8 @@ while ($row = $axsks->fetch_assoc())
 /* Daily Top kills in a sortie (top kills streak) Top players based on the most Kills in a Sortie */
 $daxsks = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             s.kills as kills 
-                                       FROM scoring_campaign_sorties s 
-                                       LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c
+                                       FROM scoring_campaign_sorties s  
+                                       LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c
                                        WHERE s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                                             AND s.persona_id=c.persona_id
                                             AND s.country_id='4'  
@@ -1374,8 +1346,8 @@ while ($row = $daxsks->fetch_assoc())
 /* Axis Top Captures -- MOST CAPTURES IN 1 SORTIE */
 $sortaxcaps = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             s.captures as caps 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid), scoring_persona_configs c 
                                       WHERE s.persona_id=c.persona_id 
                                         AND (isnull(c.bans) OR c.bans=0)
                                         AND s.country_id='4'
@@ -1389,8 +1361,8 @@ while ($row = $sortaxcaps->fetch_assoc())
 /* Daily Axis Top Captures -- MOST CAPTURES IN 1 SORTIE */
 $dsortaxcaps = mysqli_query($dbConnCommunity, "SELECT callsign, 
                                             s.captures as caps 
-                                      FROM scoring_campaign_sorties s 
-                                      LEFT JOIN wwii_player w ON (s.player_id=w.playerid) 
+                                      FROM scoring_campaign_sorties s  
+                                      LEFT JOIN wwiionline.wwii_player w ON (s.player_id=w.playerid) 
                                       WHERE s.`sortie_start` >= DATE_SUB(NOW(), INTERVAL 24 HOUR) 
                                         AND s.country_id='4' 
                                       ORDER BY caps DESC LIMIT 100") or die ($dbConnCommunity->error.capstreaksget_LINE_);
