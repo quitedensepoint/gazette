@@ -78,16 +78,19 @@
 				<figcaption>World@War offices - we will rebuild!.</figcaption>
 			</figure>
 		</div>
+		
 		<div class="error error-small">
 			<h3>Enemy Communique Intercepted</h3>
 			<p>A cryptic enemy dispatch was intercepted last night and is currently in the hands of our codebreakers.</p>
 		</div>
+		<?php if($showErrors) { ?>
 		<div class="error error-data">
 			<div><strong>Error Code</strong> : <?php echo $errno; ?></div>
 			<div><strong>Error Message</strong> : <?php echo $errstr; ?></div>
 			<!-- div><strong>Error File</strong> : <?php echo $errfile; ?></div>
 			<div><strong>Error Line</strong> : <?php echo $errline; ?></div-->
-		</div>		
+		</div>
+		<?php } ?>
 	</div>	
 </body>
 </html>

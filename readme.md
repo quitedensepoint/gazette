@@ -84,3 +84,7 @@ The small WebMap that is on the Gazette is its own small version of the actual W
 The WebMap is environment specific, this is so that the proper data is pulled. While testing, if the data was soley pulled from the live server, the times would become offset and then no data would be pulled for the dev server. The environment setting in the DBconn.example.php will allow for configuration.
 
 > *'webmap-environment' => 'live'*
+
+## Error Handling
+Ensure the config file (DBConn.example.php) for the options variable *error_handling* has the *show_errors* variable set to false. This will ensure the errors aren't shown in the "bombed out" screen. Set it to true for developing.
+Errors are stored in "[project root]/logs/errors.log"

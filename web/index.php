@@ -5,6 +5,9 @@ It has the layout and look of the original page.
 This page is a table layout that consists of 5 cells across   
 */
 
+// Enable output buffering - this can increase performance and allows us to handle errors better
+ob_start();
+
 require(__DIR__ . '/../DBconn.php');
 require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/casualty-processor.php');
@@ -382,4 +385,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 ?>
 </body>
 </html>
- 
+<?php
+// This MUST be present as the last line of this file to ensure buffered content is sent to the browser
+ob_end_flush();
+// Don't put a closing PHP tag here. It isn't necessary and can introduce problems

@@ -79,5 +79,16 @@ $options = [
 	'campaigncheck_log_retention_days' => 14,
 	
 	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
-	'webmap-environment' => 'dev'
+	'webmap-environment' => 'dev',
+	
+	/**
+	 * Error handling for the gazette
+	 */
+	'error_handling' => [
+		
+		/**
+		 * if true, will show the actual error in the handling page. Switch to true for development
+		 */
+		'show_errors' => false 
+	]	
 ];

@@ -1,6 +1,9 @@
 <?php
 // For Allied side specific information 
 
+// Enable output buffering - this can increase performance and allows us to handle errors better
+ob_start();
+
 //include 'testkills.php';
 include'assets/alliedstats.php';
 require(__DIR__ . '/../DBconn.php');
@@ -269,3 +272,7 @@ $stat4 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats4.php');
     </div> <?php /* end of background container */ ?>
 </body>
 </html>
+<?php
+// This MUST be present as the last line of this file to ensure buffered content is sent to the browser
+ob_end_flush();
+// Don't put a closing PHP tag here. It isn't necessary and can introduce problems
