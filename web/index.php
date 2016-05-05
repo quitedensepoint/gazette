@@ -288,6 +288,8 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 						    $firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
 						    $firstArticle = str_replace('<a href="/index.php', '<a href="http://www.battlegroundeurope.com/index.php', $firstArticle);
 						    $firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
+							$firstArticle = str_replace('class="contentpagetitle"', 'target="_blank" class="contentpagetitle"', $firstArticle);
+							$firstArticle = str_replace('class="readon"', 'target="_blank" class="readon"', $firstArticle);
 						    echo $firstArticle;
 					    ?>
             
