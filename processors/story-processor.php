@@ -288,11 +288,19 @@ class StoryProcessor {
 			// If the country has no stories, go to the next country
 			if(!isset($this->countryStories[$activeCountry['country_id']]))
 			{
-				echo " -- No stories\n";
+				echo sprintf(" -- No stories for %s\n", $activeCountry['name']);
 				
 				continue;
 			}
 			echo "\n";
+			
+			// Check to see if the current story can be used by the active country
+			// COMMDEV-808
+			if(!in_array($storyData['story_id'], $this->countryStories[$activeCountry['country_id']]))
+			{
+				echo sprintf(" -- Story %d is not available for %s\n", $storyData['story_id'], $activeCountry['name']);				
+				continue;				
+			}
 			
 			if(($result = $this->processSourceForCountry($storyData, $source, $activeCountry, $templateId)) !== false)
 			{

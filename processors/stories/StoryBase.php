@@ -594,11 +594,19 @@ abstract class StoryBase
 	 * Retrieves a randomly selected country not on a specific side, or null if cannot find one
 	 * 
 	 * @param integer $sideId
+	 * @param boolean $active if true, will choose from only active countries
 	 * @return array|null
 	 */
-	public function getRandomEnemyCountry($sideId)
+	public function getRandomEnemyCountry($sideId, $active = true)
 	{
 		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = "select * from countries where side_id != ? ";
+		if($active)
+		{
+			$query .= " AND active = 1";
+		}
+		$query .= " order by RAND() limit 1";
 		
 		$query = $dbHelper
 			->prepare("select * from countries where side_id != ? order by RAND() limit 1",[$sideId]);	
