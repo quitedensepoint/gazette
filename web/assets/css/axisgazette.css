@@ -196,48 +196,25 @@ html, body {
     position:relative;
     top: -870px;
     left:5px;
-	width: 230px;
+	width: 150px;
     height:350px;
 	text-align: center;
     border:1px black solid;
     
 }
 
-#frenchField {
+#germanField {
     position:relative;
     top:-5px;
-    left:0px;
+    left:30px;
 	width: 60px;
     height:275px;
     vertical-align:top;
-    text-align: right;
+    text-align: center;
     padding: 5px;
-    border-right:1px black solid;
-}
-#britField {
-    position:relative;
-    top:-290px;
-    left:65px;
-	width: 60px;
-    height:275px;
-	text-align: center;
-    vertical-align:top;
-    padding: 5px;
-    border-right:1px black solid;
-    
+   
 }
 
-#USField {
-    position:relative;
-    top:-575px;
-    left:133px;
-	width: 90px;
-    height:275px;
-	text-align: left;
-    vertical-align:top;
-    padding: 5px;
-    
-}
 
 #bottomRightOuterStory {
     position:relative;
@@ -252,8 +229,8 @@ html, body {
 #bottomMiddle {
     position:relative;
     top:-1245px;
-    left:250px;
-	width: 250px;
+    left:160px;
+	width: 330px;
     height:350px;
 	padding: 5px;
     

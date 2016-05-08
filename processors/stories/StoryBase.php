@@ -658,7 +658,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 		
 		$query = $dbHelper
-			->prepare("select * from countries where country_id = ? limit 1",[$countryId]);	
+			->prepare("select * from countries where story_countries.country_id = ? limit 1",[$countryId]);	
 		
 		$result = $dbHelper->getAsArray($query);
 		

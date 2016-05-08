@@ -8,12 +8,12 @@ require(__DIR__ . '/../DBconn.php');
 
 $stat1 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats1.php');
 $stat2 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats2.php');
+$stat3 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats3.php');
+$stat4 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats4.php');
 $funit = file_get_contents(__DIR__ .'/../cache/playnow_allied_french_spawn.php');
 $bunit = file_get_contents(__DIR__ .'/../cache/playnow_allied_british_spawn.php');
 $uunit = file_get_contents(__DIR__ .'/../cache/playnow_allied_us_spawn.php');
 $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
-$stat3 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats3.php');
-$stat4 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats4.php');
 
 ?>
 <!DOCTYPE html>
@@ -208,10 +208,10 @@ $stat4 = file_get_contents(__DIR__ .'/../cache/playnow_allied_stats4.php');
         <div id="unitsInField">
             <span class="papertimeshuge">Units In The Field</span>
                 <div id="frenchField" valign='top'>
-                   <span class="papertimesmedium"><div> <?php echo "<b>French</b>:".$bunit ?></div></span>
+                   <span class="papertimesmedium"><div> <?php echo "<b>French</b>:".$funit ?></div></span>
                 </div>
                 <div id="britField" valign='top'>
-                   <span class="papertimesmedium"><div> <?php echo "<b>British</b>:". $funit ?></div></span>
+                   <span class="papertimesmedium"><div> <?php echo "<b>British</b>:". $bunit ?></div></span>
                 </div>
                 <div id="USField" valign='top'>
                    <span class="papertimesmedium"><div> <?php echo "<b>United States</b>:".$uunit  ?> </div></span>

@@ -11,7 +11,7 @@ $gstat2 = file_get_contents(__DIR__ .'/../cache/playnow_axis_stats2.php');
 $gstat3 = file_get_contents(__DIR__ .'/../cache/playnow_axis_stats3.php');
 $gstat4 = file_get_contents(__DIR__ .'/../cache/playnow_axis_stats4.php');
 $gunit = file_get_contents(__DIR__ .'/../cache/playnow_axis_german_spawn.php');
-$promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
+$gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
 
 
 ?>
@@ -19,7 +19,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>        
     <title>World@War AXIS Gazette</title>
-	<link rel='stylesheet' href='assets/css/alliedgazette.css'>
+	<link rel='stylesheet' href='assets/css/axisgazette.css'>
 	<link rel="shortcut icon" href="assets/img/favicon.ico" />
 </head>
 
@@ -48,7 +48,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
 <!-- TOP ROW: HC recruiting | Small Story | Stats Leaderboard Block -->
         <div id="topLeftOuterStory">
             <span class="papertimesmedium"><?php echo "<b>HIGH COMMAND SEEKING OFFICERS</b><br />
-                    <hr style='width:90%; margin-top:0;'>The Axis Side is calling out to all axis players of yesterday and today. 
+                    <hr style='width:90%; margin-top:0;'>The OKW is calling out to all axis players of yesterday and today. 
                         The team is working together and we need <b>YOUR</b> help.  Victory can only be earned if all players team together and work towards a common goal.
                         Your side needs players willing to step forth from the ranks to be leaders.<br /><b>YOU</b> can be that leader<br /><BR />
                         <a href='http://battlegroundeurope.net/ocs'>CLICK HERE TO LEARN MORE</a>" ?> </span>
@@ -206,17 +206,14 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
 
         <div id="unitsInField">
             <span class="papertimeshuge">In The Field</span>
-                <div id="frenchField" valign='top'>
+                <div id="germanField" valign='top'>
                    <span class="papertimesmedium"><div><?php echo "<b>Germany</b>:".$gunit  ?></div></span>
                 </div>
-                <div id="britField" valign='top'>
-                   <span class="papertimesmedium"><div><?php echo"<b>Italy</b><br><br/>There have been persistant rumors that the Italians will be joining the frontlines in the future"?> </div></span>
-                </div>
-
         </div>
         <div id="bottomMiddle">
             <div id="bottomMidtop">
                 <span class="papertimesmedium"><?php echo $gstat3 ?> </span>
+                <hr style="width:90%; margin-top:0;">
             </div>
             <div id="bottomMidbottom">
                 <span class="papertimesmedium"><?php echo $gstat4 ?> </span>
@@ -226,7 +223,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
 
 <!-- 4th Row: By Country Factory stats/RDP completion -->
         <div id="bottomRightOuterStory">
-            <span class="papertimesmedium"><?php echo $promo ?></span>
+            <span class="papertimesmedium"><?php echo $gpromo ?></span>
         </div> 
 
 
