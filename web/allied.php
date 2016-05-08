@@ -196,40 +196,40 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
 							$image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
 							$selImage = $image[array_rand($image)];
 						?>
-                        <img id="poster" src="<?php echo $selImage ?>" style="width: 460px; height: 260px;"> 
+                        <img id="poster" src="<?php echo $selImage; ?>" style="width: 460px; height: 260px;"> 
 						<!-- End rotation Code --> </span>
         </div>
 <!-- Third Row: Units in Field | Story/image | stats1 story -->
 
         <div id="secondRightOuterStory">
-            <span class="papertimesmedium"><?php echo $stat1 ?></span>
+            <span class="papertimesmedium"><?php echo $stat1; ?></span>
         </div>        
 
         <div id="unitsInField">
             <span class="papertimeshuge">Units In The Field</span>
                 <div id="frenchField" valign='top'>
-                   <span class="papertimesmedium"><div> <?php echo "<b>French</b>:".$funit ?></div></span>
+                   <span class="papertimesmedium"><div> <?php echo "<b>French</b>:".$funit; ?></div></span>
                 </div>
                 <div id="britField" valign='top'>
-                   <span class="papertimesmedium"><div> <?php echo "<b>British</b>:". $bunit ?></div></span>
+                   <span class="papertimesmedium"><div> <?php echo "<b>British</b>:". $bunit; ?></div></span>
                 </div>
                 <div id="USField" valign='top'>
-                   <span class="papertimesmedium"><div> <?php echo "<b>United States</b>:".$uunit  ?> </div></span>
+                   <span class="papertimesmedium"><div> <?php echo "<b>United States</b>:".$uunit;  ?> </div></span>
                 </div>
         </div>
         <div id="bottomMiddle">
             <div id="bottomMidtop">
-                <span class="papertimesmedium"><?php echo $stat3 ?> </span>
+                <span class="papertimesmedium"><?php echo $stat3; ?> </span>
             </div>
             <div id="bottomMidbottom">
-                <span class="papertimesmedium"><?php echo $stat4 ?> </span>
+                <span class="papertimesmedium"><?php echo $stat4; ?> </span>
             </div>
         </div>
 
 
 <!-- 4th Row: By Country Factory stats/RDP completion -->
         <div id="bottomRightOuterStory">
-            <span class="papertimesmedium"><?php echo $promo ?></span>
+            <span class="papertimesmedium"><?php echo $promo; ?></span>
         </div> 
 
 

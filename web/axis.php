@@ -195,28 +195,31 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
 							$image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
 							$selImage = $image[array_rand($image)];
 						?>
-                        <img id="poster" src="<?php echo $selImage ?>" style="width: 460px; height: 260px;"> 
+                        <img id="poster" src="<?php echo $selImage; ?>" style="width: 460px; height: 260px;"> 
 						<!-- End rotation Code --> </span>
         </div>
 <!-- Third Row: Units in Field | Story/image | stats1 story -->
 
         <div id="secondRightOuterStory">
-            <span class="papertimesmedium"><?php echo $gstat1 ?></span>
+            <span class="papertimesmedium"><?php echo $gstat1; ?></span>
         </div>        
 
         <div id="unitsInField">
             <span class="papertimeshuge">In The Field</span>
                 <div id="germanField" valign='top'>
-                   <span class="papertimesmedium"><div><?php echo "<b>Germany</b>:".$gunit  ?></div></span>
+                   <span class="papertimesmedium"><div><?php echo "<b>Germany</b>:".$gunit;  ?></div></span>
                 </div>
         </div>
         <div id="bottomMiddle">
             <div id="bottomMidtop">
-                <span class="papertimesmedium"><?php echo $gstat3 ?> </span>
+                <span class="papertimesmedium"> <?php echo $gstat3; ?> </span>
+                
+            </div>
+            <div>
                 <hr style="width:90%; margin-top:0;">
             </div>
             <div id="bottomMidbottom">
-                <span class="papertimesmedium"><?php echo $gstat4 ?> </span>
+                <span class="papertimesmedium"><?php echo $gstat4; ?> </span>
             </div>
         </div>
 
