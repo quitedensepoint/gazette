@@ -35,7 +35,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
             </table>
         </div>
         <div>
-            <span id ="mainHeadline" class="paperheadline"><?php echo "<b>AXIS FORCES EDITION</b>" ?></SPAN>
+            <span id ="mainHeadline" class="paperheadline"><?php echo "<b>AXIS FORCES EDITION</b>"; ?></SPAN>
             
         </div>
         <div>
@@ -51,10 +51,10 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
                     <hr style='width:90%; margin-top:0;'>The OKW is calling out to all axis players of yesterday and today. 
                         The team is working together and we need <b>YOUR</b> help.  Victory can only be earned if all players team together and work towards a common goal.
                         Your side needs players willing to step forth from the ranks to be leaders.<br /><b>YOU</b> can be that leader<br /><BR />
-                        <a href='http://battlegroundeurope.net/ocs'>CLICK HERE TO LEARN MORE</a>" ?> </span>
+                        <a href='http://battlegroundeurope.net/ocs'>CLICK HERE TO LEARN MORE</a>"; ?> </span>
         </div>
         <div id="topLeftInnerStory">
-            <span class="papertimesmedium"><?php echo $gstat2  ?></span>
+            <span class="papertimesmedium"><?php echo $gstat2;  ?></span>
         </div>
         <div id="leader">
             <span class="papertimeshuge"><b>AXIS LEADERBOARD</b></span>
@@ -188,7 +188,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
 <!-- Second Row: Know Enemy | Stats Continue  -->
         <div id="knowEnemy">
             <hr style="width:90%; margin-top:0;">
-            <span class="papertimeshuge"><?php echo "Know Your Enemy<br />" ?>
+            <span class="papertimeshuge"><?php echo "Know Your Enemy<br />"; ?>
 						<!-- Code for image rotation -->
 						<?php
 							$iDir='assets/img/allied/units/';
@@ -226,7 +226,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
 
 <!-- 4th Row: By Country Factory stats/RDP completion -->
         <div id="bottomRightOuterStory">
-            <span class="papertimesmedium"><?php echo $gpromo ?></span>
+            <span class="papertimesmedium"><?php echo $gpromo; ?></span>
         </div> 
 
 

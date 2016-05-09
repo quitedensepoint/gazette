@@ -36,14 +36,14 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
             </table>
         </div>
         <div>
-            <span id ="mainHeadline" class="paperheadline"><?php echo "<b>ALLIED FORCES EDITION</b>" ?></SPAN>
+            <span id ="mainHeadline" class="paperheadline"><?php echo "<b>ALLIED FORCES EDITION</b>"; ?></SPAN>
             
         </div>
         <div>
             <img src="assets/img/header.gif" id="imagegazette">
         </div>
         <div id="topLeft" >
-            <span class="papertimeshuge" ><?php echo"FROM THE<br /> ALLIED COMMAND";?></span>
+            <span class="papertimeshuge" ><?php echo"FROM THE<br /> ALLIED COMMAND"; ?></span>
         </div>
         <div class='clear'></div>
 <!-- TOP ROW: HC recruiting | Small Story | Stats Leaderboard Block -->
@@ -52,10 +52,10 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                     <hr style='width:90%; margin-top:0;'>The Allied Side is calling out to all allied players of yesterday and today. 
                         The team is working together and we need <b>YOUR</b> help.  Victory can only be earned if all allied players team together and work towards a common goal.
                         The allied side needs players willing to step forth from the ranks to be leaders.<br /><b>YOU</b> can be that leader<br /><BR />
-                        <a href='http://battlegroundeurope.net/ocs'>CLICK HERE TO LEARN MORE</a>" ?> </span>
+                        <a href='http://battlegroundeurope.net/ocs'>CLICK HERE TO LEARN MORE</a>"; ?> </span>
         </div>
         <div id="topLeftInnerStory">
-            <span class="papertimesmedium"><?php echo $stat2  ?></span>
+            <span class="papertimesmedium"><?php echo $stat2;  ?></span>
         </div>
         <div id="leader">
             <span class="papertimeshuge"><b>ALLIED LEADERBOARD</b></span>
@@ -189,7 +189,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
 <!-- Second Row: Know Enemy | Stats Continue  -->
         <div id="knowEnemy">
             <hr style="width:90%; margin-top:0;">
-            <span class="papertimeshuge"><?php echo "Know Your Enemy<br />" ?>
+            <span class="papertimeshuge"><?php echo "Know Your Enemy<br />"; ?>
 						<!-- Code for image rotation -->
 						<?php
 							$iDir='assets/img/allied/units/';
@@ -211,7 +211,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                    <span class="papertimesmedium"><div> <?php echo "<b>French</b>:".$funit; ?></div></span>
                 </div>
                 <div id="britField" valign='top'>
-                   <span class="papertimesmedium"><div> <?php echo "<b>British</b>:". $bunit; ?></div></span>
+                   <span class="papertimesmedium"><div> <?php echo "<b>British</b>:".$bunit; ?></div></span>
                 </div>
                 <div id="USField" valign='top'>
                    <span class="papertimesmedium"><div> <?php echo "<b>United States</b>:".$uunit;  ?> </div></span>
