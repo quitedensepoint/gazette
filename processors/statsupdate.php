@@ -1371,6 +1371,6 @@ $dsortaxcaps = mysqli_query($dbConnCommunity, "SELECT callsign,
 while ($row = $dsortaxcaps->fetch_assoc())
     { mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period, sortcapscallsign, capstreak) VALUES ('2','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capstreaksinsert_LINE_); }
 
-echo "done";
+echo "Side Leaderboard (axis.php and allied.php) stats update -- complete \n";
 
 ?>
