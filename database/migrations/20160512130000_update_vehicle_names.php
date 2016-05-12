@@ -6,7 +6,10 @@ class UpdateVehicleNames extends AbstractMigration
 {
 	public function up()
 	{
-		// Add US to template 50
+		// Empties the gazette.vehicles table
+		$this->execute("TRUNCATE TABLE `vehicles`;");
+		
+		// Adds all of the current vehicles with their updated names from community.scoring_vehicles
 		$this->execute("INSERT INTO `scoring_vehicles` (`vehicle_id`, `country_id`, `branch_id`, `category_id`, `class_id`, `type_id`, `name`, `short_name`, `shown`, `modified`, `added`) VALUES
 								(1, 1, 2, 1, 2, 1, 'Spitfire Mk Ia', 'Spit Ia', 'True', '2016-05-11 15:04:08', '2001-09-24 17:30:58'),
 								(2, 1, 2, 1, 2, 2, 'Hurricane Mk I', 'Hurri I', 'True', '2004-02-27 20:36:11', '2001-09-24 17:30:58'),
