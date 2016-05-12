@@ -66,7 +66,7 @@ html, body {
 }
 /* Background Image */
 #container {
-	height: 1050px;
+	height: 1100px;
 	width: 905px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	margin-left: auto;

@@ -66,7 +66,7 @@ html, body {
 }
 /* Background Image */
 #container {
-	height: 1050px;
+	height: 1100px;
 	width: 905px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	margin-left: auto;
@@ -197,7 +197,7 @@ html, body {
     top: -870px;
     left:5px;
 	width: 150px;
-    height:375px;
+    height:390px;
 	text-align: center;
     border:1px black solid;
     
@@ -218,7 +218,7 @@ html, body {
 
 #bottomRightOuterStory {
     position:relative;
-    top:-1420px;
+    top:-1440px;
     left: 515px;
 	width: 375px;
     text-align: center;

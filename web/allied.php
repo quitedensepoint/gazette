@@ -203,6 +203,9 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
 
         <div id="secondRightOuterStory">
             <span class="papertimesmedium"><?php echo $stat1; ?></span>
+            <div>
+                <hr style="width:90%; margin-top:0;">
+            </div>
         </div>        
 
         <div id="unitsInField">
@@ -220,6 +223,9 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
         <div id="bottomMiddle">
             <div id="bottomMidtop">
                 <span class="papertimesmedium"><?php echo $stat3; ?> </span>
+            </div>
+            <div>
+                <hr style="width:90%; margin-top:0;">
             </div>
             <div id="bottomMidbottom">
                 <span class="papertimesmedium"><?php echo $stat4; ?> </span>

@@ -202,6 +202,9 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
 
         <div id="secondRightOuterStory">
             <span class="papertimesmedium"><?php echo $gstat1; ?></span>
+            <div>
+                <hr style="width:90%; margin-top:0;">
+            </div>
         </div>        
 
         <div id="unitsInField">

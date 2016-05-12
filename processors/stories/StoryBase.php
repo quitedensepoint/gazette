@@ -336,7 +336,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from wwii_vehtype WHERE vehtype_oid = ? LIMIT 1", [$vehicleId]);	
+			->prepare("SELECT * from community.scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
 
 		return $dbHelper->getAsArray($query);					
 	}
@@ -356,7 +356,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from vehicles WHERE country_id = ? AND category_id = ? "
+			->prepare("SELECT * from community.scoring_vehicles WHERE country_id = ? AND category_id = ? "
 				. "AND class_id = ? AND type_id = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
 
 		return $dbHelper->getAsArray($query);					
