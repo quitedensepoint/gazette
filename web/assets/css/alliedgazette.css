@@ -206,8 +206,8 @@ html, body {
 #frenchField {
     position:relative;
     top:-5px;
-    left:0px;
-	width: 60px;
+    left:-10px;
+	width: 70px;
     height:275px;
     vertical-align:top;
     text-align: right;
@@ -218,7 +218,7 @@ html, body {
     position:relative;
     top:-290px;
     left:65px;
-	width: 60px;
+	width: 70px;
     height:275px;
 	text-align: center;
     vertical-align:top;
@@ -230,7 +230,7 @@ html, body {
 #USField {
     position:relative;
     top:-575px;
-    left:133px;
+    left:143px;
 	width: 90px;
     height:275px;
 	text-align: left;
