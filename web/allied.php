@@ -60,7 +60,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
         </div>
         <div id="leader">
             <span class="papertimeshuge"><b>ALLIED LEADERBOARD</b></span>
-            <span class="paptertimesmedium"><br>Updated Hourly</span>
+            <!--<span class="paptertimesmedium"><br>Updated Hourly</span>-->
             <hr style="width:90%; margin-top:0;">
                 <div id="dailyLeader">
                     <span class="papertimesmedium">
@@ -142,6 +142,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                     <tr><td><b>Single Sortie</b></td></tr>
                     <tr><td>Most kills</td></tr>
                     <tr><td>Most Capture</td></tr>
+                    <tr><td><span class="paptertimesmedium">*Updated Hourly*</span></td></tr>
                 </table>
             </span>
         </div>
