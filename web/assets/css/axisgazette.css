@@ -66,7 +66,7 @@ html, body {
 }
 /* Background Image */
 #container {
-	height: 1100px;
+	height: 1120px;
 	width: 905px;
 	background-image: url("/assets/img/paper_tile.jpg");
 	margin-left: auto;
@@ -133,7 +133,7 @@ html, body {
     top:-381px;
     left:520px;
     width:375px;
-    height:600px;
+    height:610px;
     text-align: center;
     border: 1px solid black;
 }
@@ -175,7 +175,7 @@ html, body {
 
 #knowEnemy {
     position:relative;
-    top: -725px;
+    top: -760px;
 	width: 471px;
     height:275px;
 	text-align: center;
@@ -194,10 +194,10 @@ html, body {
 
 #unitsInField {
     position:relative;
-    top: -870px;
+    top: -900px;
     left:5px;
 	width: 150px;
-    height:390px;
+    height:400px;
 	text-align: center;
     border:1px black solid;
     
@@ -218,7 +218,7 @@ html, body {
 
 #bottomRightOuterStory {
     position:relative;
-    top:-1440px;
+    top:-1460px;
     left: 515px;
 	width: 375px;
     text-align: center;
@@ -228,7 +228,7 @@ html, body {
 
 #bottomMiddle {
     position:relative;
-    top:-1245px;
+    top:-1320px;
     left:160px;
 	width: 330px;
     height:350px;
