@@ -59,7 +59,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
         </div>
         <div id="leader">
             <span class="papertimeshuge"><b>AXIS LEADERBOARD</b></span>
-            <span class="paptertimesmedium"><br>Updated Hourly</span>
+            
             <hr style="width:90%; margin-top:0;">
                 <div id="dailyLeader">
                     <span class="papertimesmedium">
@@ -141,6 +141,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
                     <tr><td><b>Single Sortie</b></td></tr>
                     <tr><td>Most kills</td></tr>
                     <tr><td>Most Capture</td></tr>
+                    <tr><td><span class="paptertimesmedium">*Updated Hourly*</span></td></tr>
                 </table>
             </span>
         </div>
@@ -182,8 +183,10 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
                     <tr align='center'><td><b>Player</b></td><td><b>Total</b></td</tr>
                     <tr align='center'><td><?php while ($row = $gtkstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortmkillcallsign'])."</i></td><td>".$row['sortmkill']."</td>" ;} ?></td></tr>
                     <tr align='center'><td><?php  while ($row = $gtcapstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortcapscallsign'])."</i></td><td>".$row['capstreak']."</td>" ; }  ?></td></tr>
+                    
                 </table>
             </span>
+            
         </div>
         </div>
 <!-- Second Row: Know Enemy | Stats Continue  -->
