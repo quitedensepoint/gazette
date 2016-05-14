@@ -40,6 +40,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
             
         </div>
         <div>
+            <br />
             <img src="assets/img/header.gif" id="imagegazette">
         </div>
         <div id="topLeft" >
@@ -52,7 +53,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                     <hr style='width:90%; margin-top:0;'>The Allied Side is calling out to all allied players of yesterday and today. 
                         The team is working together and we need <b>YOUR</b> help.  Victory can only be earned if all allied players team together and work towards a common goal.
                         The allied side needs players willing to step forth from the ranks to be leaders.<br /><b>YOU</b> can be that leader<br /><BR />
-                        <a href='http://battlegroundeurope.net/ocs'>CLICK HERE TO LEARN MORE</a>"; ?> </span>
+                        <a href='http://battlegroundeurope.net/ocs' target='_blank'>CLICK HERE TO LEARN MORE</a>"; ?> </span>
         </div>
         <div id="topLeftInnerStory">
             <span class="papertimesmedium"><?php echo $stat2;  ?></span>
@@ -67,38 +68,38 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                         <tr align='center'><th colspan='2'>Last 24 Hours:</th></tr>
                         <tr align='center'><td colspan='2'><hr style="width:100%; margin-top:0;"></td></tr>
                         <tr align='center'><td><b>Total Pts.</b></td><td><b>Player</b></td></tr>
-                        <tr align='center'><td><?php while ($row = $daa->fetch_assoc())     { echo ROUND($row['aaapoints'],0)."</td><td><b>".$row['aaacallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $datg->fetch_assoc())    { echo ROUND($row['atgpoints'],0)."</td><td><b>".$row['atgcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $datr->fetch_assoc())    { echo ROUND($row['atrpoints'],0)."</td><td><b>".$row['atrcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $deng->fetch_assoc())    { echo ROUND($row['engpoints'],0)."</td><td><b>".$row['engcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dgren->fetch_assoc())   { echo ROUND($row['grenpoints'],0)."</td><td><b>".$row['grencallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dlmg->fetch_assoc())    { echo ROUND($row['lmgpoints'],0)."</td><td><b>".$row['lmgcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dmort->fetch_assoc())   { echo ROUND($row['mortpoints'],0)."</td><td><b>".$row['mortcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $drifle->fetch_assoc())  { echo ROUND($row['rpoints'],0)."</td><td><b>".$row['rcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dsmg->fetch_assoc())    { echo ROUND($row['smgpoints'],0)."</td><td><b>".$row['smgcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dsniper->fetch_assoc()) { echo ROUND($row['sniperpoints'],0)."</td><td><b>".$row['snipercallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dtank->fetch_assoc())   { echo ROUND($row['tankpoints'],0)."</td><td><b>".$row['tankcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dtruck->fetch_assoc())  { echo ROUND($row['truckpoints'],0)."</td><td><b>".$row['truckcallsign']."</b>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $daa->fetch_assoc())     { echo ROUND($row['aaapoints'],0)."</td><td><i>".ucfirst($row['aaacallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $datg->fetch_assoc())    { echo ROUND($row['atgpoints'],0)."</td><td><i>".ucfirst($row['atgcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $datr->fetch_assoc())    { echo ROUND($row['atrpoints'],0)."</td><td><i>".ucfirst($row['atrcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $deng->fetch_assoc())    { echo ROUND($row['engpoints'],0)."</td><td><i>".ucfirst($row['engcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dgren->fetch_assoc())   { echo ROUND($row['grenpoints'],0)."</td><td><i>".ucfirst($row['grencallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dlmg->fetch_assoc())    { echo ROUND($row['lmgpoints'],0)."</td><td><i>".ucfirst($row['lmgcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dmort->fetch_assoc())   { echo ROUND($row['mortpoints'],0)."</td><td><i>".ucfirst($row['mortcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $drifle->fetch_assoc())  { echo ROUND($row['rpoints'],0)."</td><td><i>".ucfirst($row['rcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dsmg->fetch_assoc())    { echo ROUND($row['smgpoints'],0)."</td><td><i>".ucfirst($row['smgcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dsniper->fetch_assoc()) { echo ROUND($row['sniperpoints'],0)."</td><td><i>".ucfirst($row['snipercallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dtank->fetch_assoc())   { echo ROUND($row['tankpoints'],0)."</td><td><i>".ucfirst($row['tankcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dtruck->fetch_assoc())  { echo ROUND($row['truckpoints'],0)."</td><td><i>".ucfirst($row['truckcallsign'])."</i>";} ?></td></tr>
                         <tr align='center'><td><br /></td></tr>
-                        <tr align='center'><td><?php while ($row = $dfight->fetch_assoc())  { echo ROUND($row['fightpoints'],0)."</td><td><b>".$row['fightcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dbomb->fetch_assoc())   { echo ROUND($row['bombpoints'],0)."</td><td><b>".$row['bombcallsign']."</b>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dfight->fetch_assoc())  { echo ROUND($row['fightpoints'],0)."</td><td><i>".ucfirst($row['fightcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dbomb->fetch_assoc())   { echo ROUND($row['bombpoints'],0)."</td><td><i>".ucfirst($row['bombcallsign'])."</i>";} ?></td></tr>
                         <tr align='center'><td><br /></td></tr>
-                        <tr align='center'><td><?php while ($row = $ddd->fetch_assoc())     { echo ROUND($row['ddpoints'],0)."</td><td><b>".$row['ddcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dpb->fetch_assoc())     { echo ROUND($row['pbpoints'],0)."</td><td><b>".$row['pbcallsign']."</b>";} ?></td></tr>
-                        <tr align='center'><td><?php while ($row = $dtt->fetch_assoc())     { echo ROUND($row['ttpoints'],0)."</td><td><b>".$row['ttcallsign']."</b>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $ddd->fetch_assoc())     { echo ROUND($row['ddpoints'],0)."</td><td><i>".ucfirst($row['ddcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dpb->fetch_assoc())     { echo ROUND($row['pbpoints'],0)."</td><td><i>".ucfirst($row['pbcallsign'])."</i>";} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dtt->fetch_assoc())     { echo ROUND($row['ttpoints'],0)."</td><td><i>".ucfirst($row['ttcallsign'])."</i>";} ?></td></tr>
                         <tr><td colspan='2'><hr style="width:100%"></td></tr>   
                         <tr align='center'><td><b>Total</b></td><td><b>Player</b></td></tr>
-                        <tr align='center'><td><?php while ($row = $dkills->fetch_assoc())  { echo $row['kills']."</td><td><b>".$row['killscallsign']."</b></td>" ;} ?> </td></tr>
-                        <tr align='center'><td><?php while ($row = $dcaps->fetch_assoc())   { echo $row['caps']."</td><td><b>".$row['capscallsign']."</b></td>" ;} ?></td></tr>
-                        <tr align='center'><td><?php  while ($row = $dkd->fetch_assoc())    { echo $row['kd']."</td><td><b>".$row['kdcallsign']."</b></td>" ;} ?></td></tr>
-                        <tr align='center'><td><?php  while ($row = $dtom->fetch_assoc())   { echo $row['tom']."</td><td><b>".$row['tomcallsign']."</b></td>" ;} ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dkills->fetch_assoc())  { echo $row['kills']."</td><td><i>".ucfirst($row['killscallsign'])."</i></td>" ;} ?> </td></tr>
+                        <tr align='center'><td><?php while ($row = $dcaps->fetch_assoc())   { echo $row['caps']."</td><td><i>".ucfirst($row['capscallsign'])."</i></td>" ;} ?></td></tr>
+                        <tr align='center'><td><?php  while ($row = $dkd->fetch_assoc())    { echo $row['kd']."</td><td><i>".ucfirst($row['kdcallsign'])."</i></td>" ;} ?></td></tr>
+                        <tr align='center'><td><?php  while ($row = $dtom->fetch_assoc())   { echo $row['tom']."</td><td><i>".ucfirst($row['tomcallsign'])."</i></td>" ;} ?></td></tr>
                         <tr align='center'><td><br /></td></tr>
-                        <tr align='center'><td><?php  while ($row = $dkrow->fetch_assoc())  { echo $row['krowpoints']."</td><td><b>".$row['krowcallsign']."</b></td>" ;} ?></td></tr>
-                        <tr align='center'><td><?php  while ($row = $dcrow->fetch_assoc())  { echo $row['crowpoints']."</td><td><b>".$row['crowcallsign']."</b></td>" ;} ?></td></tr>
+                        <tr align='center'><td><?php  while ($row = $dkrow->fetch_assoc())  { echo $row['krowpoints']."</td><td><i>".ucfirst($row['krowcallsign'])."</i></td>" ;} ?></td></tr>
+                        <tr align='center'><td><?php  while ($row = $dcrow->fetch_assoc())  { echo $row['crowpoints']."</td><td><i>".ucfirst($row['crowcallsign'])."</i></td>" ;} ?></td></tr>
                         <tr><td colspan='2'><hr style="width:100%"></td></tr>
                         <tr align='center'><td><b>Player</b></td><td><b>Total</b></td</tr>
-                        <tr align='center'><td><?php while ($row = $dkstreak->fetch_assoc()){ echo $row['sortmkill']."</td><td><b>".$row['sortmkillcallsign']."</b></td>" ;} ?></td></tr>
-                        <tr align='center'><td><?php  while ($row = $dcapstreak->fetch_assoc()){ echo $row['capstreak']."</td><td><b>".$row['sortcapscallsign']."</b></td>" ;}  ?></td></tr>
+                        <tr align='center'><td><?php while ($row = $dkstreak->fetch_assoc()){ echo $row['sortmkill']."</td><td><i>".ucfirst($row['sortmkillcallsign'])."</i></td>" ;} ?></td></tr>
+                        <tr align='center'><td><?php  while ($row = $dcapstreak->fetch_assoc()){ echo $row['capstreak']."</td><td><i>".ucfirst($row['sortcapscallsign'])."</i></td>" ;}  ?></td></tr>
                                                         
                     </table>
             </span>
@@ -150,38 +151,38 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                     <tr align='center'><th colspan='2'>Campaign Leaders:</th></tr>
                     <tr><td colspan='2'><hr style="width:100%; margin-top:0;"></td></tr>
                     <tr align='center'><td><b>Player</b></td><td><b>Points</b></td></tr>
-                    <tr align='center'><td><?php while ($row = $taa->fetch_assoc())     { echo "<b>".$row['aaacallsign']."</b></td><td>".ROUND($row['aaapoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tatg->fetch_assoc())    { echo "<b>".$row['atgcallsign']."</b></td><td>".ROUND($row['atgpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tatr->fetch_assoc())    { echo "<b>".$row['atrcallsign']."</b></td><td>".ROUND($row['atrpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $teng->fetch_assoc())    { echo "<b>".$row['engcallsign']."</b></td><td>".ROUND($row['engpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tgren->fetch_assoc())   { echo "<b>".$row['grencallsign']."</b></td><td>".ROUND($row['grenpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tlmg->fetch_assoc())    { echo "<b>".$row['lmgcallsign']."</b></td><td>".ROUND($row['lmgpoints'],0)."";}?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tmort->fetch_assoc())   { echo "<b>".$row['mortcallsign']."</b></td><td>".ROUND($row['mortpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $trifle->fetch_assoc())  { echo "<b>".$row['rcallsign']."</b></td><td>".ROUND($row['rpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tsmg->fetch_assoc())    { echo "<b>".$row['smgcallsign']."</b></td><td>".ROUND($row['smgpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tsniper->fetch_assoc()) { echo "<b>".$row['snipercallsign']."</b></td><td>".ROUND($row['sniperpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $ttank->fetch_assoc())   { echo "<b>".$row['tankcallsign']."</b></td><td>".ROUND($row['tankpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $ttruck->fetch_assoc())  { echo "<b>".$row['truckcallsign']."</b></td><td>".ROUND($row['truckpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $taa->fetch_assoc())     { echo "<i>".ucfirst($row['aaacallsign'])."</i></td><td>".ROUND($row['aaapoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tatg->fetch_assoc())    { echo "<i>".ucfirst($row['atgcallsign'])."</i></td><td>".ROUND($row['atgpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tatr->fetch_assoc())    { echo "<i>".ucfirst($row['atrcallsign'])."</i></td><td>".ROUND($row['atrpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $teng->fetch_assoc())    { echo "<i>".ucfirst($row['engcallsign'])."</i></td><td>".ROUND($row['engpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tgren->fetch_assoc())   { echo "<i>".ucfirst($row['grencallsign'])."</i></td><td>".ROUND($row['grenpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tlmg->fetch_assoc())    { echo "<i>".ucfirst($row['lmgcallsign'])."</i></td><td>".ROUND($row['lmgpoints'],0)."";}?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tmort->fetch_assoc())   { echo "<i>".ucfirst($row['mortcallsign'])."</i></td><td>".ROUND($row['mortpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $trifle->fetch_assoc())  { echo "<i>".ucfirst($row['rcallsign'])."</i></td><td>".ROUND($row['rpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tsmg->fetch_assoc())    { echo "<i>".ucfirst($row['smgcallsign'])."</i></td><td>".ROUND($row['smgpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tsniper->fetch_assoc()) { echo "<i>".ucfirst($row['snipercallsign'])."</i></td><td>".ROUND($row['sniperpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $ttank->fetch_assoc())   { echo "<i>".ucfirst($row['tankcallsign'])."</i></td><td>".ROUND($row['tankpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $ttruck->fetch_assoc())  { echo "<i>".ucfirst($row['truckcallsign'])."</i></td><td>".ROUND($row['truckpoints'],0)."";} ?></td></tr>
                     <tr><td><br /></td></tr>
-                    <tr align='center'><td><?php while ($row = $tfight->fetch_assoc())  { echo "<b>".$row['fightcallsign']."</b></td><td>".ROUND($row['fightpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tbomb->fetch_assoc())   { echo "<b>".$row['bombcallsign']."</b></td><td>".ROUND($row['bombpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tfight->fetch_assoc())  { echo "<i>".ucfirst($row['fightcallsign'])."</i></td><td>".ROUND($row['fightpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tbomb->fetch_assoc())   { echo "<i>".ucfirst($row['bombcallsign'])."</i></td><td>".ROUND($row['bombpoints'],0)."";} ?></td></tr>
                     <tr align='center'><td><br /></td></tr>
-                    <tr align='center'><td><?php while ($row = $tdd->fetch_assoc())     { echo "<b>".$row['ddcallsign']."</b></td><td>".ROUND($row['ddpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $tpb->fetch_assoc())     { echo "<b>".$row['pbcallsign']."</b></td><td>".ROUND($row['pbpoints'],0)."";} ?></td></tr>
-                    <tr align='center'><td><?php while ($row = $ttt->fetch_assoc())     { echo "<b>".$row['ttcallsign']."</b></td><td>".ROUND($row['ttpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tdd->fetch_assoc())     { echo "<i>".ucfirst($row['ddcallsign'])."</i></td><td>".ROUND($row['ddpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tpb->fetch_assoc())     { echo "<i>".ucfirst($row['pbcallsign'])."</i></td><td>".ROUND($row['pbpoints'],0)."";} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $ttt->fetch_assoc())     { echo "<i>".ucfirst($row['ttcallsign'])."</i></td><td>".ROUND($row['ttpoints'],0)."";} ?></td></tr>
                     <tr><td colspan='2'><hr style="width:100%"></td></tr>
                     <tr align='center'><td><b>Player</b></td><td><b>Total</b></td></tr>
-                    <tr align='center'><td><?php while ($row = $tkills->fetch_assoc())  { echo "<b>".$row['killscallsign']."</b></td><td>".$row['kills']."</td>" ;} ?> </td></tr>
-                    <tr align='center'><td><?php while ($row = $tcaps->fetch_assoc())   { echo "<b>".$row['capscallsign']."</b></td><td>".$row['caps']."</td>" ;} ?></td></tr>
-                    <tr align='center'><td><?php  while ($row = $tkd->fetch_assoc())    { echo "<b>".$row['kdcallsign']."</b></td><td>".$row['kd']."</td>" ;} ?></td></tr>
-                    <tr align='center'><td><?php  while ($row = $ttom->fetch_assoc())   { echo "<b>".$row['tomcallsign']."</b></td><td>".$row['tom']."</td>" ;} ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tkills->fetch_assoc())  { echo "<i>".ucfirst($row['killscallsign'])."</i></td><td>".$row['kills']."</td>" ;} ?> </td></tr>
+                    <tr align='center'><td><?php while ($row = $tcaps->fetch_assoc())   { echo "<i>".ucfirst($row['capscallsign'])."</i></td><td>".$row['caps']."</td>" ;} ?></td></tr>
+                    <tr align='center'><td><?php  while ($row = $tkd->fetch_assoc())    { echo "<i>".ucfirst($row['kdcallsign'])."</i></td><td>".$row['kd']."</td>" ;} ?></td></tr>
+                    <tr align='center'><td><?php  while ($row = $ttom->fetch_assoc())   { echo "<i>".ucfirst($row['tomcallsign'])."</i></td><td>".$row['tom']."</td>" ;} ?></td></tr>
                     <tr align='center'><td><br /></td></tr>
-                    <tr align='center'><td><?php  while ($row = $tkrow->fetch_assoc())  { echo "<b>".$row['krowcallsign']."</b></td><td>".$row['krowpoints']."</td>" ;} ?></td></tr>
-                    <tr align='center'><td><?php  while ($row = $tcrow->fetch_assoc())  { echo "<b>".$row['crowcallsign']."</b></td><td>".$row['crowpoints']."</td>" ;} ?></td></tr>
+                    <tr align='center'><td><?php  while ($row = $tkrow->fetch_assoc())  { echo "<i>".ucfirst($row['krowcallsign'])."</i></td><td>".$row['krowpoints']."</td>" ;} ?></td></tr>
+                    <tr align='center'><td><?php  while ($row = $tcrow->fetch_assoc())  { echo "<i>".ucfirst($row['crowcallsign'])."</i></td><td>".$row['crowpoints']."</td>" ;} ?></td></tr>
                     <tr><td colspan='2'><hr style="width:100%"></td></tr>
                     <tr align='center'><td><b>Player</b></td><td><b>Total</b></td</tr>
-                    <tr align='center'><td><?php while ($row = $tkstreak->fetch_assoc()){ echo "<b>".$row['sortmkillcallsign']."</b></td><td>".$row['sortmkill']."</td>" ;} ?></td></tr>
-                    <tr align='center'><td><?php  while ($row = $tcapstreak->fetch_assoc()){ echo "<b>".$row['sortcapscallsign']."</b></td><td>".$row['capstreak']."</td>" ; }  ?></td></tr>
+                    <tr align='center'><td><?php while ($row = $tkstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortmkillcallsign'])."</i></td><td>".$row['sortmkill']."</td>" ;} ?></td></tr>
+                    <tr align='center'><td><?php  while ($row = $tcapstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortcapscallsign'])."</i></td><td>".$row['capstreak']."</td>" ; }  ?></td></tr>
                 </table>
             </span>
         </div>
