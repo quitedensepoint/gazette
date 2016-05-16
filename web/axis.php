@@ -195,8 +195,8 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
             <span class="papertimeshuge"><?php echo "Know Your Enemy<br />"; ?>
 						<!-- Code for image rotation -->
 						<?php
-							$iDir='assets/img/allied/units/';
-							$image = glob ($iDir.'*.{jpg,png,gif}', GLOB_BRACE);
+							$pDir='assets/img/axis/units/';
+							$image = glob ($pDir.'*.{jpg,png,gif}', GLOB_BRACE);
 							$selImage = $image[array_rand($image)];
 						?>
                         <img id="poster" src="<?php echo $selImage; ?>" style="width: 460px; height: 260px;"> 
