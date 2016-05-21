@@ -252,7 +252,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 							$selImage = $image[array_rand($image)];
 						?>
 						<!-- End rotation Code -->
-						<img id="poster" src="<?php echo $selImage ?>" style="width: 170px;"> 
+						<img id="poster" src="<?php echo $selImage; ?>" style="width: 170px;"> 
                     </div>
                     <div id='top'>  </div>  
 <!-- Article Below Poster Right Side-->
@@ -271,11 +271,11 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 							    $selImage = $image[array_rand($image)];
 						    ?>
 						    <!-- End rotation Code -->
-						    <img id="poster" src="<?php echo $selImage ?>"> 
+						    <img id="poster" src="<?php echo $selImage; ?>"> 
          </div>
 <!-- Article Below Poster Left Side-->
 			<div  id='middleBottomLeftStory' class="story-detail">
-                <?= $indexAlliedStats1 ?>
+                <?= $indexAlliedStats1; ?>
             </div>
         </div>
 
@@ -291,6 +291,8 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 						    $firstArticle = str_replace('<span class="override">', '', $firstArticle[0]);
 						    $firstArticle = str_replace('<a href="/index.php', '<a href="http://www.battlegroundeurope.com/index.php', $firstArticle);
 						    $firstArticle = str_replace('class="contentpaneopen"', 'class="contentpaneopen" width="100%"', $firstArticle);
+							$firstArticle = str_replace('class="contentpagetitle"', 'target="_blank" class="contentpagetitle"', $firstArticle);
+							$firstArticle = str_replace('class="readon"', 'target="_blank" class="readon"', $firstArticle);
 						    echo $firstArticle;
 					    ?>
             
@@ -299,7 +301,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 <!-- Bottom Left Story -->
             <div id="bottomLeft">
                 <hr style="width: 90%;">
-                <?php echo $indexGeneral1 ?>
+                <?php echo $indexGeneral1; ?>
             </div>
 <!-- Frames below the news -->
             <div id='belowNews'>
@@ -317,12 +319,12 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 										<tr align='center'>
 <!-- Current AO's -->
 											<td>
-                            <?php echo $indexAxisStats1	 ?>
+                            <?php echo $indexAxisStats1;	 ?>
                         </td>
 											</td>
 <!-- Recent Captured cities --> 
 											<td style="text-align: center; width:268px;"> 
-                                                <?php echo $indexGeneral2 ?>
+                                                <?php echo $indexGeneral2; ?>
                                             </td>
 							</table>
 						</td>

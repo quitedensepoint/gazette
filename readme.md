@@ -4,8 +4,9 @@ Manages the World War II Online Gazette application
 ## Dependencies
 The application relies on the following dependencies in order to function correctly.
 
-* [robmorgan/phinx](https://github.com/robmorgan/phinx)
-* [monolog/monolog](https://github.com/Seldaek/monolog)
+* [robmorgan/phinx](https://github.com/robmorgan/phinx) - Database Migrations
+* [monolog/monolog](https://github.com/Seldaek/monolog) - Logging
+* [guzzlehttp/guzzle](https://github.com/guzzle/guzzle) - Remote Connectivity
 
 Use *composer install* as described below to install these dependencies.
 
@@ -84,6 +85,16 @@ The small WebMap that is on the Gazette is its own small version of the actual W
 The WebMap is environment specific, this is so that the proper data is pulled. While testing, if the data was soley pulled from the live server, the times would become offset and then no data would be pulled for the dev server. The environment setting in the DBconn.example.php will allow for configuration.
 
 > *'webmap-environment' => 'live'*
+
+## Player Emails
+When a story that is system generated references the deeds of a specific player (the story is "player centric"), the system will attempt to generate an email that will go out to the player alerting them of their mention in the gazette. How the email is sent will depend on the settings specific in the options of the DBConn.php. See DBConn.example.php for the settings
+
+The handlers defined in the settings do different things.
+- Use *IgnoreHandler* when developing. This ensures that the code runs correctly without modification, but the system will ignore any requests to send an email.
+- Use *TestHandler* to test sending out emails so you can see what they look like when developing. This allows you to set an array of recipients to send to, via SMTP.
+- Use *RESTHandler* for production. This will send requests according to the specification to a remote REST service which will handle placeholder replacements and determining the real recipient to send the email to.
+
+For more information, see the documentation at http://at.playnet.com:8090/display/COMM/Gazette+Player+Emails
 
 ## Error Handling
 Ensure the config file (DBConn.example.php) for the options variable *error_handling* has the *show_errors* variable set to false. This will ensure the errors aren't shown in the "bombed out" screen. Set it to true for developing.

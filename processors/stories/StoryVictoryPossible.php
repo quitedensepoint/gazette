@@ -1,16 +1,18 @@
 <?php
 
+use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+
 /**
  * Executes the logic to generate a story from the 
  * "Victory Possible" source.
  */
 class StoryVictoryPossible extends StoryVictoryBase implements StoryInterface {
 	
-	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
-		parent::__construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData);
+	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
+		parent::__construct($creatorData, $playerMailHandler, $dbConnections);
 		
-		self::$minOwnershipPercent = 85;	
-		self::$maxOwnershipPercent = 87;				
+		self::$maxOwnershipPercent = 85;
+		self::$minOwnershipPercent = 87;			
 	}
 	
 	public function isValid() {

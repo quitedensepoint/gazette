@@ -50,7 +50,10 @@ class StoryRDPIntro extends StoryRDPBase implements StoryInterface {
 		
 		$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);
 		$enemyVehicle = $this->getVehicleByClassification($enemyCountry['country_id'], $action['veh_category_id'], $action['veh_class_id'], $action['veh_type_id']);
-		$this->creatorData['template_vars']['enemy_vehicle']	= $enemyVehicle[0]['name'];	
+
+		// Sometimes a vehicle may not be available to look up, so check and apply a default name if not known
+		$vehicleName = count($enemyVehicle) == 1 ? $enemyVehicle[0]['name'] : 'unknown enemy';
+		$this->creatorData['template_vars']['enemy_vehicle']	= $vehicleName;	
 
 		return true;
 		

@@ -1,10 +1,11 @@
 <?php
 
-/**
+/*
  * Executes the logic to generate a story from the 
  * "Spawn Lister" source.
  * 
- * @todo Find out exactly what this is meant to do and where it is meant to appear
+ * 
+ * => This story Generates the spawn lists for the 'In the Field' - shows what vehicle type each country has currently available to spawn
  */
 class StorySpawnLister extends StoryBase implements StoryInterface {
 	

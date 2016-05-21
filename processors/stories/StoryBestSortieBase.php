@@ -1,5 +1,7 @@
 <?php
 
+use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+
 /**
  * This class is a base class for the various "Best" attached functionality. It allows us
  * access to some common functions so we don't have to duplicate them across
@@ -9,7 +11,31 @@
  */
 abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 	
+	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
+		parent::__construct($creatorData, $playerMailHandler, $dbConnections);
+		$this->isPlayerCentric = true;			
+	}	
+	
 	const UNKNOWN_DURATION_TEXT = "a few";
+	
+	/**
+	 * Sets the player that performed the kills in the sortie
+	 * 
+	 * @param integer $id
+	 * @return array|false
+	 */
+	public function setProtagonist($id)
+	{
+		$this->protagonistId = $id;		
+		$player = $this->getPlayerById($this->protagonistId);
+		if(count($player) == 0)
+		{
+			return false;
+		}
+		$this->creatorData['template_vars']['player'] = $player[0]['callsign'];
+		
+		return $player[0];
+	}
 	
 	/**
 	 * Returns a string representing the number of minutes on a sortie,

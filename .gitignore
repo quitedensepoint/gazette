@@ -3,3 +3,5 @@ DBconn.php
 /nbproject/
 /vendor/
 /phinx.yml
+# Test Email Handler Output
+/mailoutput/

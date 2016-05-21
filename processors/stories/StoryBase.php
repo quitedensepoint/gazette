@@ -1,5 +1,7 @@
 <?php
 
+use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+
 /**
  * An abstract class to help parse the stories
  */
@@ -48,6 +50,11 @@ abstract class StoryBase
 	 */
 	protected $creatorData;
 	
+	/**
+	 * The ID of the player who is the protaganist (subject) of a story, if any
+	 * @var integer
+	 */
+	protected $protagonistId = null;
 	
 	/**
 	 * An array of directions  for entering into stories.
@@ -87,14 +94,39 @@ abstract class StoryBase
 	 */
 	public static $timezone;
 	
-	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe, $creatorData) {
-		$this->dbConn = $dbConn;
-		$this->dbHelper = new dbhelper($dbConn);
-		$this->dbConnWWII = $dbConnWWII;
-		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
-		$this->dbConnToe = $dbConnToe;
-		$this->creatorData = $creatorData;
+	/**
+	 * An array of database connections
+	 * 
+	 * @var array
+	 */
+	protected $dbConnections;
+	
+	/**
+	 * The object that handles the generation and sending of customer emails
+	 * 
+	 * @var HandlerInterface 
+	 */
+	protected $playerMailHandler;
+	
+	/**
+	 * Is the story revolving around a player?
+	 * 
+	 * @var boolean 
+	 */
+	protected $isPlayerCentric = false;
+	
+	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
 		
+		$this->creatorData = $creatorData;
+		$this->playerMailHandler = $playerMailHandler;
+		
+		$this->dbConnections = $dbConnections;
+		$this->dbConn = $dbConnections['dbConn'];
+		$this->dbConnWWII = $dbConnections['dbConnWWII'];
+		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
+		$this->dbConnToe = $dbConnections['dbConnToe'];		
+		$this->dbHelper = new dbhelper($this->dbConn);
+
 		self::$timezone = new DateTimeZone('America/Chicago');
 	}
 	
@@ -304,7 +336,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from wwii_vehtype WHERE vehtype_oid = ? LIMIT 1", [$vehicleId]);	
+			->prepare("SELECT * from community.scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
 
 		return $dbHelper->getAsArray($query);					
 	}
@@ -324,7 +356,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from vehicles WHERE country_id = ? AND category_id = ? "
+			->prepare("SELECT * from community.scoring_vehicles WHERE country_id = ? AND category_id = ? "
 				. "AND class_id = ? AND type_id = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
 
 		return $dbHelper->getAsArray($query);					
@@ -562,11 +594,19 @@ abstract class StoryBase
 	 * Retrieves a randomly selected country not on a specific side, or null if cannot find one
 	 * 
 	 * @param integer $sideId
+	 * @param boolean $active if true, will choose from only active countries
 	 * @return array|null
 	 */
-	public function getRandomEnemyCountry($sideId)
+	public function getRandomEnemyCountry($sideId, $active = true)
 	{
 		$dbHelper = new dbhelper($this->dbConn);
+		
+		$query = "select * from countries where side_id != ? ";
+		if($active)
+		{
+			$query .= " AND active = 1";
+		}
+		$query .= " order by RAND() limit 1";
 		
 		$query = $dbHelper
 			->prepare("select * from countries where side_id != ? order by RAND() limit 1",[$sideId]);	
@@ -618,7 +658,7 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 		
 		$query = $dbHelper
-			->prepare("select * from countries where country_id = ? limit 1",[$countryId]);	
+			->prepare("select * from countries where story_countries.country_id = ? limit 1",[$countryId]);	
 		
 		$result = $dbHelper->getAsArray($query);
 		
@@ -691,4 +731,71 @@ abstract class StoryBase
 		
 		return $dbHelper->getAsArray($query);
 	}
+	
+	/**
+	 * Is this story about a specific player?
+	 * 
+	 * @return boolean
+	 */
+	public function isPlayerCentric()
+	{
+		return $this->isPlayerCentric;
+	}
+	
+	/**
+	 * Get the player id associated with the story, if any
+	 * @return integer|null
+	 */
+	public function getProtagonistId()
+	{
+		return $this->protagonistId;
+	}
+	
+	/**
+	 * Generates the HTML content for the player email from file
+	 * 
+	 * @param array $template
+	 * @return string
+	 */
+	public function generateHtmlContent($template, array $extraData = []) 
+	{
+		$story = $this->makeStory($template);
+		
+		$emailTemplate = file_get_contents(__DIR__ . '/../../templates/email/player-story.html');
+		
+		$emailTemplate = str_replace('%TITLE%', $story['title'], $emailTemplate);
+		$emailTemplate = str_replace('%STORY_CONTENT%', $story['body'], $emailTemplate);
+		
+		foreach($extraData as $key => $value)
+		{
+			$emailTemplate = str_replace('%' . strtoupper($key) . '%', trim($value), $emailTemplate);
+		}		
+
+		return $emailTemplate;
+
+	}
+	
+	/**
+	 * Generates the text content for the player email from a file
+	 * 
+	 * @param array $template
+	 * @return string
+	 */
+	public function generateTextContent($template, array $extraData = []) 
+	{
+		// Strip out the HTML where we can.
+		$story = $this->makeStory($template);
+		
+		$emailTemplate = file_get_contents(__DIR__ . '/../../templates/email/player-story.txt');
+		
+		$emailTemplate = str_replace('%TITLE%', strip_tags($story['title']), $emailTemplate);
+		$emailTemplate = str_replace('%STORY_CONTENT%', strip_tags($story['body']), $emailTemplate);
+		foreach($extraData as $key => $value)
+		{
+			$emailTemplate = str_replace('%' . strtoupper($key) . '%', strip_tags(trim($value)), $emailTemplate);
+		}
+		
+		return $emailTemplate;
+
+	}	
 }

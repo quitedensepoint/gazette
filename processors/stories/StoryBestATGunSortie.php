@@ -37,14 +37,10 @@ class StoryBestATGunSortie extends StoryBestSortieBase implements StoryInterface
 		/**
 		 * Get the player who did the kills
 		 */
-		$player = $this->getPlayerById($kill['killer_id']);
-		if(count($player) == 0)
+		if(!$this->setProtagonist($kill['killer_id']))
 		{
 			return false;
-		}
-		$player = $player[0];
-		$this->creatorData['template_vars']['player'] = $player['callsign'];
-		
+		}	
 		
 		/**
 		 * Get the sortie info for the player

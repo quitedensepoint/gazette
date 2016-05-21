@@ -12,6 +12,9 @@
 require_once(__DIR__ . "/../include/dbhelper.php");
 require_once(__DIR__ . "/stories/require.php");
 
+use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+use Playnet\WwiiOnline\Common\PlayerMail\Message;
+use Playnet\WwiiOnline\Common\PlayerMail\MessagePlayer;
 use Playnet\WwiiOnline\WwiiOnline\Models\Side\Allied\Allied;
 use Playnet\WwiiOnline\WwiiOnline\Models\Side\Axis\Axis;
 
@@ -59,13 +62,30 @@ class StoryProcessor {
 	 */
 	private $countryStories = [];
 	
-	public function __construct($dbConn, $dbConnWWII, $dbConnWWIIOnline, $dbConnToe) {
-		$this->dbConn = $dbConn;
-		$this->dbConnWWII = $dbConnWWII;
-		$this->dbConnWWIIOnline = $dbConnWWIIOnline;
-		$this->dbConnToe = $dbConnToe;
-		$this->dbHelper = new dbhelper($this->dbConn);
+	/**
+	 *
+	 * @var Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface 
+	 */
+	private $playerMailHandler;
+	
+	/**
+	 * An array of the database connections the story generation can use
+	 * 
+	 * @var array
+	 */
+	private $dbConnections;
+	
+	public function __construct(HandlerInterface $playerMailHandler, array $dbConnections = array()) 
+	{
+		$this->dbConnections = $dbConnections;
+		$this->dbConn = $dbConnections['dbConn'];
+		$this->dbConnWWII = $dbConnections['dbConnWWII'];
+		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
+		$this->dbConnToe = $dbConnections['dbConnToe'];
 		
+		$this->dbHelper = new dbhelper($this->dbConn);
+		$this->playerMailHandler = $playerMailHandler;
+
 		$this->init();
 	}
 	
@@ -268,11 +288,19 @@ class StoryProcessor {
 			// If the country has no stories, go to the next country
 			if(!isset($this->countryStories[$activeCountry['country_id']]))
 			{
-				echo " -- No stories\n";
+				echo sprintf(" -- No stories for %s\n", $activeCountry['name']);
 				
 				continue;
 			}
 			echo "\n";
+			
+			// Check to see if the current story can be used by the active country
+			// COMMDEV-808
+			if(!in_array($storyData['story_id'], $this->countryStories[$activeCountry['country_id']]))
+			{
+				echo sprintf(" -- Story %d is not available for %s\n", $storyData['story_id'], $activeCountry['name']);				
+				continue;				
+			}
 			
 			if(($result = $this->processSourceForCountry($storyData, $source, $activeCountry, $templateId)) !== false)
 			{
@@ -332,7 +360,7 @@ class StoryProcessor {
 		}
 
 		/* @var $storyCreator StoryInterface */
-		$storyCreator = new $storyCreatorClass($this->dbConn, $this->dbConnWWII, $this->dbConnWWIIOnline, $this->dbConnToe, $creatorData);
+		$storyCreator = new $storyCreatorClass($creatorData, $this->playerMailHandler, $this->dbConnections);
 		echo sprintf("          Checking story %s\n" , $storyCreatorClass);
 
 		if($storyCreator->isValid())
@@ -361,6 +389,8 @@ class StoryProcessor {
 			$content['debug_data'] = ['source_id' => $source['source_id'], 'template_id' => $template['template_id']];
 			
 			$this->updateStory($storyData['story_key'], $source['life'], $template['template_id']);
+			
+			$this->checkPlayerStory($storyCreator, $template);
 			
 			return $content;
 		}
@@ -637,9 +667,34 @@ class StoryProcessor {
 			}
 		}
 		
-
-		
 		return $output;
+	}
+	
+	/**
+	 * Checks the story to confirm it is about a player and prepares to send the
+	 * email to that player
+	 * 
+	 * @param StoryBase $storyCreator
+	 * @param array $template
+	 */
+	public function checkPlayerStory(StoryBase $storyCreator, $template)
+	{
+		
+		if($storyCreator->isPlayerCentric())
+		{
+			echo "Sending out player story\n";
+			$extraData = [
+				'assets_base_url' => $this->playerMailHandler->getOption('assets_base_url')
+			]; 
+			
+			$message = new Message();
+			$message->setContent($storyCreator->generateHtmlContent($template, $extraData));
+			$message->setTextContent($storyCreator->generateTextContent($template, $extraData));
+			$message->addPlayer(new MessagePlayer($storyCreator->getProtagonistId()));
+			// $content['playerMailData'] = $storyCreator->getPlayerEmailData($template);
+
+			$this->playerMailHandler->addMessage($message);
+		}
 	}
 	
 	/**

@@ -3,8 +3,12 @@
     "description": "WWIIOnline Gazette",
     "require": {
         "robmorgan/phinx": "^0.5.1",
-        "monolog/monolog": "^1.17"
+        "monolog/monolog": "^1.17",
+        "guzzlehttp/guzzle" : "6.2.0"
     },
+    "require-dev": {
+        "swiftmailer/swiftmailer": "5.4.1"
+    },    
     "authors": [
         {
             "name": "Brian Steinke",
