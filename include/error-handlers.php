@@ -19,14 +19,6 @@ set_error_handler(function($errno , $errstr, $errfile, $errline, $errcontext) {
 	global $options;
 	
 	/**
-	 * This function will erase any buffered output so that the error page looks correct
-	 */
-	if(ob_get_contents() !== false)
-	{
-		ob_clean();
-	}
-	
-	/**
 	 * Log the error
 	 */
 	$streamHandler = new \Monolog\Handler\StreamHandler(__DIR__ . "/../logs/error.log");
@@ -42,6 +34,20 @@ set_error_handler(function($errno , $errstr, $errfile, $errline, $errcontext) {
 	
 	$showErrors = $options['error_handling']['show_errors'];
 	
+	// If the PHP script has been run from the command line, where server
+	// protocol does not exist, we just run as we don't want to display content anywhere
+	if(!isset($_SERVER['SERVER_PROTOCOL']))
+	{
+		return;
+	}
+	
+	/**
+	 * This function will erase any buffered output so that the error page looks correct
+	 */
+	if(ob_get_contents() !== false)
+	{
+		ob_clean();
+	}
 	
 	/**
 	 * Parameters will be applied in the include script
