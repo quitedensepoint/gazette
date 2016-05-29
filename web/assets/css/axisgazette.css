@@ -58,12 +58,11 @@ html, body {
     clear:both;
 }
 
-
-
 #top {
 	position: absolute;
     top: 0px;
 }
+
 /* Background Image */
 #container {
 	height: 1120px;
@@ -86,15 +85,14 @@ html, body {
     top:27px;
     width: 905px;
     text-align: center;
-    
 }
+
 /* Gazette Image */
 #imagegazette {
     position:relative;
     left: 300px;
     top:50px;
     width:598px;
-   
 }
 
 /* L Side headline - "from desk of allied commander */
@@ -103,10 +101,9 @@ html, body {
     width: 300px;
 	text-align: center;
 	padding: 5px;
-    }
+}
 
 /*Left outer Article*/
-
 #topLeftOuterStory {
     position:relative;
     width: 300px;
@@ -137,16 +134,19 @@ html, body {
     text-align: center;
     border: 1px solid black;
 }
+
 /*Within leader - queries for top player within 24 hours*/
 #dailyLeader {
     position:relative;
     top:-8px;
-    
     width: 125px;
     height:465px;
-	text-align: right;
+	text-align: center;
     padding: 5px;
-    
+}
+
+#dailyLeader > tr, th, td {
+    padding: 0px;
 }
 
 #catIDLeader {
@@ -157,9 +157,8 @@ html, body {
     height:465px;
 	text-align: center;
     padding: 5px;
-    
-
 }
+
 /*within leader queries for top player for campaign*/
 #campaignLeader {
     position:relative;
@@ -167,10 +166,13 @@ html, body {
     left:232px;
 	width: 130px;
     height:465px;
-	text-align:left;
+	text-align:center;
     vertical-align:top;
     padding: 5px;
-    
+}
+
+#campaignLeader > tr, th, td {
+    padding: 0px;
 }
 
 #knowEnemy {
@@ -179,7 +181,6 @@ html, body {
 	width: 500px;
     height:275px;
 	text-align: center;
-    
 }
 
 #secondRightOuterStory {
@@ -200,7 +201,6 @@ html, body {
     height:425px;
 	text-align: center;
     border:1px black solid;
-    
 }
 
 #germanField {
@@ -212,9 +212,7 @@ html, body {
     vertical-align:top;
     text-align: center;
     padding: 5px;
-   
 }
-
 
 #bottomRightOuterStory {
     position:relative;
@@ -244,7 +242,6 @@ html, body {
 #botomMidBottom {
     position:relative;
 }
-
 
 /** data styles **/
 .player, .side, .enemy_side, .side_adj {
