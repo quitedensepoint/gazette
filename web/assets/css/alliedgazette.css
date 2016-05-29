@@ -58,12 +58,11 @@ html, body {
     clear:both;
 }
 
-
-
 #top {
 	position: absolute;
     top: 0px;
 }
+
 /* Background Image */
 #container {
 	height: 1120px;
@@ -88,6 +87,7 @@ html, body {
     text-align: center;
     
 }
+
 /* Gazette Image */
 #imagegazette {
     position:relative;
@@ -103,17 +103,15 @@ html, body {
     width: 300px;
 	text-align: center;
 	padding: 5px;
-    }
+}
 
 /*Left outer Article*/
-
 #topLeftOuterStory {
     position:relative;
     width: 300px;
     height:155px;
     text-align: center;
     padding: 5px;
-    
 }
 
 #topLeftInnerStory {
@@ -124,7 +122,6 @@ html, body {
     width: 170px;
     text-align:center;
     padding:5px;
-    
 }
 
 /* production stories and units in field */
@@ -137,16 +134,19 @@ html, body {
     text-align: center;
     border: 1px solid black;
 }
+
 /*Within leader - queries for top player within 24 hours*/
 #dailyLeader {
     position:relative;
     top:-8px;
-    
     width: 125px;
     height:465px;
 	text-align: right;
     padding: 5px;
-    
+}
+
+#dailyLeader > tr, th, td {
+    padding: 0px;
 }
 
 #catIDLeader {
@@ -157,9 +157,8 @@ html, body {
     height:465px;
 	text-align: center;
     padding: 5px;
-    
-
 }
+
 /*within leader queries for top player for campaign*/
 #campaignLeader {
     position:relative;
@@ -170,7 +169,10 @@ html, body {
 	text-align:left;
     vertical-align:top;
     padding: 5px;
-    
+}
+
+#campaignLeader > tr, th, td {
+    padding: 0px;
 }
 
 #knowEnemy {
@@ -179,7 +181,6 @@ html, body {
 	width: 471px;
     height:275px;
 	text-align: center;
-    
 }
 
 #secondRightOuterStory {
@@ -200,7 +201,6 @@ html, body {
     height:400px;
 	text-align: center;
     border:1px black solid;
-    
 }
 
 #frenchField {
@@ -214,6 +214,7 @@ html, body {
     padding: 5px;
     border-right:1px black solid;
 }
+
 #britField {
     position:relative;
     top:-290px;
@@ -224,7 +225,6 @@ html, body {
     vertical-align:top;
     padding: 5px;
     border-right:1px black solid;
-    
 }
 
 #USField {
@@ -236,7 +236,6 @@ html, body {
 	text-align: left;
     vertical-align:top;
     padding: 5px;
-    
 }
 
 #bottomRightOuterStory {
@@ -246,7 +245,6 @@ html, body {
 	width: 375px;
     text-align: center;
     padding: 5px;
-
 }
 
 #bottomMiddle {
@@ -255,13 +253,11 @@ html, body {
     left:250px;
 	width: 250px;
     height:350px;
-	padding: 5px;
-    
+	padding: 5px;  
 }
 
 #bottomMidtop {
     position:relative;
-
 }
 
 #botomMidBottom {
