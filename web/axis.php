@@ -44,6 +44,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
         <div>
             <br />
             <img src="assets/img/header.gif" id="imagegazette">
+			<span id="version">Version: 2.2</span>
         </div>
         <div id="topLeft" >
             <span class="papertimeshuge" ><?php echo"FROM THE<br /> AXIS COMMAND";?></span>

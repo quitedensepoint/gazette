@@ -277,3 +277,12 @@ html, body {
 .player {     
     font-weight: bold;
 }
+
+#version {
+    position: relative;
+    top: 45.6px;
+    left: 140px;
+    font-size: 6pt;
+    background-color: transparent;
+    color: #cccccc;
+}
