@@ -99,7 +99,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
                         <tr><td><?php  while ($row = $gdkrow->fetch_assoc()){ echo round($row['krowpoints'],0)."</td><td><i>".ucfirst($row['krowcallsign'])."</i></td>";} ?></td></tr>
                         <tr><td><?php  while ($row = $gdcrow->fetch_assoc()){ echo round($row['crowpoints'],0)."</td><td><i>".ucfirst($row['crowcallsign'])."</i></td>";} ?></td></tr>
                         <tr><td colspan='2'><hr style="width:100%"></td></tr>
-                        <tr><td><b>Total</b></td><td><b>Player</b></td</tr>
+                        <tr><td><b>Total</b></td><td><b>Player</b></td></tr>
                         <tr><td><?php while ($row = $gdkstreak->fetch_assoc()){ echo $row['sortmkill']."</td><td><i>".ucfirst($row['sortmkillcallsign'])."</i></td>";} ?></td></tr>
                         <tr><td><?php  while ($row = $gdcapstreak->fetch_assoc()){ echo $row['capstreak']."</td><td><i>".ucfirst($row['sortcapscallsign'])."</i></td>";}  ?></td></tr>                
                     </table>
@@ -182,7 +182,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
                     <tr><td><?php  while ($row = $gtkrow->fetch_assoc()){ echo "<i>".ucfirst($row['krowcallsign'])."</i></td><td>".$row['krowpoints']."</td>";} ?></td></tr>
                     <tr><td><?php  while ($row = $gtcrow->fetch_assoc()){ echo "<i>".ucfirst($row['crowcallsign'])."</i></td><td>".$row['crowpoints']."</td>";} ?></td></tr>
                     <tr><td colspan='2'><hr style="width:100%"></td></tr>
-                    <tr><td><b>Player</b></td><td><b>Total</b></td</tr>
+                    <tr><td><b>Player</b></td><td><b>Total</b></td></tr>
                     <tr><td><?php while ($row = $gtkstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortmkillcallsign'])."</i></td><td>".$row['sortmkill']."</td>";} ?></td></tr>
                     <tr><td><?php  while ($row = $gtcapstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortcapscallsign'])."</i></td><td>".$row['capstreak']."</td>";}  ?></td></tr>
                     
@@ -216,7 +216,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
         <div id="unitsInField">
             <span class="papertimeshuge">In The Field</span>
                 <div id="germanField" valign='top'>
-                   <span class="papertimesmedium"><div><?php echo "<b>Germany</b>:".$gunit;  ?></div></span>
+                   <div><span class="papertimesmedium"><?php echo "<b>Germany</b>:".$gunit;  ?></span></div>
                 </div>
         </div>
         <div id="bottomMiddle">

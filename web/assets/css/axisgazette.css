@@ -198,7 +198,7 @@ html, body {
     top: -900px;
     left:5px;
 	width: 150px;
-    height:425px;
+    height:440px;
 	text-align: center;
     border:1px black solid;
 }
@@ -226,7 +226,7 @@ html, body {
 
 #bottomMiddle {
     position:relative;
-    top:-1340px;
+    top:-1360px;
     left:160px;
 	width: 330px;
     height:350px;

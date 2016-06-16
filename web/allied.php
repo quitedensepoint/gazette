@@ -100,7 +100,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                         <tr align='center'><td><?php  while ($row = $dkrow->fetch_assoc()){ echo $row['krowpoints']."</td><td><i>".ucfirst($row['krowcallsign'])."</i></td>";} ?></td></tr>
                         <tr align='center'><td><?php  while ($row = $dcrow->fetch_assoc()){ echo $row['crowpoints']."</td><td><i>".ucfirst($row['crowcallsign'])."</i></td>";} ?></td></tr>
                         <tr><td colspan='2'><hr style="width:100%"></td></tr>
-                        <tr align='center'><td><b>Total</b></td><td><b>Player</b></td</tr>
+                        <tr align='center'><td><b>Total</b></td><td><b>Player</b></td></tr>
                         <tr align='center'><td><?php while ($row = $dkstreak->fetch_assoc()){ echo $row['sortmkill']."</td><td><i>".ucfirst($row['sortmkillcallsign'])."</i></td>";} ?></td></tr>
                         <tr align='center'><td><?php  while ($row = $dcapstreak->fetch_assoc()){ echo $row['capstreak']."</td><td><i>".ucfirst($row['sortcapscallsign'])."</i></td>";}  ?></td></tr>                    
 					</table>
@@ -183,7 +183,7 @@ $promo = file_get_contents(__DIR__ .'/../cache/playnow_allied_promotion.php');
                     <tr align='center'><td><?php  while ($row = $tkrow->fetch_assoc()){ echo "<i>".ucfirst($row['krowcallsign'])."</i></td><td>".$row['krowpoints']."</td>";} ?></td></tr>
                     <tr align='center'><td><?php  while ($row = $tcrow->fetch_assoc()){ echo "<i>".ucfirst($row['crowcallsign'])."</i></td><td>".$row['crowpoints']."</td>";} ?></td></tr>
                     <tr><td colspan='2'><hr style="width:100%"></td></tr>
-                    <tr align='center'><td><b>Player</b></td><td><b>Total</b></td</tr>
+                    <tr align='center'><td><b>Player</b></td><td><b>Total</b></td></tr>
                     <tr align='center'><td><?php while ($row = $tkstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortmkillcallsign'])."</i></td><td>".$row['sortmkill']."</td>";} ?></td></tr>
                     <tr align='center'><td><?php  while ($row = $tcapstreak->fetch_assoc()){ echo "<i>".ucfirst($row['sortcapscallsign'])."</i></td><td>".$row['capstreak']."</td>";}  ?></td></tr>
                 </table>
