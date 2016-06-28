@@ -1,7 +1,12 @@
 DBconn.php
+
 # drloon Netbeans project file
 /nbproject/
 /vendor/
 /phinx.yml
+
 # Test Email Handler Output
 /mailoutput/
+
+# Test Email Handler Output
+/web/.well-known/
