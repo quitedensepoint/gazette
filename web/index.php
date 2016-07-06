@@ -294,6 +294,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 							$firstArticle = str_replace('class="contentpagetitle"', 'target="_blank" class="contentpagetitle"', $firstArticle);
 							$firstArticle = str_replace('class="readon"', 'target="_blank" class="readon"', $firstArticle);
 							$firstArticle = str_replace('crs-article.png" border="0" align="left"', 'crs-article.png" border="0" style="float: left; margin-left: 3px; margin-right: 3px;"', $firstArticle);
+							$firstArticle = str_replace('crs-article.png" align="left"', 'crs-article.png" border="0" style="float: left; margin-left: 3px; margin-right: 3px;"', $firstArticle);
 						    echo $firstArticle;
 					    ?>
             
