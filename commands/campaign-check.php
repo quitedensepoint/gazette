@@ -104,7 +104,18 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 		
 		/** At campaign start, we mark all initial countries in the campaign as active */
 		$logger->info('Marking all initially active countries as active for campaign start.');
-		$gazetteDb->execute("UPDATE `countries` SET `is_active` = `is_active_initially`, `activated_at` = NOW() WHERE `is_active_initially` = 1");		
+		$gazetteDb->execute("UPDATE `countries` SET `is_active` = `is_active_initially`, `activated_at` = NOW() WHERE `is_active_initially` = 1");			
+
+		/** Update the campaign end date/time with the updated one as the actual end date/time isn't created until the new campaing begins */	
+		$communityCampaignData = $communityDb->first("SELECT `campaign_id`, `stop_time` FROM `scoring_campaigns` WHERE `campaign_id` = "
+			. "(SELECT MAX(`campaign_id`)-1 FROM `scoring_campaigns`) LIMIT 1");	
+		
+		$logger->info(sprintf('Campaign %d in gazette will be updated with an end date/time of %s',
+			$communityCampaignData['campaign_id'], $communityCampaignData['stop_time']));
+			
+		// Update the campaign pulled from CSR
+		$gazetteDb->execute("UPDATE `campaigns` SET `stop_time` = ? WHERE `campaign_id` = ?",
+			[$communityCampaignData['stop_time'], $communityCampaignData['campaign_id']]);
 		
 	}
 	else {
@@ -119,11 +130,11 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 			. "(SELECT MAX(`campaign_id`) FROM `scoring_campaigns`) LIMIT 1");
 		
 		$logger->info(sprintf('Campaign %d in gazette will be marked as Completed, stopping at %s',
-			$communityCampaignData['campaign_id'], $communityCampaignData['stop_time']));
+			$communityCampaignData['campaign_id'], (new DateTime())->format('Y-m-d H:i:s')));
 		
-		// Update the campaign pulled from CSR
+		// Update the campaign pulled from CSR and the current date/time
 		$gazetteDb->execute("UPDATE `campaigns` SET `stop_time` = ?, `status` = 'Completed' WHERE `campaign_id` = ?",
-			[$communityCampaignData['stop_time'], $communityCampaignData['campaign_id']]);
+			[(new DateTime())->format('Y-m-d H:i:s'), $communityCampaignData['campaign_id']]);
 		
 		/**
 		 * Reset all of the countries to an inactive state
