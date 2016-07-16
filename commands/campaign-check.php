@@ -58,8 +58,16 @@ else
 // Now check the wwiionline database to see what is running
 $wwiiolCampaignState = $wwiiOnlineDb
 	->get("SELECT `value` FROM `wwii_config` WHERE `variableName` = ? LIMIT 1", ['arena.intermission']);
+	
+if(intval($wwiiolCampaignState[0]['value']) == 0){
+	$wwiiolCampaignStatus = 'Running (0)';
+}elseif(intval($wwiiolCampaignState[0]['value']) == 1){
+	$wwiiolCampaignStatus = 'Intermission Setup (1)';
+}else{
+	$wwiiolCampaignStatus = 'Running Intermission (2)';
+}
 
-$logger->info(sprintf('GameDB reports campaign status as %d', intval($wwiiolCampaignState[0]['value'])));
+$logger->info(sprintf('GameDB reports campaign status as %s', $wwiiolCampaignStatus));
 
 $isWwiiOnlineCampaignRunning = intval($wwiiolCampaignState[0]['value']) == 0;
 
@@ -73,7 +81,7 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 		$logger->debug('Retrieving new campaign information');
 		
 		// Get the campaign data from the wwiionline db
-		$wwiionlineStartData = $wwiiOnlineDb->get("SELECT `name`,`value` FROM `wwii_arena` WHERE `name` IN ('campaign_id','campaign_start')");
+		$wwiionlineStartData = $wwiiOnlineDb->get("SELECT `name`,`value`,`modified` FROM `wwii_arena` WHERE `name` IN ('campaign_id','campaign_start')");
 		
 		$newCampaignId = null;
 		$newStartTime = null;
@@ -89,18 +97,17 @@ if($isWwiiOnlineCampaignRunning != $isGazetteCampaignRunning)
 			}
 			if($data['name'] === 'campaign_start') 
 			{
-				$newStartTime = new DateTime();
-				$newStartTime->setTimestamp(intval($data['value']));
+				$newStartTime = $data['modified'];
 			}
 		}
 
-		$logger->info(sprintf('A new campaign in gazette will be added as campaign ID %d, starting at %s', $newCampaignId, $newStartTime->format('Y-m-d H:i:s')));
+		$logger->info(sprintf('A new campaign in gazette will be added as campaign ID %d, starting at %s', $newCampaignId, $newStartTime));
 		
 		/**
 		 * Create a new campaign to represent the one just started
 		 */
 		$gazetteDb->execute("INSERT INTO `campaigns` (`start_time`, `status`, `campaign_id`) VALUES (?,?,?)",
-			[$newStartTime->format('Y-m-d H:i:s'), 'Running', $newCampaignId]);
+			[$newStartTime, 'Running', $newCampaignId]);
 		
 		/** At campaign start, we mark all initial countries in the campaign as active */
 		$logger->info('Marking all initially active countries as active for campaign start.');
