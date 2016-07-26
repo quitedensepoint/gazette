@@ -82,11 +82,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
         <div id='info'>
             <table id='infoBar'>
                 <tr>
-<<<<<<< HEAD
-				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.35.3</span></td>
-=======
 				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.35.4</span></td>
->>>>>>> master
 					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$campRow['id']." Day: ".$days->format('%a'); ?></span></td> 
 					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href="allied.php">ALLIED Section</a> & <a href="axis.php">AXIS Section</a></span></td>
 			    </tr>
