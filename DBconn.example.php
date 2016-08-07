@@ -124,7 +124,23 @@ $options = [
 			'subject' => 'World War II Online Gazette: You\'ve been mentioned!',
 			
 			// When developing, the local account to send the emails to. Leave it blank to skip local emails
-			'dev_recipient' => 'developer@localhost',
+			'dev_recipient' => 'developer@localhost',			
+		
+			// How long to keep the log files for the sending of player emails
+			'log_retention_days' => 14,
+
+			// **** FOR DEVELOPMENT ONLY ****
+			// if true, will logout output from the REST mailer to the command line as well as log files
+			'log_to_console' => false,
+			
+			// How long the system should wait, in minutes, between sending a user another notification
+			'notification_rate' => 24 * 60, // 24 hours * 60 minutes
+
+			// Unsubscribe information
+			'unsubscribe' => [			
+				'url' => 'http://gazette.localhost',
+				'path' => '/unsubscribe.php'
+			],			
 			
 			'api' => [
 				// The URL base of gadgets API to send player notifications. Must end in a slash
@@ -133,9 +149,19 @@ $options = [
 				// The path where logging of API calls and errors is sent to
 				'log_path' => __DIR__ . '/logs/',
 				
-				// Logging level
-				'log_level' => 100, // Monolog\Logger::DEBUG, - can't use Monolog setting in DBCONN as the autoloader hasn't kicked in yet
-
+				// Logging level - 
+				/**
+				 *    const EMERGENCY = 'emergency';
+				 *	const ALERT     = 'alert';
+				 *	const CRITICAL  = 'critical';
+				 *	const ERROR     = 'error';
+				 *	const WARNING   = 'warning';
+				 *	const NOTICE    = 'notice';
+				 *	const INFO      = 'info';
+				 *	const DEBUG     = 'debug'; 
+				 */
+				'log_level' => 'debug', // Monolog\Logger::DEBUG, - can't use Monolog setting in DBCONN as the autoloader hasn't kicked in yet			
+				
 				/**
 				 * The credentials used to authenticate against the API
 				 */

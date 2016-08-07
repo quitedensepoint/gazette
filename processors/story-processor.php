@@ -12,11 +12,11 @@
 require_once(__DIR__ . "/../include/dbhelper.php");
 require_once(__DIR__ . "/stories/require.php");
 
-use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
 use Playnet\WwiiOnline\Common\PlayerMail\Message;
 use Playnet\WwiiOnline\Common\PlayerMail\MessagePlayer;
 use Playnet\WwiiOnline\WwiiOnline\Models\Side\Allied\Allied;
 use Playnet\WwiiOnline\WwiiOnline\Models\Side\Axis\Axis;
+use Playnet\WwiiOnline\Common\PlayerMail\NotificationManager;
 
 class StoryProcessor {
 	
@@ -63,19 +63,19 @@ class StoryProcessor {
 	private $countryStories = [];
 	
 	/**
-	 *
-	 * @var Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface 
-	 */
-	private $playerMailHandler;
-	
-	/**
 	 * An array of the database connections the story generation can use
 	 * 
 	 * @var array
 	 */
 	private $dbConnections;
 	
-	public function __construct(HandlerInterface $playerMailHandler, array $dbConnections = array()) 
+	/**
+	 *
+	 * @var NotificationManager
+	 */
+	private $notificationManager;
+	
+	public function __construct(NotificationManager $notificationManager, array $dbConnections = array()) 
 	{
 		$this->dbConnections = $dbConnections;
 		$this->dbConn = $dbConnections['dbConn'];
@@ -84,7 +84,7 @@ class StoryProcessor {
 		$this->dbConnToe = $dbConnections['dbConnToe'];
 		
 		$this->dbHelper = new dbhelper($this->dbConn);
-		$this->playerMailHandler = $playerMailHandler;
+		$this->notificationManager = $notificationManager;
 
 		$this->init();
 	}
@@ -360,7 +360,7 @@ class StoryProcessor {
 		}
 
 		/* @var $storyCreator StoryInterface */
-		$storyCreator = new $storyCreatorClass($creatorData, $this->playerMailHandler, $this->dbConnections);
+		$storyCreator = new $storyCreatorClass($creatorData, $this->notificationManager->getHandler(), $this->dbConnections);
 		echo sprintf("          Checking story %s\n" , $storyCreatorClass);
 
 		if($storyCreator->isValid())
@@ -676,26 +676,55 @@ class StoryProcessor {
 	 * 
 	 * @param StoryBase $storyCreator
 	 * @param array $template
+	 * @return void
 	 */
 	public function checkPlayerStory(StoryBase $storyCreator, $template)
 	{
-		
 		if($storyCreator->isPlayerCentric())
 		{
-			echo "Sending out player story\n";
-			$extraData = [
-				'assets_base_url' => $this->playerMailHandler->getOption('assets_base_url')
-			]; 
-			
-			$message = new Message();
-			$message->setContent($storyCreator->generateHtmlContent($template, $extraData));
-			$message->setTextContent($storyCreator->generateTextContent($template, $extraData));
-			$message->addPlayer(new MessagePlayer($storyCreator->getProtagonistId()));
-			// $content['playerMailData'] = $storyCreator->getPlayerEmailData($template);
+			// There is only a protagonist if the story is player centric, and we check to see if they
+			// are already unsubscribed
+			if(!$this->notificationManager->isPlayerUnsubscribed($storyCreator->getProtagonistId()))
+			{			
+				// Get the player that is to be sent this story
+				$player = $this->notificationManager->getPlayer($storyCreator->getProtagonistId());
+				
+				// if the player is empty, add them as a new record
+				if(empty($player))
+				{
+					$player = $this->notificationManager->addPlayer($storyCreator->getProtagonistId());
+				}
+				else if(!$this->notificationManager->canSendNotification($storyCreator->getProtagonistId()))
+				{
+					// Not allowed to send a notification because of whatever factor (see function for reasons)
+					return;
+				}
 
-			$this->playerMailHandler->addMessage($message);
+				$extraData = [
+					'assets_base_url' => $this->notificationManager->getHandler()->getOption('assets_base_url')
+				]; 
+
+				$message = new Message();
+				
+				// Generate the unsubscribe link and place it in out content
+				// TODO: If ever we end up with a solution to generate the unsub link on the API side, this will need to change
+				$unsubscribeLink = $this->notificationManager->getUnsubscribeLink($storyCreator->getProtagonistId());
+
+				$content = str_replace('%UNSUBSCRIBE%', $unsubscribeLink, $storyCreator->generateHtmlContent($template, $extraData));
+				$textContent = str_replace('%UNSUBSCRIBE%', $unsubscribeLink, $storyCreator->generateTextContent($template, $extraData));
+				$message->setContent($content);
+				$message->setTextContent($textContent);
+				$message->addPlayer(new MessagePlayer($storyCreator->getProtagonistId()));
+
+				$this->notificationManager->getHandler()->addMessage($message);
+				
+				// Ensure we don't send another email for defined period of time
+				$this->notificationManager->updateLastSend($storyCreator->getProtagonistId());
+			}
+
 		}
 	}
+
 	
 	/**
 	 * Parse and return data generated for headlines

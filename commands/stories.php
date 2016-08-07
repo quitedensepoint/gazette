@@ -60,14 +60,12 @@ if(!isset($dbConnToe)) {
 	throw new Exception('Please ensure you have defined a connection "$dbConnToe" to toe DB in the DBConn file');
 }
 
-// Retrieves the classname used to handle player email notifications from the dbConn options
-// Note that the double slash is needed at the end of the class path
-$playerMailHandlerClass = 'Playnet\WwiiOnline\Common\PlayerMail\\' . $options['playerMail']['handler'];
-$playerMailHandler = new $playerMailHandlerClass($options['playerMail']['options']);
+// Create a notification manager to help us determined who should receive the player emails
+$notificationManager = new Playnet\WwiiOnline\Common\PlayerMail\NotificationManager($dbconn, $options['playerMail']['handler'], $options['playerMail']['options']);
 
 // We are passing in the database connections as an array rather than separators
 // we end up with too manay parameters
-$storyProcessor = new StoryProcessor($playerMailHandler, [
+$storyProcessor = new StoryProcessor($notificationManager, [
 	'dbConn' => $dbconn, 
 	'dbConnWWII' => $dbConnWWII, 
 	'dbConnWWIIOnline' => $dbConnWWIIOL, 
@@ -126,7 +124,7 @@ if(isset($storyOptions['generate'])) {
 /**
  * Send out the player stories
  */
-$playerMailHandler->send();
+$notificationManager->getHandler()->send();
 
 /**
  * If we have asked for a specific area to be expired, it will regenerate on

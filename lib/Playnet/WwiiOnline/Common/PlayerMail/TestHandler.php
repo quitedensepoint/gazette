@@ -12,6 +12,7 @@ use Swift_TransportException;
 use Swift_Mailer;
 
 use SplObjectStorage;
+use Monolog\Logger;
 
 /**
  * The test handler will take any request to send an email and send it to a list of
@@ -31,8 +32,15 @@ class TestHandler implements HandlerInterface {
 	 */
 	private $messages;
 	
-	public function __construct(array $options = []) 
+	/**
+	 *
+	 * @var Logger 
+	 */
+	private $logger;
+	
+	public function __construct(Logger $logger, array $options = []) 
 	{
+		$this->logger = $logger;
 		$this->options = $options;
 		$this->messages = new SplObjectStorage();
 	}

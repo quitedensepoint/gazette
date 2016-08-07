@@ -5,6 +5,8 @@
 
 namespace Playnet\WwiiOnline\Common\PlayerMail;
 
+use Monolog\Logger;
+
 /**
  * The ignore handler will take any request to send an email and ignore it,
  * effectively bypassing the sending email. This handler can be used in development
@@ -15,7 +17,7 @@ namespace Playnet\WwiiOnline\Common\PlayerMail;
  */
 class IgnoreHandler implements HandlerInterface {
 	
-	public function __construct(array $options = []) {
+	public function __construct(Logger $logger, array $options = []) {
 		// Ignore the options
 	}
 	

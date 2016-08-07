@@ -9,7 +9,6 @@ use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;	
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 use SplObjectStorage;
 
@@ -51,8 +50,10 @@ class RestHandler implements HandlerInterface{
 	 */
 	private $logger;
 	
-	public function __construct(array $options = []) 
+	public function __construct(Logger $logger, array $options = []) 
 	{
+
+		$this->logger = $logger;		
 		$this->options = $options;
 		$this->messages = new SplObjectStorage();
 		
@@ -61,8 +62,7 @@ class RestHandler implements HandlerInterface{
 			'timeout' => 5
 		]);
 
-		$this->logger = new Logger('playeremail');
-		$this->logger->pushHandler(new StreamHandler($this->options['api']['log_path'] . 'playermailer.log', $this->options['api']['log_level']));
+		
 	}
 	
 	/**
@@ -78,14 +78,17 @@ class RestHandler implements HandlerInterface{
 	 */
 	public function send() 
 	{
-		$this->logger->debug("Starting the send process");
+
 		// Requeue the messages
 		$this->messages->rewind();
 		
 		if($this->messages->count() == 0)
 		{
+			$this->logger->warning("No emails to send!");
 			return;
 		}
+		
+		$this->logger->debug("Sending an email");
 		
 		$jsonData = [];
 		while($message = $this->messages->current())
@@ -98,6 +101,7 @@ class RestHandler implements HandlerInterface{
 		
 		$requestData = [
 			// May need to set verify to false on some dev systems, NEVER on production. Bloody things.
+			// This prevents verification of the SSL certificates for the API, if the certs are bad
 			'verify' => true,
 			'auth' => [
 				$this->options['api']['auth_credentials']['username'],
@@ -105,22 +109,21 @@ class RestHandler implements HandlerInterface{
 			],
 			'json' => $jsonData
 		];
-		$this->logger->debug("Request Data", $requestData);
 		
-		$logger = $this->logger;
-		$promise = $this->client->requestAsync('POST', 'sendPlayerMail', $requestData);
-		$promise->then(
-			function (ResponseInterface $res) use($logger) {
-				$logger->debug('Message successfully sent to API', ['data' => $res->getBody()]);
-			},
-			function (RequestException $e) use($logger) {
+		/**
+		 * Log the information we are sending to the API
+		 */
+		//$this->logger->debug("Request Data", $requestData);
 
-				$logger->error($e->getMessage());
-			}
-		);
-		
-		// Wait until the remote request is fulfilled
-		$promise->wait(false);
+		try {
+			$result = $this->client->request('POST', '/sendPlayerEmail', $requestData);
+			
+			$this->logger->debug('Message successfully sent to API', ['data' => $result->getBody()->getContents()]);
+		}
+		catch(RequestException $e)
+		{
+			$this->logger->error($e->getMessage());
+		}
 
 		$this->logger->debug("End the send process");
 	}
