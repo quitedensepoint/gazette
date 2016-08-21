@@ -53,7 +53,7 @@ class StoryBestAirGroundAttack extends StoryBestSortieBase implements StoryInter
 			return false;
 		}
 		$player = $player[0];
-		$this->creatorData['template_vars']['player'] = $player['callsign'];
+		$this->creatorData['template_vars']['player'] = ucfirst($player['callsign']);
 		
 		
 		/**

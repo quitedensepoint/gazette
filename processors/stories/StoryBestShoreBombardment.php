@@ -55,7 +55,7 @@ class StoryBestShoreBombardment extends StoryBestSortieBase implements StoryInte
 			return false;
 		}
 		$player = $player[0];
-		$this->creatorData['template_vars']['player'] = $player['callsign'];
+		$this->creatorData['template_vars']['player'] = ucfirst($player['callsign']);
 			
 		/**
 		 * Get the sortie info for the player

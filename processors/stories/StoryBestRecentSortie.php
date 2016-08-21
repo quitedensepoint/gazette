@@ -31,7 +31,7 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 			if(count($capture) == 1)
 			{
 				$this->creatorData['template_vars']['user_id'] = $sortie['customer_id'];
-				$this->creatorData['template_vars']['player'] = $sortie['callsign'];
+				$this->creatorData['template_vars']['player'] = ucfirst($sortie['callsign']);
 				$this->creatorData['template_vars']['kills'] = $sortie['kills'];
 				$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
 				$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawned'], $sortie['returned']);

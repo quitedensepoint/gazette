@@ -23,7 +23,7 @@ class StoryRecentPromotion extends StoryBase implements StoryInterface {
 			if(!$this->promotionStoryExists($promotion['customerid'], $promotion['rankid']))
 			{
 				$this->creatorData['template_vars']['user_id']		= $promotion['customerid'];
-				$this->creatorData['template_vars']['player'] 		= $promotion['callsign'];
+				$this->creatorData['template_vars']['player'] 		= ucfirst($promotion['callsign']);
 				
 				$rankData = $this->getRankById( $promotion['rankid']);
 				$this->creatorData['template_vars']['rank']			= $rankData[0]['description'];

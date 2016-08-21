@@ -32,7 +32,7 @@ abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 		{
 			return false;
 		}
-		$this->creatorData['template_vars']['player'] = $player[0]['callsign'];
+		$this->creatorData['template_vars']['player'] = ucfirst($player[0]['callsign']);
 		
 		return $player[0];
 	}
