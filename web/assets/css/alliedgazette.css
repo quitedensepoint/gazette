@@ -266,7 +266,7 @@ html, body {
 
 
 /** data styles **/
-.player, .side, .enemy_side, .side_adj {
+.player, .side, .enemy_side {
     text-transform: capitalize;
 }
 
