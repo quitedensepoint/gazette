@@ -90,11 +90,11 @@ class StoryVictoryBase extends StoryBase  {
 		
 		$template_vars = $this->creatorData['template_vars'];
 
-		$template_vars['side_adj'] = strtolower($template_vars['side']) == 
-			strtolower(Allied::getSideName()) ? Allied::getSideAdjective() : Axis::getSideAdjective();
-		
-		$template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 
-			strtolower(Allied::getSideName()) ? Axis::getSideAdjective() : Allied::getSideAdjective();
+        $template_vars['side_adj'] = strtolower($template_vars['side']) == 
+            strtolower(Allied::getSideName()) ? Axis::getSideAdjective() : Allied::getSideAdjective();
+
+        $template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 
+            strtolower(Allied::getSideName()) ? Allied::getSideAdjective() : Axis::getSideAdjective();
 		
 		return $this->parseStory($template_vars, $template['title'], $template['body'] );
 	}	
