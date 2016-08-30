@@ -38,16 +38,6 @@ class StoryVictory extends StoryVictoryBase implements StoryInterface {
 		return ($totalCps > self::$minTotalCps && ($cpOwnershipPercent >= self::$minOwnershipPercent));
 		
 	}
-
-	public function makeStory($template) {
-		
-		$template_vars = $this->creatorData['template_vars'];
-		
-		$template_vars['side_adj'] = strtolower($template_vars['side']) == 'allied' ? 'Allied' : 'Axis';
-		$template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 'axis' ? 'Axis' : 'Allied';
-		
-		return $this->parseStory($template_vars, $template['title'], $template['body'] );	
-	}	
 	
 	/**
 	 * @todo Is this necessary?
