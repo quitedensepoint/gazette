@@ -23,13 +23,16 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 		$time->setTimestamp(time() - 7200);
 
 		$sorties = $this->getRecentSorties($this->creatorData['country_id'], $time->getTimestamp());
-		
+
 		foreach ($sorties as $sortie)
 		{
 			$capture = $this->getStratCaptures($sortie['mission_id'], $sortie['player_id'], $sortie['country_id']);
 			
 			if(count($capture) == 1)
 			{
+				// The person to whom this story relates
+				$this->setProtagonist($sortie['player_id']);
+				
 				$this->creatorData['template_vars']['user_id'] = $sortie['customer_id'];
 				$this->creatorData['template_vars']['player'] = ucfirst($sortie['callsign']);
 				$this->creatorData['template_vars']['kills'] = $sortie['kills'];
@@ -61,7 +64,8 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 	 * @param integer $time the number of seconds since 1970 (epoch or unix time)
 	 * @return integer
 	 * 
-	 * @todo This function had "and s.captures > 0" in the original Perl file. Work out 
+	 * @todo This function had "and s.captures > 0" in the original Perl file. Work out
+	 * @todo This query is INSANELY slow. Sacrifice more bunnies for greater speed. 
 	 */
 	public function getRecentSorties($countryId, $time)
 	{
