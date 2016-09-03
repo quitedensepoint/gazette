@@ -92,7 +92,7 @@ When a story that is system generated references the deeds of a specific player 
 The handlers defined in the settings do different things.
 - Use *IgnoreHandler* when developing. This ensures that the code runs correctly without modification, but the system will ignore any requests to send an email.
 - Use *TestHandler* to test sending out emails so you can see what they look like when developing. This allows you to set an array of recipients to send to, via SMTP.
-- Use *RESTHandler* for production. This will send requests according to the specification to a remote REST service which will handle placeholder replacements and determining the real recipient to send the email to.
+- Use *RestHandler* for production. This will send requests according to the specification to a remote REST service which will handle placeholder replacements and determining the real recipient to send the email to.
 
 For more information, see the documentation at http://at.playnet.com:8090/display/COMM/Gazette+Player+Emails
 

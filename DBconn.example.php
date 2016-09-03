@@ -79,7 +79,7 @@ $options = [
 	'campaigncheck_log_retention_days' => 14,
 	
 	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
-	'webmap-environment' => 'dev',
+	'webmap-environment' => 'live',
 
 	// Options for the player mailer (see Confluence Documentation)
 	'playerMail' => [
@@ -87,7 +87,7 @@ $options = [
 		// The subject to go out on the emails
 		'subject' => 'World War II Online Gazette: You\'ve been mentioned!',
 		
-		// The classname (in the Playnet\WiiOnline\Common\PlayerMail namespace
+		// The classname (in the Playnet\WiiOnline\Common\PlayerMail namespace) [IgnoreHandler, TestHandler, RestHandler]
 		'handler' => 'IgnoreHandler',
 		
 		// The options to pass into the constructor of the handler
@@ -133,8 +133,8 @@ $options = [
 			// if true, will logout output from the REST mailer to the command line as well as log files
 			'log_to_console' => false,
 			
-			// How long the system should wait, in minutes, between sending a user another notification
-			'notification_rate' => 24 * 60, // 24 hours * 60 minutes
+			// How long the system should wait, in seconds, between sending a user another notification
+			'notification_rate' => 24 * 60 * 60, // 24 hours * 60 minutes * 60 seconds
 
 			// Unsubscribe information
 			'unsubscribe' => [			
