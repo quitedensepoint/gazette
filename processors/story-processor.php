@@ -557,27 +557,6 @@ class StoryProcessor {
 	}	
 	
 	/**
-	 * Retrieves the sources for all the story types used by a story filtered by the country
-	 * @param integer $storyId
-	 * @param integer $countryId
-	 * @return array
-	 * 
-	 * @deprecated since version 1.0.0
-	 */
-	private function getSourceData($storyId, $countryId)
-	{
-		$query = $this->dbHelper
-		->prepare("SELECT s.source_id,s.name, s.weight,s.life,t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
-			." FROM sources AS s "
-			." INNER JOIN template_sources AS ts ON s.source_id = ts.source_id"
-			." INNER JOIN templates AS t ON ts.template_id = t.template_id "
-			." INNER JOIN template_countries AS tc ON t.template_id = tc.template_id"
-			." WHERE s.type_id = ? AND tc.country_id = ? ORDER BY RAND()", [$storyId, $countryId]);
-
-		return $this->dbHelper->getAsArray($query);		
-	}
-	
-	/**
 	 * Sorts the sources into an array based on their weighting
 	 * @param array $sourceData
 	 * @return array
