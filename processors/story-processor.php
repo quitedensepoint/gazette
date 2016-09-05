@@ -471,14 +471,12 @@ class StoryProcessor {
 	 */
 	private function getRandomTemplateForSource($sourceId, $countryId, $pageId, $storyId)
 	{
-		$query = $this->dbHelper
-		->prepare("SELECT t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
+		$templates = $this->dbHelper
+		->get("SELECT t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
 			." FROM template_sources AS ts"
 			." INNER JOIN templates AS t ON ts.template_id = t.template_id "
 			." INNER JOIN template_countries AS tc ON t.template_id = tc.template_id"
 			." WHERE ts.source_id = ? AND tc.country_id = ? ORDER BY RAND()", [$sourceId, $countryId]);
-
-		$templates = $this->dbHelper->getAsArray($query);
 		
 		$this->logger->debug(sprintf("There are %d templates for source %d, country %d",count($templates), $sourceId, $countryId));		
 		
@@ -515,14 +513,12 @@ class StoryProcessor {
 	 */
 	private function getTemplateById($templateId)
 	{
-		$query = $this->dbHelper
-		->prepare("SELECT t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
+		$result = $this->dbHelper
+		->get("SELECT t.template_id,t.title,t.body,t.variety_1,t.variety_2,t.duplicates,tc.country_id "
 			." FROM template_sources AS ts"
 			." INNER JOIN templates AS t ON ts.template_id = t.template_id "
 			." INNER JOIN template_countries AS tc ON t.template_id = tc.template_id"
 			." WHERE t.template_id = ? LIMIT 1", [$templateId]);
-
-		$result = $this->dbHelper->getAsArray($query);
 		
 		return count($result) > 0 ? $result[0] : null;
 	}	
@@ -539,15 +535,12 @@ class StoryProcessor {
 		
 		/**
 		 * Load in the story types for this story, we may have multiple types, for each country
-		 * 
 		 */
-		$query = $this->dbHelper
-			->prepare("SELECT t.* 
+		return $this->dbHelper
+			->get("SELECT t.* 
 			FROM story_types st
 			INNER JOIN types t ON st.type_id = t.type_id
-			WHERE st.story_id = ?", [$storyId]);	
-		
-		return $this->dbHelper->getAsArray($query);
+			WHERE st.story_id = ?", [$storyId]);
 	}
 	
 	/**
@@ -557,12 +550,10 @@ class StoryProcessor {
 	 */
 	private function getSourcesForType($typeId)
 	{
-		$query = $this->dbHelper
-		->prepare("SELECT s.source_id, s.type_id, s.name, s.weight, s.life"
+		return  $this->dbHelper
+		->get("SELECT s.source_id, s.type_id, s.name, s.weight, s.life"
 			." FROM sources AS s "
-			." WHERE s.type_id = ? ORDER BY RAND()", [$typeId]);
-
-		return $this->dbHelper->getAsArray($query);		
+			." WHERE s.type_id = ? ORDER BY RAND()", [$typeId]);	
 	}	
 	
 	/**
@@ -806,11 +797,9 @@ class StoryProcessor {
 	
 		$dbHelper = new dbhelper($this->dbConn);
 
-		$query = $dbHelper
-			->prepare("SELECT count(*) as used_count FROM stories WHERE page_id = ? and story_id != ? and used_id = ?", 
+		$result = $dbHelper
+			->get("SELECT count(*) as used_count FROM stories WHERE page_id = ? and story_id != ? and used_id = ?", 
 				[$pageId, $storyId, $templateId]);	
-		
-		$result = $dbHelper->getAsArray($query);
 
 		return $result[0]['used_count'] > 0;
 	}
@@ -827,10 +816,8 @@ class StoryProcessor {
 		 */
 		$dbHelper = new dbhelper($this->dbConn);
 		
-		$query = $dbHelper
-			->prepare("SELECT * FROM `countries` WHERE `is_active` = 1");	
-		
-		$this->activeCountries = $dbHelper->getAsArray($query);	
+		$this->activeCountries = $dbHelper
+			->get("SELECT * FROM `countries` WHERE `is_active` = 1");	
 		
 		/**
 		 * Load in all the story ids that are relevant to active country
@@ -846,11 +833,9 @@ class StoryProcessor {
 			return;
 		}
 		
-		$query2 = $dbHelper
-			->prepare(sprintf("SELECT * FROM `story_countries` WHERE `country_id` in (%s)", join(',', $activeIds)));
-		
-		$results = $dbHelper->getAsArray($query2);
-		
+		$results = $dbHelper
+			->get(sprintf("SELECT * FROM `story_countries` WHERE `country_id` in (%s)", join(',', $activeIds)));
+				
 		foreach($results as $result)
 		{
 			$this->countryStories[$result['country_id']][] = $result['story_id'];
@@ -869,12 +854,11 @@ class StoryProcessor {
 	{
 		$this->logger->debug(sprintf("Checking page section named %s\n", $storyKey));
 		
-		$storyQuery = $this->dbHelper
-			->prepare("SELECT s.*, sf.`key` as `story_format` FROM `stories` AS s INNER JOIN `story_formats` AS sf ON s.`story_format_id` = sf.`id` "
+		$story = $this->dbHelper
+			->first("SELECT s.*, sf.`key` as `story_format` FROM `stories` AS s INNER JOIN `story_formats` AS sf ON s.`story_format_id` = sf.`id` "
 				. "WHERE `story_key` = ?", [$storyKey]);
 		
-		$storyData = $this->dbHelper->getAsArray($storyQuery);
-		if(count($storyData) !== 1)
+		if(empty($story))
 		{
 			$this->logger->warn(sprintf("Could not find a story with key %s - skipping\n", $storyKey));
 			return false;
@@ -882,7 +866,10 @@ class StoryProcessor {
 
 		$this->logger->debug(sprintf('Page section %s will use story ID %d ', $storyKey, $story['story_id']));
 		
-		return $storyData[0];		
+		/**
+		 * Return the first story found
+		 */
+		return $story;	
 	}
 	
 	/**
