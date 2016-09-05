@@ -12,6 +12,7 @@
 require_once(__DIR__ . "/../include/dbhelper.php");
 require_once(__DIR__ . "/stories/require.php");
 
+use Monolog\Logger;
 use Playnet\WwiiOnline\Common\PlayerMail\Message;
 use Playnet\WwiiOnline\Common\PlayerMail\MessagePlayer;
 use Playnet\WwiiOnline\WwiiOnline\Models\Side\Allied\Allied;
@@ -75,7 +76,14 @@ class StoryProcessor {
 	 */
 	private $notificationManager;
 	
-	public function __construct(NotificationManager $notificationManager, array $dbConnections = array()) 
+	/**
+	 * Used for logger the progress of story creation
+	 * 
+	 * @var Logger
+	 */
+	private $logger;
+	
+	public function __construct(Logger $logger, NotificationManager $notificationManager, array $dbConnections = array()) 
 	{
 		$this->dbConnections = $dbConnections;
 		$this->dbConn = $dbConnections['dbConn'];
@@ -84,6 +92,7 @@ class StoryProcessor {
 		$this->dbConnToe = $dbConnections['dbConnToe'];
 		
 		$this->dbHelper = new dbhelper($this->dbConn);
+		$this->logger = $logger;
 		$this->notificationManager = $notificationManager;
 
 		$this->init();
@@ -102,6 +111,8 @@ class StoryProcessor {
 		$templateId = $options['templateId'];
 		$reportOnly = $options['reportOnly'];
 	
+		$this->logger->debug(sprintf("Processing key %s with options.", $storyKey),['options' => $options]);
+		
 		/**
 		if($this->isIntermission())
 		{
@@ -117,7 +128,7 @@ class StoryProcessor {
 
 		if(($story = $this->checkStory($storyData, $sourceId, $templateId)) === false)
 		{	
-			echo sprintf("*** No stories could be made for %s! - using story alt***\n", $storyKey);
+			$this->logger->warn(sprintf("No stories could be made for %s! - using story alt", $storyKey));
 
 			/**
 			 * No valid story could be found for this section of the page, so use
@@ -159,9 +170,11 @@ class StoryProcessor {
 		$storyTypes = $this->getTypeData($storyId);
 		if(count($storyTypes) == 0)
 		{
-			echo sprintf("There are no story types for key %s - skipping\n", $storyKey);
+			$this->logger->warn(sprintf("There are no story types for key %s - skipping", $storyKey));
 			return false;			
 		}
+		
+		$this->logger->debug(sprintf("The story selected uses %d story types", count($storyTypes)));
 		
 		return $this->checkStoryTypes($storyData, $storyTypes, $sourceId, $templateId);
 	}
@@ -177,11 +190,9 @@ class StoryProcessor {
 	 */
 	private function checkStoryTypes($storyData, $storyTypes, $sourceId = null, $templateId = null)
 	{
-		echo sprintf("    Story has %d storytypes\n", count($storyTypes));
-		
 		foreach($storyTypes as $storyType)
 		{
-			echo sprintf("    Checking Story Type %s\n", $storyType['name']);
+			$this->logger->debug(sprintf("Checking story type %s", $storyType['name']));
 			
 			if(($content = $this->prepareStory($storyData, $storyType, $sourceId, $templateId)))
 			{
@@ -211,6 +222,7 @@ class StoryProcessor {
 		 */
 		if($sourceId !== null)
 		{
+			$this->logger->debug(sprintf("Specific source requested on command line: %d", $sourceId));			
 			$sourceData = $this->getStorySource($sourceId);
 		}
 		else {
@@ -224,6 +236,8 @@ class StoryProcessor {
 			$sourceData = $this->getSourcesForType($typeId);
 			$sourceId = $sourceData[0]['source_id'];			
 		}
+		
+		$this->logger->debug(sprintf("Type %s has %d possible sources", $storyType['name'], count($sourceData)));
 
 		/**
 		 * Here we group the templates by their weight. This allows to ensure the more
@@ -246,9 +260,11 @@ class StoryProcessor {
 			{
 				if($source['type_id'] != $typeId)
 				{
-					echo sprintf("  source type mismatch %s : %s\n", $source['type_id'], $typeId);
+					$this->logger->debug(sprintf("Type %s (ID:%d) cannot use source '%s' (ID: %d)", $storyType['name'], $typeId, $source['name'], $source['type_id']));
 					continue;
 				}
+				
+				$this->logger->debug(sprintf("Type %s (ID:%d) will use source '%s' (ID: %d)", $storyType['name'], $typeId, $source['name'], $source['type_id']));
 				
 				if(($content = $this->processSource($storyData, $source, $templateId)) !== false) {
 					return $content;
@@ -283,22 +299,22 @@ class StoryProcessor {
 		 */
 		foreach($activeCountries as $activeCountry)
 		{			
-			echo sprintf("        Checking source %s on country %s", $source['name'], $activeCountry['name']);			
+			$this->logger->debug(sprintf("Checking source %s on country %s", $source['name'], $activeCountry['name']));			
 			
 			// If the country has no stories, go to the next country
 			if(!isset($this->countryStories[$activeCountry['country_id']]))
 			{
-				echo sprintf(" -- No stories for %s\n", $activeCountry['name']);
+				$this->logger->debug(sprintf("No stories for %s", $activeCountry['name']));
 				
 				continue;
 			}
-			echo "\n";
 			
 			// Check to see if the current story can be used by the active country
 			// COMMDEV-808
 			if(!in_array($storyData['story_id'], $this->countryStories[$activeCountry['country_id']]))
 			{
-				echo sprintf(" -- Story %d is not available for %s\n", $storyData['story_id'], $activeCountry['name']);				
+				$this->logger->warn(sprintf("Source '%s' (ID:%d) is not available for %s because it would appear in page area %s which is reserved for the other side", 
+					$source['name'], $storyData['story_id'], $activeCountry['name'], $storyData['story_key']));				
 				continue;				
 			}
 			
@@ -355,32 +371,36 @@ class StoryProcessor {
 		 */
 		if(!class_exists($storyCreatorClass))
 		{
-			echo "          No story class has been defined for $storyCreatorClass - skipping...\n";
+			$this->logger->debug("No story class has been defined for $storyCreatorClass - skipping...");
 			return false;
 		}
 
 		/* @var $storyCreator StoryInterface */
 		$storyCreator = new $storyCreatorClass($creatorData, $this->notificationManager->getHandler(), $this->dbConnections);
-		echo sprintf("          Checking story %s\n" , $storyCreatorClass);
+		$this->logger->debug(sprintf("Executing story class %s" , $storyCreatorClass));
 
 		if($storyCreator->isValid())
 		{
 			if($templateId !== null)
 			{
+				$this->logger->debug(sprintf("Loading explicitly requested template %d." , $templateId));
+				
 				$template = $this->getTemplateById($templateId);
 			}
 			else
 			{
+				$this->logger->debug(sprintf("Loading random template for source %s (ID:%d)." , $source['name'], $source['source_id']));
+				
 				$template = $this->getRandomTemplateForSource($source['source_id'], $creatorData['country_id'], $pageId, $storyId);
 			}
 			
 			if($template == null)
 			{
-				echo sprintf("            ** No valid templates for source %s**\n" , $sourceName);
+				$this->logger->warn(sprintf("No valid templates for source %s" , $sourceName));
 				return false;
 			}
 			
-			echo sprintf("            Using Template %s\n" , $template['template_id']);
+			$this->logger->debug(sprintf("Using Template %s" , $template['template_id']));
 			
 			/**
 			 * Content is an array of [title, body]
@@ -396,6 +416,7 @@ class StoryProcessor {
 		}
 		else
 		{
+			$this->logger->debug(sprintf("The story %s did not find an entry that meets the criteria." , $storyCreatorClass));
 			return false;
 		}		
 	}
@@ -439,7 +460,6 @@ class StoryProcessor {
 	{
 		return $this->dbHelper
 			->get("SELECT s.source_id, s.type_id, s.name, s.weight, s.life FROM `sources` as s WHERE s.source_id = ? limit 1", [$sourceId]);
-	
 	}
 	
 	/**
@@ -460,7 +480,7 @@ class StoryProcessor {
 
 		$templates = $this->dbHelper->getAsArray($query);
 		
-		echo sprintf("            There are %d templates for source %d, country %d\n",count($templates), $sourceId, $countryId);		
+		$this->logger->debug(sprintf("There are %d templates for source %d, country %d",count($templates), $sourceId, $countryId));		
 		
 		/**
 		 * Go through every returned template. If we find one that allows duplicates, accept it.
@@ -477,11 +497,11 @@ class StoryProcessor {
 
 			if(!$this->checkIfTemplateDuplicatedOnPage($pageId, $storyId, $template['template_id']))
 			{
-				echo sprintf("            Template %d ok\n",$template['template_id']); 
+				$this->logger->debug(sprintf("Template %d ok\n",$template['template_id'])); 
 				return $template;
 			}
 			
-			echo sprintf("            Template %d is already duplicated on page %s\n",$template['template_id'], $pageId);
+			$this->logger->debug(sprintf("Template %d is already duplicated on page %s\n",$template['template_id'], $pageId));
 		}
 		
 		return null;
@@ -515,6 +535,8 @@ class StoryProcessor {
 	 */
 	private function getTypeData($storyId)
 	{
+		$this->logger->debug(sprintf('Loading in the types for story id %d', $storyId));
+		
 		/**
 		 * Load in the story types for this story, we may have multiple types, for each country
 		 * 
@@ -845,7 +867,7 @@ class StoryProcessor {
 	 */
 	private function getStoryDataForKey($storyKey)
 	{
-		echo sprintf("Checking page area %s\n", $storyKey);
+		$this->logger->debug(sprintf("Checking page section named %s\n", $storyKey));
 		
 		$storyQuery = $this->dbHelper
 			->prepare("SELECT s.*, sf.`key` as `story_format` FROM `stories` AS s INNER JOIN `story_formats` AS sf ON s.`story_format_id` = sf.`id` "
@@ -854,9 +876,11 @@ class StoryProcessor {
 		$storyData = $this->dbHelper->getAsArray($storyQuery);
 		if(count($storyData) !== 1)
 		{
-			echo sprintf("Could not find a story with key %s - skipping\n", $storyKey);
+			$this->logger->warn(sprintf("Could not find a story with key %s - skipping\n", $storyKey));
 			return false;
 		}
+
+		$this->logger->debug(sprintf('Page section %s will use story ID %d ', $storyKey, $story['story_id']));
 		
 		return $storyData[0];		
 	}
@@ -878,7 +902,7 @@ class StoryProcessor {
 		}
 		else
 		{
-			echo $storyContent;
+			$this->logger->debug($storyContent);
 		}		
 	}
 

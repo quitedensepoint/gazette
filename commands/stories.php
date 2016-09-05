@@ -12,11 +12,30 @@
  * 
  */
 
+use Monolog\Logger;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
+
 require(__DIR__ . '/../DBconn.php');
 require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/story-processor.php');
 require(__DIR__ . '/../vendor/autoload.php');
 
+/**
+ * Initialise Gazette Logging
+ */
+
+$loggingOptions =$options['storygenerator']['log'];
+$logger = new Logger("story-generator");
+$logger->setTimezone(new DateTimeZone($loggingOptions['timezone']));
+$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/story-generator.log', $loggingOptions['retention_days'], Logger::DEBUG));
+
+if($loggingOptions['console'])
+{
+	$logger->pushHandler(new StreamHandler('php://stdout', $loggingOptions['level']));
+}
+
+$logger->info('Gazette Story Processing is beginning.');
 
 /**
  * Allow us to do DB queries in one line instead of five
@@ -44,19 +63,25 @@ if(count($storyOptions) == 0 || isset($storyOptions['help']))
 		);
 }
 
+$logger->info('Processing options provided', ['options' => $storyOptions]);
+
 if(!isset($dbconn)) {
+	$logger->emergency('The $dbConn variable is not defined! Cannot start without database connectivity!');
 	throw new Exception('Please ensure you have defined a connection "$dbconn" to gazette DB in the DBConn file');
 }
 
 if(!isset($dbConnWWII)) {
+	$logger->emergency('The $dbConnWWII variable is not defined! Cannot start without database connectivity!');
 	throw new Exception('Please ensure you have defined a connection "$dbConnWWII" to wwii DB in the DBConn file');
 }
 
 if(!isset($dbConnWWIIOL)) {
+	$logger->emergency('The $dbConnWWIIOL variable is not defined! Cannot start without database connectivity!');
 	throw new Exception('Please ensure you have defined a connection "$dbConnWWIIOL" to wwiionline DB in the DBConn file');
 }
 
 if(!isset($dbConnToe)) {
+	$logger->emergency('The $dbConnToe variable is not defined! Cannot start without database connectivity!');
 	throw new Exception('Please ensure you have defined a connection "$dbConnToe" to toe DB in the DBConn file');
 }
 
@@ -65,7 +90,7 @@ $notificationManager = new Playnet\WwiiOnline\Common\PlayerMail\NotificationMana
 
 // We are passing in the database connections as an array rather than separators
 // we end up with too manay parameters
-$storyProcessor = new StoryProcessor($notificationManager, [
+$storyProcessor = new StoryProcessor($logger, $notificationManager, [
 	'dbConn' => $dbconn, 
 	'dbConnWWII' => $dbConnWWII, 
 	'dbConnWWIIOnline' => $dbConnWWIIOL, 
@@ -124,7 +149,9 @@ if(isset($storyOptions['generate'])) {
 /**
  * Send out the player stories
  */
+$logger->info('Preparing to send Player Emails');
 $notificationManager->getHandler()->send();
+$logger->info('Player Emails sending complete');
 
 /**
  * If we have asked for a specific area to be expired, it will regenerate on

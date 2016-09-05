@@ -79,6 +79,8 @@ If you do an "all", all areas will hold this story, which will make it look weor
 {templatenum} will force the system to use the story template located in templates table. Be warned that this will produced stories with weird results if
 the template is not normally used against the source (see the template_sources table)
 
+The processing logic for stories will be logged to the logs directory. Check the dbConn.example.php for the logging options for stories.
+
 ## WebMap
 The small WebMap that is on the Gazette is its own small version of the actual WebMap. This means it has its own configuration but it still pulls the needed data from from the WebMap's libraries. 
 
