@@ -1,6 +1,6 @@
 <?php
 
-use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+use Monolog\Logger;
 
 /**
  * An abstract class to help parse the stories
@@ -57,6 +57,13 @@ abstract class StoryBase
 	protected $protagonistId = null;
 	
 	/**
+	 * Logging issues in the story generation
+	 * 
+	 * @var Logger 
+	 */
+	protected $logger;
+	
+	/**
 	 * An array of directions  for entering into stories.
 	 * @var array
 	 */
@@ -108,8 +115,9 @@ abstract class StoryBase
 	 */
 	protected $isPlayerCentric = false;
 	
-	public function __construct($creatorData, array $dbConnections = array()) {
-		
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array()) 
+	{		
+		$this->logger = $logger;
 		$this->creatorData = $creatorData;
 		
 		$this->dbConnections = $dbConnections;

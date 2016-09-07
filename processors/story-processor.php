@@ -376,7 +376,7 @@ class StoryProcessor {
 		}
 
 		/* @var $storyCreator StoryInterface */
-		$storyCreator = new $storyCreatorClass($creatorData, $this->dbConnections);
+		$storyCreator = new $storyCreatorClass($this->logger, $creatorData, $this->dbConnections);
 		$this->logger->debug(sprintf("Executing story class %s" , $storyCreatorClass));
 
 		if($storyCreator->isValid())

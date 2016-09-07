@@ -1,5 +1,7 @@
 <?php
 
+use Monolog\Logger;
+
 /**
  * This class is a base class for the various "Best" attached functionality. It allows us
  * access to some common functions so we don't have to duplicate them across
@@ -9,8 +11,8 @@
  */
 abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 	
-	public function __construct($creatorData, array $dbConnections = array()) {
-		parent::__construct($creatorData, $dbConnections);
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array()) {
+		parent::__construct($logger, $creatorData, $dbConnections);
 		$this->isPlayerCentric = true;			
 	}	
 	

@@ -1,13 +1,15 @@
 <?php
 
+use Monolog\Logger;
+
 /**
  * Executes the logic to generate a story from the 
  * "Victory Immiment" source.
  */
 class StoryVictoryImminent extends StoryVictoryBase implements StoryInterface {
 	
-	public function __construct($creatorData, array $dbConnections = array()) {
-		parent::__construct($creatorData, $dbConnections);
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array()) {
+		parent::__construct($logger, $creatorData, $dbConnections);
 
 		self::$minOwnershipPercent = 91;			
 		self::$maxOwnershipPercent = 93;	
