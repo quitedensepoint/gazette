@@ -1,7 +1,5 @@
 <?php
 
-use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
-
 /**
  * This class is a base class for the various "Best" attached functionality. It allows us
  * access to some common functions so we don't have to duplicate them across
@@ -11,8 +9,8 @@ use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
  */
 abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 	
-	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
-		parent::__construct($creatorData, $playerMailHandler, $dbConnections);
+	public function __construct($creatorData, array $dbConnections = array()) {
+		parent::__construct($creatorData, $dbConnections);
 		$this->isPlayerCentric = true;			
 	}	
 	

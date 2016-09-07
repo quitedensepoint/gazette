@@ -102,23 +102,15 @@ abstract class StoryBase
 	protected $dbConnections;
 	
 	/**
-	 * The object that handles the generation and sending of customer emails
-	 * 
-	 * @var HandlerInterface 
-	 */
-	protected $playerMailHandler;
-	
-	/**
 	 * Is the story revolving around a player?
 	 * 
 	 * @var boolean 
 	 */
 	protected $isPlayerCentric = false;
 	
-	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
+	public function __construct($creatorData, array $dbConnections = array()) {
 		
 		$this->creatorData = $creatorData;
-		$this->playerMailHandler = $playerMailHandler;
 		
 		$this->dbConnections = $dbConnections;
 		$this->dbConn = $dbConnections['dbConn'];
