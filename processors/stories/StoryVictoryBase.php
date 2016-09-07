@@ -84,10 +84,11 @@ class StoryVictoryBase extends StoryBase  {
 	 * Overrides the makeStory function of the StoryBase class
 	 * 
 	 * @param array $template
+	 * @param boolean $comparePlaceholders
 	 * @return string
 	 */
-	public function makeStory($template) {
-		
+	public function makeStory($template, $comparePlaceholders = false) 
+	{
 		$template_vars = $this->creatorData['template_vars'];
 
         $template_vars['side_adj'] = strtolower($template_vars['side']) == 
@@ -95,6 +96,11 @@ class StoryVictoryBase extends StoryBase  {
 
         $template_vars['enemy_side_adj'] = strtolower($template_vars['side']) == 
             strtolower(Allied::getSideName()) ? Allied::getSideAdjective() : Axis::getSideAdjective();
+		
+		if($comparePlaceholders)
+		{		
+			$this->comparePlaceholders($template, $template_vars);
+		}
 		
 		return $this->parseStory($template_vars, $template['title'], $template['body'] );
 	}	

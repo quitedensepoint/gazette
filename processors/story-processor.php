@@ -405,7 +405,7 @@ class StoryProcessor {
 			/**
 			 * Content is an array of [title, body]
 			 */
-			$content['story'] =  $storyCreator->makeStory($template);
+			$content['story'] =  $storyCreator->makeStory($template, true);
 			$content['debug_data'] = ['source_id' => $source['source_id'], 'template_id' => $template['template_id']];
 			
 			$this->updateStory($storyData['story_key'], $source['life'], $template['template_id']);

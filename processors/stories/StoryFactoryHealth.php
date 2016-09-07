@@ -41,8 +41,10 @@ class StoryFactoryHealth extends StoryFactoryBase implements StoryInterface {
 	 * this particular story
 	 * 
 	 * @param array $template
+	 * @param boolean $comparePlaceholders
+	 * @return array
 	 */
-	public function makeStory($template) {
+	public function makeStory($template, $comparePlaceholders = false) {
 		/**
 		 * All of the factories in each chokepoint need to be reviwed and will
 		 * built an outline of that chokepoint
@@ -102,6 +104,11 @@ class StoryFactoryHealth extends StoryFactoryBase implements StoryInterface {
 			}
 
 			$finalBody .= $this->parseStory($template_vars, $template['title'], $template['body'])['body'];
+		}
+		
+		if($comparePlaceholders)
+		{		
+			$this->comparePlaceholders($template, $template_vars);
 		}		
 		
 		return ['title' => '', 'body' => $this->makeVarieties($template, $finalBody, $template_vars)];
