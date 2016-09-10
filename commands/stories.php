@@ -50,7 +50,7 @@ $gazetteDbHelper = new dbhelper($dbconn);
  */
 $serverTimezone = new DateTimeZone(date_default_timezone_get());
 
-$storyOptions = getopt('', ['list:', 'expire:', 'help:', 'generate:', 'sourceid:', 'templateid:', 'reportonly:']);
+$storyOptions = getopt('', ['list:', 'expire:', 'help:', 'generate:', 'sourceid:', 'templateid:', 'typeid:', 'reportonly:', 'force:']);
 
 if(count($storyOptions) == 0 || isset($storyOptions['help']))
 {
@@ -59,6 +59,7 @@ if(count($storyOptions) == 0 || isset($storyOptions['help']))
 		. "\n  --generate=all|expired|story_name\tWill generate a new story for the option providede, or new stories for all stories that have expired if no option given."
 		. "\n  --sourceid\tForces a specific story of the id passed in to be generated.\n"
 		. "\n  --templateid\tForces a specific template for the source to be used.\n"
+		. "\n  --typeid\tForces a specific type to be used.\n"
 		. "\n  --reportonly\tForces the text of the story to the command line rather than a file.\n"
 		);
 }
@@ -99,6 +100,7 @@ $storyProcessor = new StoryProcessor($logger, $notificationManager, [
 
 $sourceId = (isset($storyOptions['sourceid']) && ctype_digit($storyOptions['sourceid'])) ? intval($storyOptions['sourceid']) : null;
 $templateId = (isset($storyOptions['templateid']) && ctype_digit($storyOptions['templateid'])) ? intval($storyOptions['templateid']) : null;
+$typeId = (isset($storyOptions['typeid']) && ctype_digit($storyOptions['typeid'])) ? intval($storyOptions['typeid']) : null;
 $reportOnly = isset($storyOptions['reportonly']);
 
 if(isset($storyOptions['generate'])) {
@@ -106,7 +108,8 @@ if(isset($storyOptions['generate'])) {
 	$opts = [
 		'sourceId' => $sourceId, 
 		'templateId' => $templateId,
-		'reportOnly' => $reportOnly
+		'typeId' => $typeId,
+		'reportOnly' => $reportOnly,
 	];
 	
     /**

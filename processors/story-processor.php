@@ -177,7 +177,7 @@ class StoryProcessor {
 		$storyKey = $storyData['story_key'];
 		$storyId= $storyData['story_id'];
 		
-		$storyTypes = $this->getTypeData($storyId);
+		$storyTypes = $this->getTypeData($storyId, $storyKey);
 		if(count($storyTypes) == 0)
 		{
 			$this->logger->warn(sprintf("There are no story types for key %s - skipping", $storyKey));
@@ -202,7 +202,7 @@ class StoryProcessor {
 	{
 		foreach($storyTypes as $storyType)
 		{
-			$this->logger->debug(sprintf("Checking story type %s", $storyType['name']));
+			$this->logger->debug(sprintf("Checking story type %s (ID: %s)", $storyType['name'], $storyType['type_id']));
 			
 			if(($content = $this->prepareStory($storyData, $storyType, $sourceId, $templateId)))
 			{
@@ -537,11 +537,33 @@ class StoryProcessor {
 	 * Retrieves all the story types associated with story
 	 * 
 	 * @param integer $storyId
+	 * @param string $storyKey
 	 * @return array
 	 */
-	private function getTypeData($storyId)
+	private function getTypeData($storyId, $storyKey)
 	{
 		$this->logger->debug(sprintf('Loading in the types for story id %d', $storyId));
+		
+		if(!empty($this->options['typeId']))
+		{
+			// We have asked for a specific typeid on the command line
+			$this->logger->debug(sprintf('Command line option "typeid" is set to ID %s', $this->options['typeId']));
+			
+			$type = $this->dbHelper
+				->first("SELECT t.* FROM story_types st	INNER JOIN types t ON st.type_id = t.type_id WHERE st.story_id = ? AND t.type_id = ?", 
+					[$storyId,$this->options['typeId'] ]
+				);
+			
+			if(!empty($type))
+			{
+				$this->logger->debug(sprintf('Type "%s" found for ID %s', $type['name'], $type['type_id']));
+				return [$type];
+			}
+			
+			$this->logger->warning(sprintf('Type ID %s cannot be used in page section %s. Check that the ID exists in "types" table. Also check that'
+				. ' the "story_types" relationship table has an entry if this is incorrect behaviour.'
+				. ' Program will now load all eligible types for the story and chech each one.', $this->options['typeId'], $storyKey));
+		}
 		
 		/**
 		 * Load in the story types for this story, we may have multiple types, for each country
