@@ -8,8 +8,8 @@ use Monolog\Logger;
  */
 class StoryVictoryPossible extends StoryVictoryBase implements StoryInterface {
 	
-	public function __construct(Logger $logger, $creatorData, array $dbConnections = array()) {
-		parent::__construct($logger, $creatorData, $dbConnections);
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array(), array $options = []) {
+		parent::__construct($logger, $creatorData, $dbConnections, $options);
 		
 		self::$maxOwnershipPercent = 85;
 		self::$minOwnershipPercent = 87;			

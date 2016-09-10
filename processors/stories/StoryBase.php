@@ -115,7 +115,14 @@ abstract class StoryBase
 	 */
 	protected $isPlayerCentric = false;
 	
-	public function __construct(Logger $logger, $creatorData, array $dbConnections = array()) 
+	/**
+	 * Contains the options passed in from the command line
+	 * 
+	 * @var type 
+	 */
+	protected $options;
+	
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array(), array $options = []) 
 	{		
 		$this->logger = $logger;
 		$this->creatorData = $creatorData;
@@ -126,6 +133,8 @@ abstract class StoryBase
 		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
 		$this->dbConnToe = $dbConnections['dbConnToe'];		
 		$this->dbHelper = new dbhelper($this->dbConn);
+		
+		$this->options = $options;
 
 		self::$timezone = new DateTimeZone('America/Chicago');
 	}

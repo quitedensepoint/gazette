@@ -11,8 +11,8 @@ use Monolog\Logger;
  */
 abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 	
-	public function __construct(Logger $logger, $creatorData, array $dbConnections = array()) {
-		parent::__construct($logger, $creatorData, $dbConnections);
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array(), array $options = []) {
+		parent::__construct($logger, $creatorData, $dbConnections, $options);
 		$this->isPlayerCentric = true;			
 	}	
 	

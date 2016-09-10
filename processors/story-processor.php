@@ -83,6 +83,14 @@ class StoryProcessor {
 	 */
 	private $logger;
 	
+	/**
+	 * An array of options that is passed in via the process function
+	 * 
+	 * @var array
+	 * @todo Put this into the constructor instead
+	 */
+	private $options;
+	
 	public function __construct(Logger $logger, NotificationManager $notificationManager, array $dbConnections = array()) 
 	{
 		$this->dbConnections = $dbConnections;
@@ -107,9 +115,11 @@ class StoryProcessor {
 	 */
 	public function process($storyKey, $options)
 	{
-		$sourceId	= $options['sourceId'];
-		$templateId = $options['templateId'];
-		$reportOnly = $options['reportOnly'];
+		$this->options = $options;
+		
+		$sourceId	= $this->options['sourceId'];
+		$templateId = $this->options['templateId'];
+		$reportOnly = $this->options['reportOnly'];
 	
 		$this->logger->debug(sprintf("Processing key %s with options.", $storyKey),['options' => $options]);
 		
@@ -376,7 +386,7 @@ class StoryProcessor {
 		}
 
 		/* @var $storyCreator StoryInterface */
-		$storyCreator = new $storyCreatorClass($this->logger, $creatorData, $this->dbConnections);
+		$storyCreator = new $storyCreatorClass($this->logger, $creatorData, $this->dbConnections, $this->options);
 		$this->logger->debug(sprintf("Executing story class %s" , $storyCreatorClass));
 
 		if($storyCreator->isValid())
