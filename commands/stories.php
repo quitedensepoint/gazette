@@ -61,6 +61,7 @@ if(count($storyOptions) == 0 || isset($storyOptions['help']))
 		. "\n  --templateid\tForces a specific template for the source to be used.\n"
 		. "\n  --typeid\tForces a specific type to be used.\n"
 		. "\n  --reportonly\tForces the text of the story to the command line rather than a file.\n"
+		. "\n  --force\tWill generate a story based on most recent qualifying data. Good for testing in development.\n"
 		);
 }
 
@@ -102,6 +103,7 @@ $sourceId = (isset($storyOptions['sourceid']) && ctype_digit($storyOptions['sour
 $templateId = (isset($storyOptions['templateid']) && ctype_digit($storyOptions['templateid'])) ? intval($storyOptions['templateid']) : null;
 $typeId = (isset($storyOptions['typeid']) && ctype_digit($storyOptions['typeid'])) ? intval($storyOptions['typeid']) : null;
 $reportOnly = isset($storyOptions['reportonly']);
+$force = isset($storyOptions['force']);
 
 if(isset($storyOptions['generate'])) {
 	
@@ -110,6 +112,7 @@ if(isset($storyOptions['generate'])) {
 		'templateId' => $templateId,
 		'typeId' => $typeId,
 		'reportOnly' => $reportOnly,
+		'force' => $force
 	];
 	
     /**
