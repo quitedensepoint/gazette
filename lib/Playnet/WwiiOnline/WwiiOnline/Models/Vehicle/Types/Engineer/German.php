@@ -21,8 +21,8 @@ class German extends Troop implements CountryInterface, TypeInterface{
 	/** Ensures this class can access side and country identifiers */
 	use GermanTrait, TypeTrait;
 	
-	/** The ID of the vehicle in wwii_vehtype */
-	const OBJECT_ID = 33;
+	/** The ID of the vehicle in community.scoring_vehicles */
+	const OBJECT_ID = 33; // Engineer,blitzName = 'de-eng'
 	
 	protected static $typeId = 3;
 

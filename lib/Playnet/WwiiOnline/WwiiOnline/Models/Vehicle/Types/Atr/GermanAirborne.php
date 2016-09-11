@@ -18,7 +18,7 @@ class GermanAirborne extends Airborne implements CountryInterface {
 	/** Ensures this class can access side and country identifiers */
 	use GermanTrait;
 	
-	/** The ID of the vehicle in wwii_vehtype */
-	const OBJECT_ID = 189;
+	/** The ID of the vehicle in community.scoring_vehicles */
+	const OBJECT_ID = 178;
 
 }

@@ -21,8 +21,8 @@ class French extends Troop implements CountryInterface, TypeInterface{
 	/** Ensures this class can access side and country identifiers */
 	use FrenchTrait, TypeTrait;
 	
-	/** The ID of the vehicle in wwii_vehtype */
-	const OBJECT_ID = 18308;
+	/** The ID of the vehicle in community.scoring_vehicles */
+	const OBJECT_ID = 265; // French Sappper , blitzName = 'fr-sapper'
 	
 	protected static $typeId = 16;
 

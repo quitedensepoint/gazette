@@ -18,7 +18,7 @@ class FrenchAirborne extends Airborne implements CountryInterface {
 	/** Ensures this class can access side and country identifiers */
 	use FrenchTrait;
 	
-	/** The ID of the vehicle in wwii_vehtype */
-	const OBJECT_ID = 183;
+	/** The ID of the vehicle in community.scoring_vehicles */
+	const OBJECT_ID = 172;
 
 }
