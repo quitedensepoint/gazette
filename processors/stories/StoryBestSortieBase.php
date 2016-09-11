@@ -11,6 +11,14 @@ use Monolog\Logger;
  */
 abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 	
+	/**
+	 * Holds the maximum number of minutes of age that a sortie can be to
+	 * qualify for the story
+	 * 
+	 * @var integer 
+	 */
+	protected $maxSortieAgeMinutes = 60;
+	
 	public function __construct(Logger $logger, $creatorData, array $dbConnections = array(), array $options = []) {
 		parent::__construct($logger, $creatorData, $dbConnections, $options);
 		$this->isPlayerCentric = true;			

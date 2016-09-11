@@ -94,7 +94,7 @@ $notificationManager = new Playnet\WwiiOnline\Common\PlayerMail\NotificationMana
 // we end up with too manay parameters
 $storyProcessor = new StoryProcessor($logger, $notificationManager, [
 	'dbConn' => $dbconn, 
-	'dbConnWWII' => $dbConnWWII, 
+	'dbConnCommunity' => $dbConnCommunity, 
 	'dbConnWWIIOnline' => $dbConnWWIIOL, 
 	'dbConnToe' => $dbConnToe]
 	);

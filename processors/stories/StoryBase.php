@@ -27,10 +27,10 @@ abstract class StoryBase
 	protected $dbHelper;
 
 	/**
-	 * Connection to the wwii DB
+	 * Connection to the community DB
 	 * @var resource 
 	 */
-	protected $dbConnWWII;	
+	protected $dbConnCommunity;	
 	
 	/**
 	 * Connection to the wwiionline DB
@@ -129,7 +129,7 @@ abstract class StoryBase
 		
 		$this->dbConnections = $dbConnections;
 		$this->dbConn = $dbConnections['dbConn'];
-		$this->dbConnWWII = $dbConnections['dbConnWWII'];
+		$this->dbConnCommunity = $dbConnections['dbConnCommunity'];
 		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
 		$this->dbConnToe = $dbConnections['dbConnToe'];		
 		$this->dbHelper = new dbhelper($this->dbConn);
@@ -294,7 +294,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from wwii_player WHERE playerid = ? LIMIT 1", [$playerId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - player ID %d could not be found ', $playerId));
+		}
+		
+		return $result;					
 	}
 	
 	/**
@@ -308,9 +315,16 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from branches WHERE branch_id = ? LIMIT 1", [$branchId]);	
+			->prepare("SELECT * from branches WHERE branch_id = ? LIMIT 1", [$branchId]);
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - branch ID %d could not be found ', $branchId));
+		}		
 
-		return $dbHelper->getAsArray($query);					
+		return $result;					
 	}	
 	
 	/**
@@ -326,7 +340,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - sortie ID %d could not be found ', $sortieId));
+		}		
+
+		return $result;						
 	}
 	
 	/**
@@ -342,7 +363,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from strat_facility WHERE facility_oid = ? LIMIT 1", [$facilityId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - facility ID %d could not be found ', $facilityId));
+		}		
+
+		return $result;					
 	}
 	
 	/**
@@ -358,7 +386,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from community.scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - vehicle ID %d could not be found ', $vehicleId));
+		}		
+
+		return $result;					
 	}
 	
 	/**
@@ -403,49 +438,22 @@ abstract class StoryBase
 	 * 
 	 * @param integer $sortieId
 	 * @return array
-	 * 
 	 */
 	public function getVehicleKillCountsForSortie($sortieId)
 	{
-		$dbHelper = new dbhelper($this->dbConnWWII);
+		$dbHelper = new dbhelper($this->dbConnCommunity);
 		
-		$query = $dbHelper
-			->prepare("SELECT victim_vehtype_oid, count(kill_id) as kill_count from kills WHERE killer_sortie_id = ?"
+		$kills = $dbHelper
+			->get("SELECT sck.opponent_vehicle_id, sv.name, count(kill_id) as kill_count"
+				. " FROM scoring_campaign_kills sck INNER JOIN scoring_vehicles sv ON sck.opponent_vehicle_id = sv.vehicle_id"
+				. " WHERE sortie_id = ?"
 				, [$sortieId]);	
-
-		$kills = $dbHelper->getAsArray($query);
 		
 		if(count($kills) == 0)
 		{
 			return [];
 		}
-		$keys = [];
-		foreach($kills as $kill)
-		{
-			$keys[] = $kill['victim_vehtype_oid'];
-		}
-		
-		$wwiiolHelper = new dbhelper($this->dbConnWWIIOnline);
-		
-		$query2 = $wwiiolHelper
-			->prepare("SELECT vehtype_oid, fullName FROM wwii_vehtype WHERE vehtype_oid IN (?)"
-				, [join(",", $keys)]);	
-
-		$vehicles = $wwiiolHelper->getAsArray($query2);
-		
-		/**
-		 * Add the names of the items killed to the list
-		 */
-		array_walk($kills, function(&$kill) use($vehicles) {
-			foreach($vehicles as $vehicle)
-			{
-				if($vehicle['vehtype_oid'] == $kill['victim_vehtype_oid'])
-				{
-					$kill['name'] = $vehicle['fullName'];
-				}
-			}
-		});
-		
+	
 		return $kills;
 	}	
 	

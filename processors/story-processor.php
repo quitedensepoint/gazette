@@ -28,10 +28,10 @@ class StoryProcessor {
 	protected $dbConn;
 	
 	/**
-	 * Connection to the wwii db (kills db)
+	 * Connection to the communityDB
 	 * @var resource 
 	 */
-	protected $dbConnWWII;	
+	protected $dbConnCommunity;	
 	
 	/**
 	 * Connection to the wwiionline db (game db)
@@ -95,7 +95,7 @@ class StoryProcessor {
 	{
 		$this->dbConnections = $dbConnections;
 		$this->dbConn = $dbConnections['dbConn'];
-		$this->dbConnWWII = $dbConnections['dbConnWWII'];
+		$this->dbConnCommunity = $dbConnections['dbConnCommunity'];
 		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
 		$this->dbConnToe = $dbConnections['dbConnToe'];
 		
@@ -381,7 +381,7 @@ class StoryProcessor {
 		 */
 		if(!class_exists($storyCreatorClass))
 		{
-			$this->logger->debug("No story class has been defined for $storyCreatorClass - skipping...");
+			$this->logger->warning("No story class has been defined for $storyCreatorClass - skipping...");
 			return false;
 		}
 
