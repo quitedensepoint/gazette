@@ -15,11 +15,6 @@ if (mysqli_connect_errno()){
     echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
 }
 
-$dbConnWWII = mysqli_connect("p:db_host","db_user","db_password","wwii");
-if (mysqli_connect_errno()){
-    echo "Failed to connect to WWII database: " . mysqli_connect_error();
-}
-
 $dbConnWWIIOL = mysqli_connect("p:db_host","db_user","db_password","wwiionline");
 if (mysqli_connect_errno()){
     echo "Failed to connect to WWIIOnline database: " . mysqli_connect_error();
@@ -77,6 +72,22 @@ $options = [
 	
 	// Keep the campaign check log retention limited to this many days
 	'campaigncheck_log_retention_days' => 14,
+	
+	// Add story generator options
+	'storygenerator' => [
+		
+		// Options for the logging of story generation
+		'log' => [
+			// Limit the rotating log to 14 days
+			'retention_days' => 14,			
+			// Record all events of this level and above
+			'level' => 'debug',
+			// If true will out debugging to the console. Good for local dev and debug
+			'console' => true,
+			// Timezone of the logger
+			'timezone' => 'America/Chicago'
+		]
+	],	
 	
 	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
 	'webmap-environment' => 'live',

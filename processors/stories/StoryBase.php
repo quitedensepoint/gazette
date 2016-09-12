@@ -1,6 +1,6 @@
 <?php
 
-use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+use Monolog\Logger;
 
 /**
  * An abstract class to help parse the stories
@@ -27,10 +27,10 @@ abstract class StoryBase
 	protected $dbHelper;
 
 	/**
-	 * Connection to the wwii DB
+	 * Connection to the community DB
 	 * @var resource 
 	 */
-	protected $dbConnWWII;	
+	protected $dbConnCommunity;	
 	
 	/**
 	 * Connection to the wwiionline DB
@@ -55,6 +55,13 @@ abstract class StoryBase
 	 * @var integer
 	 */
 	protected $protagonistId = null;
+	
+	/**
+	 * Logging issues in the story generation
+	 * 
+	 * @var Logger 
+	 */
+	protected $logger;
 	
 	/**
 	 * An array of directions  for entering into stories.
@@ -102,39 +109,52 @@ abstract class StoryBase
 	protected $dbConnections;
 	
 	/**
-	 * The object that handles the generation and sending of customer emails
-	 * 
-	 * @var HandlerInterface 
-	 */
-	protected $playerMailHandler;
-	
-	/**
 	 * Is the story revolving around a player?
 	 * 
 	 * @var boolean 
 	 */
 	protected $isPlayerCentric = false;
 	
-	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
-		
+	/**
+	 * Contains the options passed in from the command line
+	 * 
+	 * @var type 
+	 */
+	protected $options;
+	
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array(), array $options = []) 
+	{		
+		$this->logger = $logger;
 		$this->creatorData = $creatorData;
-		$this->playerMailHandler = $playerMailHandler;
 		
 		$this->dbConnections = $dbConnections;
 		$this->dbConn = $dbConnections['dbConn'];
-		$this->dbConnWWII = $dbConnections['dbConnWWII'];
+		$this->dbConnCommunity = $dbConnections['dbConnCommunity'];
 		$this->dbConnWWIIOnline = $dbConnections['dbConnWWIIOnline'];
 		$this->dbConnToe = $dbConnections['dbConnToe'];		
 		$this->dbHelper = new dbhelper($this->dbConn);
+		
+		$this->options = $options;
 
 		self::$timezone = new DateTimeZone('America/Chicago');
 	}
 	
-	public function makeStory($template) {
+	/**
+	 * 
+	 * @inheritDoc
+	 */
+	public function makeStory($template, $comparePlaceholders = false) {
 
-		$result = $this->parseStory($this->creatorData['template_vars'], $template['title'], $template['body']);
+		$templateVars = $this->creatorData['template_vars'];
 		
-		return $this->makeVarieties($template, $result, $this->creatorData['template_vars']);
+		if($comparePlaceholders)
+		{
+			$this->comparePlaceholders($template, $templateVars);
+		}
+		
+		$result = $this->parseStory($templateVars, $template['title'], $template['body']);
+		
+		return $this->makeVarieties($template, $result, $templateVars);
 	}
 	
 	/**
@@ -274,7 +294,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from wwii_player WHERE playerid = ? LIMIT 1", [$playerId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - player ID %d could not be found ', $playerId));
+		}
+		
+		return $result;					
 	}
 	
 	/**
@@ -288,9 +315,16 @@ abstract class StoryBase
 		$dbHelper = new dbhelper($this->dbConn);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from branches WHERE branch_id = ? LIMIT 1", [$branchId]);	
+			->prepare("SELECT * from branches WHERE branch_id = ? LIMIT 1", [$branchId]);
+		
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - branch ID %d could not be found ', $branchId));
+		}		
 
-		return $dbHelper->getAsArray($query);					
+		return $result;					
 	}	
 	
 	/**
@@ -306,7 +340,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - sortie ID %d could not be found ', $sortieId));
+		}		
+
+		return $result;						
 	}
 	
 	/**
@@ -322,7 +363,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from strat_facility WHERE facility_oid = ? LIMIT 1", [$facilityId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - facility ID %d could not be found ', $facilityId));
+		}		
+
+		return $result;					
 	}
 	
 	/**
@@ -338,7 +386,14 @@ abstract class StoryBase
 		$query = $dbHelper
 			->prepare("SELECT * from community.scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
 
-		return $dbHelper->getAsArray($query);					
+		$result = $dbHelper->getAsArray($query);
+		
+		if(count($result) == 0)
+		{
+			$this->logger->error(sprintf('Error generating story - vehicle ID %d could not be found ', $vehicleId));
+		}		
+
+		return $result;					
 	}
 	
 	/**
@@ -383,49 +438,22 @@ abstract class StoryBase
 	 * 
 	 * @param integer $sortieId
 	 * @return array
-	 * 
 	 */
 	public function getVehicleKillCountsForSortie($sortieId)
 	{
-		$dbHelper = new dbhelper($this->dbConnWWII);
+		$dbHelper = new dbhelper($this->dbConnCommunity);
 		
-		$query = $dbHelper
-			->prepare("SELECT victim_vehtype_oid, count(kill_id) as kill_count from kills WHERE killer_sortie_id = ?"
+		$kills = $dbHelper
+			->get("SELECT sck.opponent_vehicle_id, sv.name, count(kill_id) as kill_count"
+				. " FROM scoring_campaign_kills sck INNER JOIN scoring_vehicles sv ON sck.opponent_vehicle_id = sv.vehicle_id"
+				. " WHERE sortie_id = ?"
 				, [$sortieId]);	
-
-		$kills = $dbHelper->getAsArray($query);
 		
 		if(count($kills) == 0)
 		{
 			return [];
 		}
-		$keys = [];
-		foreach($kills as $kill)
-		{
-			$keys[] = $kill['victim_vehtype_oid'];
-		}
-		
-		$wwiiolHelper = new dbhelper($this->dbConnWWIIOnline);
-		
-		$query2 = $wwiiolHelper
-			->prepare("SELECT vehtype_oid, fullName FROM wwii_vehtype WHERE vehtype_oid IN (?)"
-				, [join(",", $keys)]);	
-
-		$vehicles = $wwiiolHelper->getAsArray($query2);
-		
-		/**
-		 * Add the names of the items killed to the list
-		 */
-		array_walk($kills, function(&$kill) use($vehicles) {
-			foreach($vehicles as $vehicle)
-			{
-				if($vehicle['vehtype_oid'] == $kill['victim_vehtype_oid'])
-				{
-					$kill['name'] = $vehicle['fullName'];
-				}
-			}
-		});
-		
+	
 		return $kills;
 	}	
 	
@@ -797,5 +825,51 @@ abstract class StoryBase
 		
 		return $emailTemplate;
 
-	}	
+	}
+	
+	/**
+	 * Extracts all the placeholders from a template into a unique array
+	 * 
+	 * @param array $template
+	 * @return array
+	 */
+	protected function getTemplatePlaceholders(array $template)
+	{
+		$title = null; $body = null;
+		$variety1 = null; $variety2 = null;
+		preg_match_all("/%([A-Z0-9_]+)%/", $template['title'], $title);
+		preg_match_all("/%([A-Z0-9_]+)%/", $template['body'], $body);
+		preg_match_all("/%([A-Z0-9_]+)%/", $template['variety_1'], $variety1);
+		preg_match_all("/%([A-Z0-9_]+)%/", $template['variety_2'], $variety2);
+		
+		return array_unique(array_merge($title[1], $body[1], $variety1[1], $variety2[1]));
+	}
+	
+	/**
+	 * Takes the placeholders that are in the template, and compates them to the template
+	 * vars generated by the story. Reports on any discrepancies and returns an array of the 
+	 * placeholders that are missing
+	 * 
+	 * @param array $template
+	 * @param array $templateVars
+	 * @return array
+	 */
+	protected function comparePlaceholders(array $template, array $templateVars)
+	{
+		$placeholders = $this->getTemplatePlaceholders($template);
+		
+		$this->logger->debug("Template placeholders are : " . implode(",", $placeholders));
+		
+		$tvars = array_change_key_case($templateVars, CASE_UPPER);
+	
+		$this->logger->debug("Story Vars are : " . implode(",", array_keys($tvars)));
+		
+		$missingPlaceholders = array_diff($placeholders, array_keys($tvars));
+		if(count($missingPlaceholders) > 0)
+		{
+			$this->logger->warn("Missing Placeholders in Template Vars: " . implode(",", $missingPlaceholders));
+		}
+		
+		return $missingPlaceholders;
+	}
 }

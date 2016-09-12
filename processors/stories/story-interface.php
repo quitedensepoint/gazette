@@ -21,9 +21,10 @@ interface StoryInterface {
 	 * validation checks
 	 * 
 	 * @param string $template The string representing the template story
+	 * @param boolean $compareVariables if true, will perform a variable comparison on the template to make sure it is ok
 	 * @return array
 	 */
-	public function makeStory($template);
+	public function makeStory($template, $compareVariables = false);
 	
 	/**
 	 * Check to see if the story centers around the actions of a player

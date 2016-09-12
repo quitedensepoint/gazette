@@ -35,7 +35,7 @@ The documentation for phinx migrations can be found at the [Phinx Website](http:
 ### Logging
 The application uses the monolog library for debug and runtime logs. Refer to the monolog documentation and the usage in the *commands/campaign-check.php* script for examples on how to output to logs.
 
-Currently the logger is not using any handlers, so it just outputs everything to the console.
+The logger will output information to the logs directory in the application root.
 
 ## Scripts
 ### Campaign Checker
@@ -71,13 +71,20 @@ Where *story_key* is the value in the story_key column in the stories table
 
 For the purposes of debugging, you can also perform the following options after the generate option
 
-> *php commands/stories.php --generate={story_key} --sourceid={sourcenum} --templateid={templatenum}*
+> *php commands/stories.php --generate={story_key} --sourceid={sourcenum} --templateid={templatenum} --typeid={typeid} --force=true*
 
 Where {sourcenum} is the id of the row in the sources table in the gazette. This will be forced to be the text of the story for areas that are being generated.
 If you do an "all", all areas will hold this story, which will make it look weord
 
 {templatenum} will force the system to use the story template located in templates table. Be warned that this will produced stories with weird results if
 the template is not normally used against the source (see the template_sources table)
+
+{typeid} will force the system to use the specific story type (e.g. Tactical Stat story) in the area for this story, if it is valid for that area.
+
+The force parameter will try to force a story to be generated, if even the data for the story is out of date. This is mainly to help developers generate output
+for player centric stories, if even if the source data is months old. This doesn't work across all story types yet.
+
+The processing logic for stories will be logged to the logs directory. Check the dbConn.example.php for the logging options for stories.
 
 ## WebMap
 The small WebMap that is on the Gazette is its own small version of the actual WebMap. This means it has its own configuration but it still pulls the needed data from from the WebMap's libraries. 
