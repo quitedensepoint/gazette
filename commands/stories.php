@@ -72,11 +72,6 @@ if(!isset($dbconn)) {
 	throw new Exception('Please ensure you have defined a connection "$dbconn" to gazette DB in the DBConn file');
 }
 
-if(!isset($dbConnWWII)) {
-	$logger->emergency('The $dbConnWWII variable is not defined! Cannot start without database connectivity!');
-	throw new Exception('Please ensure you have defined a connection "$dbConnWWII" to wwii DB in the DBConn file');
-}
-
 if(!isset($dbConnWWIIOL)) {
 	$logger->emergency('The $dbConnWWIIOL variable is not defined! Cannot start without database connectivity!');
 	throw new Exception('Please ensure you have defined a connection "$dbConnWWIIOL" to wwiionline DB in the DBConn file');
