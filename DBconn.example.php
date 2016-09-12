@@ -50,11 +50,11 @@ if (mysqli_connect_errno()){
 
 /*
 $dbconn->query("SET SESSION time_zone = 'America/Chicago'");
-$dbConnWWII->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnWWIIOnline->query("SET SESSION time_zone = 'America/Chicago'");
 $dbconnAuth->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnToe->query("SET SESSION time_zone = 'America/Chicago'");
-$dbConnCommunity->query("SET SESSION time_zone = 'America/Chicago'"); 
+$dbConnCommunity->query("SET SESSION time_zone = 'America/Chicago'");
+$dbConnWebmap->query("SET SESSION time_zone = 'America/Chicago'"); 
  */
 
 /**
