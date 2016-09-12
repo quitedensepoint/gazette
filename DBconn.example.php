@@ -133,8 +133,8 @@ $options = [
 			// if true, will logout output from the REST mailer to the command line as well as log files
 			'log_to_console' => false,
 			
-			// How long the system should wait, in seconds, between sending a user another notification
-			'notification_rate' => 24 * 60 * 60, // 24 hours * 60 minutes * 60 seconds
+			// How long the system should wait, in seconds, between sending a user another notification email
+			'notification_rate' => 7 * 24 * 60 * 60, // 7 days * 24 hours * 60 minutes * 60 seconds
 
 			// Unsubscribe information
 			'unsubscribe' => [			
