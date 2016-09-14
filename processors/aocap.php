@@ -11,7 +11,7 @@ $cap=("SELECT *
         LEFT JOIN `strat_facility` as i
             ON s.facility_oid=i.facility_oid
 
-        LEFT JOIN `ids_cp` as c
+        LEFT JOIN `strat_cp` as c
             ON i.cp_oid=c.cp_oid
         WHERE `took_ownership` ='1' AND contention='End' 
         ORDER BY `started_at` DESC
