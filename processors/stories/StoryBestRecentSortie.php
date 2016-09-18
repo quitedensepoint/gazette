@@ -6,23 +6,31 @@
  */
 class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterface {
 	
-	public function isValid() {
+	public function isValid() 
+	{
+		if(empty($kill = $this->getBestRecentSortie($this->creatorData['side_id'])))
+		{		
+			return false;
+		}
 
-		$sortie = $this->getBestRecentSortie($this->creatorData['side_id']);
-		
-		if(empty($sortie))
+		if(!$this->setProtagonist($kill['player_id']))
 		{
 			return false;
 		}
 		
-		$this->creatorData['template_vars']['user_id'] = $sortie['customer_id'];
-		$this->creatorData['template_vars']['player'] = ucfirst($sortie['callsign']);
-		$this->creatorData['template_vars']['kills'] = $sortie['kills'];
-		$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
-		$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawned'], $sortie['returned']);
-		$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($sortie['capture_fac']);
+		$sortie = $this->getSortieById($kill['sortie_id']);
+		
+		if(!$this->createCommonTemplateVarsFromSortie($sortie))
+		{
+			return false;
+		}
+		
+		$this->creatorData['template_vars']['user_id'] = $sortie['player_id'];
 
-		$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", self::$timezone);
+		$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
+		$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($kill['capture_fac']);
+
+		$dateOfSpawn = new DateTime(intval($sortie['spawn_time']) . " seconds", self::$timezone);
 		$this->creatorData['template_vars']['month'] = $dateOfSpawn->format('F');
 		$this->creatorData['template_vars']['day_ord'] = $dateOfSpawn->format('j');
 
@@ -30,10 +38,7 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 		$this->creatorData['template_vars']['enemy_country'] = $enemyCountry['name'];
 		$this->creatorData['template_vars']['enemy_country_adj'] = $enemyCountry['adjective'];
 
-		$this->createCommonTemplateVarsFromSortie($sortie);
-
 		return true;
-	
 	}
 	
 	/**
@@ -81,9 +86,7 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 	 */
 	public function getCapturedFacility($facilityId)
 	{
-		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
-		
-		$facility = $dbHelper->first("select name from strat_facility where facility_oid = ? limit 1", [$facilityId]);	
+		$facility = $this->getFacilityById($facilityId);
 
 		return !empty($facility) ? $facility['name'] : 'an enemy facility';			
 	}

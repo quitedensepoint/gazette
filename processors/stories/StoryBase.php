@@ -328,49 +328,45 @@ abstract class StoryBase
 	}	
 	
 	/**
-	 * Retrieve the record of a single sortie, or an empty array if no record
+	 * Retrieve the record of a single sortie, or null if not found
 	 * 
 	 * @param integer $sortieId The ID of the record
-	 * @return array
+	 * @return array|null
 	 */
 	public function getSortieById($sortieId)
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $dbHelper
-			->prepare("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
-
-		$result = $dbHelper->getAsArray($query);
+		$sortie = $dbHelper
+			->first("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
 		
-		if(count($result) == 0)
+		if(empty($sortie))
 		{
 			$this->logger->error(sprintf('Error generating story - sortie ID %d could not be found ', $sortieId));
 		}		
 
-		return $result;						
+		return $sortie;						
 	}
 	
 	/**
 	 * Retrieve the record for a single facility
 	 * 
 	 * @param integer $facilityId
-	 * @return array
+	 * @return array|null
 	 */
 	public function getFacilityById($facilityId)
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $dbHelper
-			->prepare("SELECT * from strat_facility WHERE facility_oid = ? LIMIT 1", [$facilityId]);	
-
-		$result = $dbHelper->getAsArray($query);
+		$facility = $dbHelper
+			->first("SELECT * from strat_facility WHERE facility_oid = ? LIMIT 1", [$facilityId]);	
 		
-		if(count($result) == 0)
+		if(empty($facility))
 		{
 			$this->logger->error(sprintf('Error generating story - facility ID %d could not be found ', $facilityId));
 		}		
 
-		return $result;					
+		return $facility;					
 	}
 	
 	/**
