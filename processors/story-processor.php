@@ -270,11 +270,11 @@ class StoryProcessor {
 			{
 				if($source['type_id'] != $typeId)
 				{
-					$this->logger->debug(sprintf("Type %s (ID:%d) cannot use source '%s' (ID: %d)", $storyType['name'], $typeId, $source['name'], $source['type_id']));
+					$this->logger->debug(sprintf("Type %s (ID:%d) cannot use source '%s' (ID: %d)", $storyType['name'], $typeId, $source['name'], $source['source_id']));
 					continue;
 				}
 				
-				$this->logger->debug(sprintf("Type %s (ID:%d) will use source '%s' (ID: %d)", $storyType['name'], $typeId, $source['name'], $source['type_id']));
+				$this->logger->debug(sprintf("Type %s (ID:%d) will use source '%s' (ID: %d)", $storyType['name'], $typeId, $source['name'], $source['source_id']));
 				
 				if(($content = $this->processSource($storyData, $source, $templateId)) !== false) {
 					return $content;

@@ -85,11 +85,107 @@ abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 	 * Creates a common set of sortie data across "Best..." stories
 	 * 
 	 * @param array $sortie
-	 * @return void
+	 * @return boolean
 	 */
 	public function createCommonTemplateVarsFromSortie($sortie)
 	{
 		$rtb = $this->getRTBStatus($sortie['rtb']);
-		$this->creatorData['template_vars']['rtb'] = $rtb == null ? 'Unknown' : $rtb;		
+		$this->creatorData['template_vars']['rtb'] = $rtb == null ? 'Unknown' : $rtb;
+		
+		// Setup the duration of the sortie
+		$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawn_time'], $sortie['return_time']);
+		
+		$this->creatorData['template_vars']['target_kills'] = $sortie['kills'];
+		$this->creatorData['template_vars']['kills'] = $sortie['kills'];
+		
+		/**
+		 * Get where the player spawned from
+		 */
+		if(!$this->setSpawnFacility($sortie))
+		{
+			return false;
+		}		
+		
+		if(!$this->setKillerVehicle($sortie))
+		{
+			return false;
+		}
+		
+		$this->setKillsList($sortie);
+		$this->setSpawnStart($sortie);
+
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param array $sortie
+	 * @return boolean
+	 */
+	public function setSpawnFacility($sortie)
+	{
+		/**
+		 * Get where the player spawned from
+		 */
+		if(empty($spawnFacility = $this->getFacilityById($sortie['facility_oid'])))
+		{
+			return false;
+		}		
+		$this->creatorData['template_vars']['spawn'] = $spawnFacility['name'];
+		
+		return true;
+	}
+	
+	/**
+	 * Update common info about the vehicle used by the player in the sortie
+	 * 
+	 * @param array $sortie
+	 * @return boolean
+	 */
+	public function setKillerVehicle(array $sortie)
+	{
+		/**
+		 * Get the vehicle the player was using as their avatar
+		 * @TODO Update definition of getVehicleByClassification across all stories
+		 */		
+		$data = $this->getVehicleByClassification($sortie['vcountry'], $sortie['vcategory'], $sortie['vclass'], $sortie['vtype']);
+		if(count($data) == 0)
+		{
+			return false;
+		}
+	
+		$killerVehicle = $data[0];
+		$this->creatorData['template_vars']['vehicle'] = $killerVehicle['name'];
+		$this->creatorData['template_vars']['vehicle_short'] = $killerVehicle['short_name'];
+		
+		return true;
+	}
+	
+	/**
+	 * Sets the list of kills for the sortie
+	 * 
+	 * @param array $sortie
+	 * @return void
+	 */
+	public function setKillsList($sortie)
+	{
+		$kills = $this->getVehicleKillCountsForSortie($sortie['sortie_id']);
+		$killList = [];
+		foreach ($kills as $kill)
+		{
+			$killList[] = sprintf("%s %ss", $kill['kill_count'], $kill['name']);
+		}
+		$this->creatorData['template_vars']['list'] = join(", ", $killList);		
+	}
+	
+	/**
+	 * Set the date of the spawn time
+	 * 
+	 * @param array $sortie
+	 */
+	public function setSpawnStart($sortie)
+	{
+		$dateOfSpawn = DateTime::createFromFormat("Y-m-d H:i:s", $sortie['spawn_time'], self::$timezone);
+		$this->creatorData['template_vars']['start'] = $dateOfSpawn === false ? "an unreported date" : $dateOfSpawn->format('F j');
 	}
 }
