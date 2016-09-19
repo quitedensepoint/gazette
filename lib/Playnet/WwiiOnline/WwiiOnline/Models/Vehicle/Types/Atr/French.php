@@ -18,7 +18,7 @@ class French extends Ground implements CountryInterface {
 	/** Ensures this class can access side and country identifiers */
 	use FrenchTrait;
 	
-	/** The ID of the vehicle in wwii_vehtype */
-	const OBJECT_ID = 119;
+	/** The ID of the vehicle in community.scoring_vehicles */
+	const OBJECT_ID = 121;
 
 }

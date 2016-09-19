@@ -57,7 +57,7 @@ class StoryBestDestroyerSortie extends StoryBestSortieBase implements StoryInter
 		/**
 		 * Get the sortie info for the player
 		 */
-		$sortie = $this->getSortieById($kill['killer_sortie_id']);
+		$sortie = $this->getSortieById($kill['sortie_id']);
 		if(count($sortie) == 0)
 		{
 			return false;
@@ -118,21 +118,38 @@ class StoryBestDestroyerSortie extends StoryBestSortieBase implements StoryInter
 	 */
 	public function getMostRecentBestKill($countryId)
 	{	
-		$dbHelper = new dbhelper($this->dbConnWWII);
+		$dbHelper = new dbhelper($this->dbConnCommunity);
 		
 		$params = [
 			Sea::getClassId(),
 			Sea::getClassId(), Riverine::getClassId(),
-			$countryId, self::$minKills];
+			$countryId, $this->maxSortieAgeMinutes, self::$minKills];
 		
+		$timeFilter = " AND kill_time >= DATE_SUB(NOW(),INTERVAL ? MINUTE)";
+
+		if($this->options['force'])
+		{		
+			/**
+			 * By using the force option, developers can test against their static data and just use the most recent records 
+			 * they have as the starting point. This will generate an actual story, even if it is out of date.
+			 */			
+			$timeFilter = "";
+			// Remove the second last paramater
+			$tmp = array_pop($params); array_pop($params); array_push($params, $tmp);
+		}
+
 		return $dbHelper
-			->first("SELECT count(kill_id) as kill_count, killer_sortie_id, killer_player_0 as killer_id, killer_vehtype_oid, MAX(kill_time) as kill_time "
-				. "FROM kills "
-				. "WHERE killer_class IN (?) AND victim_class IN (?, ?) AND killer_country = ? "
-				. "GROUP BY killer_sortie_id, killer_player_0, killer_vehtype_oid "
-				. "HAVING count(kill_id) >= ? "
-				. "ORDER BY kill_time DESC , kill_count DESC "
-				. "LIMIT 1", $params);			
+			->first("SELECT count(kill_id) as kill_count, scs.sortie_id, MAX(kill_time) as kill_time, sck.opponent_vehicle_id, scs.player_id as killer_id"
+				. " FROM scoring_campaign_sorties scs INNER JOIN scoring_campaign_kills sck  ON sck.sortie_id = scs.sortie_id"
+				. " INNER JOIN scoring_vehicles sv_enemy ON sv_enemy.vehicle_id = sck.opponent_vehicle_id"
+				. " INNER JOIN scoring_vehicles sv_player ON sv_player.vehicle_id = sck.vehicle_id"
+				. " WHERE sv_player.class_id = ? AND sv_enemy.class_id IN (?, ?) AND scs.country_id = ?"
+				. $timeFilter
+				. " GROUP BY scs.sortie_id, scs.player_id"
+				. " HAVING count(kill_id) >= ? "
+				. " ORDER BY kill_count DESC, MAX(kill_time) DESC"
+				. " LIMIT 1", $params);	
+		
 	}
 	
 }

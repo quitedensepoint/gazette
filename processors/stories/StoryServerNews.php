@@ -30,13 +30,19 @@ class StoryServerNews extends StoryBase implements StoryInterface {
 	 * This overrides the standard story making to build specific stories from server news
 	 * 
 	 * @param array $template
+	 * @param boolean $comparePlaceholders
 	 * @return array
 	 */
-	public function makeStory($template) {
+	public function makeStory($template, $comparePlaceholders = false) {
 		
 		$template_vars = [
 			'news' => $this->creatorData['template_vars']['news']['motd']
 		];
+		
+		if($comparePlaceholders)
+		{		
+			$this->comparePlaceholders($template, $template_vars);
+		}	
 		
 		$output = $this->parseStory($template_vars, $template['title'], $template['body']);
 		

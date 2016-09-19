@@ -15,11 +15,6 @@ if (mysqli_connect_errno()){
     echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
 }
 
-$dbConnWWII = mysqli_connect("p:db_host","db_user","db_password","wwii");
-if (mysqli_connect_errno()){
-    echo "Failed to connect to WWII database: " . mysqli_connect_error();
-}
-
 $dbConnWWIIOL = mysqli_connect("p:db_host","db_user","db_password","wwiionline");
 if (mysqli_connect_errno()){
     echo "Failed to connect to WWIIOnline database: " . mysqli_connect_error();
@@ -55,11 +50,11 @@ if (mysqli_connect_errno()){
 
 /*
 $dbconn->query("SET SESSION time_zone = 'America/Chicago'");
-$dbConnWWII->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnWWIIOnline->query("SET SESSION time_zone = 'America/Chicago'");
 $dbconnAuth->query("SET SESSION time_zone = 'America/Chicago'");
 $dbConnToe->query("SET SESSION time_zone = 'America/Chicago'");
-$dbConnCommunity->query("SET SESSION time_zone = 'America/Chicago'"); 
+$dbConnCommunity->query("SET SESSION time_zone = 'America/Chicago'");
+$dbConnWebmap->query("SET SESSION time_zone = 'America/Chicago'"); 
  */
 
 /**
@@ -78,8 +73,24 @@ $options = [
 	// Keep the campaign check log retention limited to this many days
 	'campaigncheck_log_retention_days' => 14,
 	
+	// Add story generator options
+	'storygenerator' => [
+		
+		// Options for the logging of story generation
+		'log' => [
+			// Limit the rotating log to 14 days
+			'retention_days' => 14,			
+			// Record all events of this level and above
+			'level' => 'debug',
+			// If true will out debugging to the console. Good for local dev and debug
+			'console' => true,
+			// Timezone of the logger
+			'timezone' => 'America/Chicago'
+		]
+	],	
+	
 	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
-	'webmap-environment' => 'dev',
+	'webmap-environment' => 'live',
 
 	// Options for the player mailer (see Confluence Documentation)
 	'playerMail' => [
@@ -87,7 +98,7 @@ $options = [
 		// The subject to go out on the emails
 		'subject' => 'World War II Online Gazette: You\'ve been mentioned!',
 		
-		// The classname (in the Playnet\WiiOnline\Common\PlayerMail namespace
+		// The classname (in the Playnet\WiiOnline\Common\PlayerMail namespace) [IgnoreHandler, TestHandler, RestHandler]
 		'handler' => 'IgnoreHandler',
 		
 		// The options to pass into the constructor of the handler
@@ -133,8 +144,8 @@ $options = [
 			// if true, will logout output from the REST mailer to the command line as well as log files
 			'log_to_console' => false,
 			
-			// How long the system should wait, in minutes, between sending a user another notification
-			'notification_rate' => 24 * 60, // 24 hours * 60 minutes
+			// How long the system should wait, in seconds, between sending a user another notification email
+			'notification_rate' => 7 * 24 * 60 * 60, // 7 days * 24 hours * 60 minutes * 60 seconds
 
 			// Unsubscribe information
 			'unsubscribe' => [			

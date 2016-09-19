@@ -21,8 +21,8 @@ class Us extends Troop implements CountryInterface, TypeInterface{
 	/** Ensures this class can access side and country identifiers */
 	use UsTrait, TypeTrait;
 	
-	/** The ID of the vehicle in wwii_vehtype */
-	const OBJECT_ID = 2674;
+	/** The ID of the vehicle in community.scoring_vehicles */
+	const OBJECT_ID = 205; // Engineer , blitzName = us-eng
 	
 	protected static $typeId = 3;
 

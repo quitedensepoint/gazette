@@ -1,5 +1,6 @@
 <?php
-use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+
+use Monolog\Logger;
 
 /**
  * Executes the logic to generate a story from the 
@@ -7,8 +8,8 @@ use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
  */
 class StoryVictoryNear extends StoryVictoryBase implements StoryInterface {
 	
-	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
-		parent::__construct($creatorData, $playerMailHandler, $dbConnections);
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array(), array $options = []) {
+		parent::__construct($logger, $creatorData, $dbConnections, $options);
 	
 		self::$minOwnershipPercent = 88;
 		self::$maxOwnershipPercent = 90;

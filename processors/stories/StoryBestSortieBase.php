@@ -1,6 +1,6 @@
 <?php
 
-use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
+use Monolog\Logger;
 
 /**
  * This class is a base class for the various "Best" attached functionality. It allows us
@@ -11,8 +11,16 @@ use Playnet\WwiiOnline\Common\PlayerMail\HandlerInterface;
  */
 abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 	
-	public function __construct($creatorData, HandlerInterface $playerMailHandler, array $dbConnections = array()) {
-		parent::__construct($creatorData, $playerMailHandler, $dbConnections);
+	/**
+	 * Holds the maximum number of minutes of age that a sortie can be to
+	 * qualify for the story
+	 * 
+	 * @var integer 
+	 */
+	protected $maxSortieAgeMinutes = 60;
+	
+	public function __construct(Logger $logger, $creatorData, array $dbConnections = array(), array $options = []) {
+		parent::__construct($logger, $creatorData, $dbConnections, $options);
 		$this->isPlayerCentric = true;			
 	}	
 	

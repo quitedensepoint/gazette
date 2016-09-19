@@ -66,10 +66,11 @@ class StoryMajorCityThreatened extends StoryMajorCityBase implements StoryInterf
 	 * 
 	 * This appears to be a weird way to generate headlines outside the normal process
 	 * 
-	 * @param type $template
+	 * @param array $template
+	 * @param boolean $comparePlaceholders
 	 * @return type
 	 */
-	public function makeStory($template) {
+	public function makeStory($template, $comparePlaceholders = false) {
 		
 		$data = [
 			'title' => $template['title'],
@@ -90,6 +91,11 @@ class StoryMajorCityThreatened extends StoryMajorCityBase implements StoryInterf
 		{
 			$data['title'] = str_replace('%' . strtoupper($key) . '%', $value, $data['title']);
 			$data['body'] = str_replace('%' . strtoupper($key) . '%', $value, $data['body']);
+		}
+		
+		if($comparePlaceholders)
+		{		
+			$this->comparePlaceholders($template, $this->creatorData['template_vars']);
 		}
 		
 		return $data;			

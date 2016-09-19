@@ -6,52 +6,34 @@
  */
 class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterface {
 	
-	/**
-	 * The minimum number of kills needed to make this story valid
-	 * 
-	 * @var integer
-	 */
-	protected static $minKills = 2;		
-	
 	public function isValid() {
 
-		/**
-		 * Get all the sorties in the last two hours
-		 */
-		$time = new DateTime();
-		$time->setTimezone(self::$timezone);
-		$time->setTimestamp(time() - 7200);
-
-		$sorties = $this->getRecentSorties($this->creatorData['country_id'], $time->getTimestamp());
+		$sortie = $this->getBestRecentSortie($this->creatorData['side_id']);
 		
-		foreach ($sorties as $sortie)
+		if(empty($sortie))
 		{
-			$capture = $this->getStratCaptures($sortie['mission_id'], $sortie['player_id'], $sortie['country_id']);
-			
-			if(count($capture) == 1)
-			{
-				$this->creatorData['template_vars']['user_id'] = $sortie['customer_id'];
-				$this->creatorData['template_vars']['player'] = ucfirst($sortie['callsign']);
-				$this->creatorData['template_vars']['kills'] = $sortie['kills'];
-				$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
-				$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawned'], $sortie['returned']);
-				$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($capture[0]['facility_oid']);
-				
-				$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", self::$timezone);
-				$this->creatorData['template_vars']['month'] = $dateOfSpawn->format('F');
-				$this->creatorData['template_vars']['day_ord'] = $dateOfSpawn->format('j');
-				
-				$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);
-				$this->creatorData['template_vars']['enemy_country'] = $enemyCountry['name'];
-				$this->creatorData['template_vars']['enemy_country_adj'] = $enemyCountry['adjective'];
-				
-				$this->createCommonTemplateVarsFromSortie($sortie);
-				
-				return true;
-			}
+			return false;
 		}
 		
-		return false;
+		$this->creatorData['template_vars']['user_id'] = $sortie['customer_id'];
+		$this->creatorData['template_vars']['player'] = ucfirst($sortie['callsign']);
+		$this->creatorData['template_vars']['kills'] = $sortie['kills'];
+		$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
+		$this->creatorData['template_vars']['duration'] = $this->getSortieDuration($sortie['spawned'], $sortie['returned']);
+		$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($sortie['capture_fac']);
+
+		$dateOfSpawn = new DateTime(intval($sortie['spawned']) . " seconds", self::$timezone);
+		$this->creatorData['template_vars']['month'] = $dateOfSpawn->format('F');
+		$this->creatorData['template_vars']['day_ord'] = $dateOfSpawn->format('j');
+
+		$enemyCountry = $this->getRandomEnemyCountry($this->creatorData['side_id']);
+		$this->creatorData['template_vars']['enemy_country'] = $enemyCountry['name'];
+		$this->creatorData['template_vars']['enemy_country_adj'] = $enemyCountry['adjective'];
+
+		$this->createCommonTemplateVarsFromSortie($sortie);
+
+		return true;
+	
 	}
 	
 	/**
@@ -59,63 +41,51 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 	 * 
 	 * @param integer $countryId
 	 * @param integer $time the number of seconds since 1970 (epoch or unix time)
-	 * @return integer
-	 * 
-	 * @todo This function had "and s.captures > 0" in the original Perl file. Work out 
+	 * @return array|null 
 	 */
-	public function getRecentSorties($countryId, $time)
+	public function getBestRecentSortie($sideId)
 	{
-		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnCommunity);
 		
-		$params = [$time, self::$minKills, $countryId];
+		$params = [$sideId, $this->maxSortieAgeMinutes, $this->maxSortieAgeMinutes];
 		
-		return $dbHelper->get("SELECT s.mission_id, s.player_id, s.vcountry as country_id, s.rtb, s.kills, s.vehicles_hit, p.customerid as customer_id, p.callsign, "
-				. "UNIX_TIMESTAMP(s.spawn_time) as spawned, UNIX_TIMESTAMP(s.return_time) as returned "
-				. "FROM wwii_sortie s INNER JOIN wwii_player p ON s.player_id = p.playerid "
-				. "WHERE s.added > FROM_UNIXTIME(?) AND s.spawn_time IS NOT NULL AND s.return_time IS NOT NULL "
-				. "AND s.mission_id > 0 AND kills > ? AND s.vcountry = ? "
-				. "ORDER BY s.score DESC", $params);	
-				
-	}
-	
-	
-	/**
-	 * 
-	 * @param integer $missionId
-	 * @param integer $customerId
-	 * @param integer $country
-	 * @return array
-	 */
-	public function getStratCaptures($missionId, $customerId, $country) {
+		$timeFilter = "HAVING scs.sortie_stop >= DATE_SUB(NOW(),INTERVAL ? MINUTE) "
+			. "OR scs.sortie_start >= DATE_SUB(NOW(),INTERVAL ? MINUTE) ";
+
+		if($this->options['force'])
+		{		
+			/**
+			 * By using the force option, developers can test against their static data and just use the most recent records 
+			 * they have as the starting point. This will generate an actual story, even if it is out of date.
+			 */			
+			$timeFilter = "";
+			// Remove the last 2 parameters as they are not used
+			array_pop($params);	array_pop($params);	
+		}			
 		
-		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
-		
-		$query = $dbHelper
-			->prepare("select facility_oid from strat_captures where missionid = ? and customerid = ? and cust_country = ? limit 1",
-			[$missionId, $customerId, $country]);	
-		
-		return $dbHelper->getAsArray($query);		
-		
+		return $dbHelper->first("SELECT scs.mission_id, scs.player_id,scs.country_id, scs.rtb, scs.kills, scs.captures, scs.sortie_id, " 
+			. "max(scc.capture_time) as capture_time, scs.sortie_stop, scs.sortie_start, scc.capture_fac "
+			. "FROM scoring_campaign_sorties scs INNER JOIN scoring_campaign_captures scc ON scc.sortie_id = scs.sortie_id "
+			. "INNER JOIN scoring_countries sc on scs.country_id = sc.country_id "
+			. "WHERE sc.side_id = ? "
+			. "GROUP BY scs.mission_id, scs.player_id,scs.country_id, scs.rtb, scs.kills, scs.captures, scs.sortie_id "
+			. $timeFilter
+			. "ORDER BY scs.score DESC, scs.sortie_stop, scs.sortie_start DESC " 
+			. "LIMIT 1", $params);				
 	}
 	
 	/**
 	 * 
 	 * @param integer $facilityId
-	 * @param integer $ox
-	 * @param integer $oy
-	 * @return array
+	 * @return string
 	 */
 	public function getCapturedFacility($facilityId)
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $dbHelper
-			->prepare("select name from strat_facility where facility_oid = ? limit 1",	[$facilityId]);	
-		
-		$result = $dbHelper->getAsArray($query);
-		
-		
-		return count($result) == 1 ? $result[0]['name'] : 'an enemy facility';			
+		$facility = $dbHelper->first("select name from strat_facility where facility_oid = ? limit 1", [$facilityId]);	
+
+		return !empty($facility) ? $facility['name'] : 'an enemy facility';			
 	}
 
 }
