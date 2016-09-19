@@ -13,7 +13,7 @@ $cap=("SELECT *
 
         LEFT JOIN `ids_cp` as c
             ON i.cp_oid=c.cp_oid
-        WHERE `took_ownership` ='1' AND contention='End' 
+        WHERE `took_ownership` ='1' AND s.contention ='End' 
         ORDER BY `started_at` DESC
         LIMIT 5 " );
 
