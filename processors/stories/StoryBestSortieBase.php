@@ -127,7 +127,7 @@ abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 		/**
 		 * Get where the player spawned from
 		 */
-		if(empty($spawnFacility = $this->getFacilityById($sortie['facility_oid'])))
+		if(empty($spawnFacility = $this->getFacilityById($sortie['origin_fac'])))
 		{
 			return false;
 		}		
@@ -149,14 +149,15 @@ abstract class StoryBestSortieBase extends StoryBase implements StoryInterface {
 		 * @TODO Update definition of getVehicleByClassification across all stories
 		 */		
 		$data = $this->getVehicleByClassification($sortie['vcountry'], $sortie['vcategory'], $sortie['vclass'], $sortie['vtype']);
-		if(count($data) == 0)
+		
+		$vehicle = $this->getVehicleById($sortie['vehicle_id']);
+		if(empty($vehicle))
 		{
 			return false;
 		}
-	
-		$killerVehicle = $data[0];
-		$this->creatorData['template_vars']['vehicle'] = $killerVehicle['name'];
-		$this->creatorData['template_vars']['vehicle_short'] = $killerVehicle['short_name'];
+
+		$this->creatorData['template_vars']['vehicle'] = $vehicle['name'];
+		$this->creatorData['template_vars']['vehicle_short'] = $vehicle['short_name'];
 		
 		return true;
 	}

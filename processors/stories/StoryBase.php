@@ -335,10 +335,10 @@ abstract class StoryBase
 	 */
 	public function getSortieById($sortieId)
 	{
-		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnCommunity);
 		
 		$sortie = $dbHelper
-			->first("SELECT * from wwii_sortie WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
+			->first("SELECT * from scoring_campaign_sorties WHERE sortie_id = ? LIMIT 1", [$sortieId]);	
 		
 		if(empty($sortie))
 		{
@@ -379,17 +379,15 @@ abstract class StoryBase
 	{
 		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
 		
-		$query = $dbHelper
-			->prepare("SELECT * from community.scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
-
-		$result = $dbHelper->getAsArray($query);
+		$vehicle = $dbHelper
+			->first("SELECT * from community.scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
 		
-		if(count($result) == 0)
+		if(empty($vehicle))
 		{
 			$this->logger->error(sprintf('Error generating story - vehicle ID %d could not be found ', $vehicleId));
 		}		
 
-		return $result;					
+		return $vehicle;					
 	}
 	
 	/**
