@@ -377,10 +377,10 @@ abstract class StoryBase
 	 */
 	public function getVehicleById($vehicleId)
 	{
-		$dbHelper = new dbhelper($this->dbConnWWIIOnline);
+		$dbHelper = new dbhelper($this->dbConnCommunity);
 		
 		$vehicle = $dbHelper
-			->first("SELECT * from community.scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
+			->first("SELECT * from scoring_vehicles WHERE vehicle_id = ? LIMIT 1", [$vehicleId]);	
 		
 		if(empty($vehicle))
 		{
@@ -402,10 +402,10 @@ abstract class StoryBase
 	 */
 	public function getVehicleByClassification($countryId, $categoryId, $classId, $typeId)
 	{
-		$dbHelper = new dbhelper($this->dbConn);
+		$dbHelper = new dbhelper($this->dbConnCommunity);
 		
 		$query = $dbHelper
-			->prepare("SELECT * from community.scoring_vehicles WHERE country_id = ? AND category_id = ? "
+			->prepare("SELECT * from scoring_vehicles WHERE country_id = ? AND category_id = ? "
 				. "AND class_id = ? AND type_id = ? LIMIT 1", [$countryId, $categoryId, $classId, $typeId]);	
 
 		return $dbHelper->getAsArray($query);					
