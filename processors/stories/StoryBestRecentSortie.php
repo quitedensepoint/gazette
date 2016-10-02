@@ -24,10 +24,10 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 		{
 			return false;
 		}
-		
+
 		$this->creatorData['template_vars']['user_id'] = $sortie['player_id'];
 
-		$this->creatorData['template_vars']['hits'] = $sortie['vehicles_hit'];
+		$this->creatorData['template_vars']['hits'] = $sortie['hits'];
 		$this->creatorData['template_vars']['captured'] = $this->getCapturedFacility($kill['capture_fac']);
 
 		$dateOfSpawn = new DateTime(intval($sortie['spawn_time']) . " seconds", self::$timezone);
@@ -68,7 +68,7 @@ class StoryBestRecentSortie extends StoryBestSortieBase implements StoryInterfac
 			array_pop($params);	array_pop($params);	
 		}			
 		
-		return $dbHelper->first("SELECT scs.mission_id, scs.player_id,scs.country_id, scs.rtb, scs.kills, scs.captures, scs.sortie_id, " 
+		return $dbHelper->first("SELECT scs.mission_id, scs.player_id,scs.country_id, scs.rtb, scs.kills, scs.hits, scs.captures, scs.sortie_id, " 
 			. "max(scc.capture_time) as capture_time, scs.sortie_stop, scs.sortie_start, scc.capture_fac "
 			. "FROM scoring_campaign_sorties scs INNER JOIN scoring_campaign_captures scc ON scc.sortie_id = scs.sortie_id "
 			. "INNER JOIN scoring_countries sc on scs.country_id = sc.country_id "
