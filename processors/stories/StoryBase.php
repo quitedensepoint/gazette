@@ -147,6 +147,8 @@ abstract class StoryBase
 
 		$templateVars = $this->creatorData['template_vars'];
 		
+		$this->logger->debug('Template Variables', $templateVars);
+		
 		if($comparePlaceholders)
 		{
 			$this->comparePlaceholders($template, $templateVars);
@@ -623,19 +625,16 @@ abstract class StoryBase
 	{
 		$dbHelper = new dbhelper($this->dbConn);
 		
-		$query = "select * from countries where side_id != ? ";
+		$sql = "select * from countries where side_id != ? ";
 		if($active)
 		{
-			$query .= " AND active = 1";
+			$sql .= " AND is_active = 1";
 		}
-		$query .= " order by RAND() limit 1";
+		$sql .= " order by RAND() limit 1";
 		
-		$query = $dbHelper
-			->prepare("select * from countries where side_id != ? order by RAND() limit 1",[$sideId]);	
+		$country = $dbHelper->first($sql,[$sideId]);
 		
-		$result = $dbHelper->getAsArray($query);
-		
-		return count($result) == 1 ? $result[0] : null;		
+		return $country;		
 	}
 	
 	/**
