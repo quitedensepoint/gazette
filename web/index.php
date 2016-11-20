@@ -82,7 +82,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
         <div id='info'>
             <table id='infoBar'>
                 <tr>
-				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.35.5</span></td>
+				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: 1.35.6</span></td>
 					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign:".$campRow['id']." Day: ".$days->format('%a'); ?></span></td> 
 					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href="allied.php">ALLIED Section</a> & <a href="axis.php">AXIS Section</a></span></td>
 			    </tr>
@@ -190,7 +190,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 				<table width="172px">
 					<tr>
                         <td width='268px'>
-							<b><span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
+							<span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
 							<br><br>
 							<b>Allied</b><br>
 							<table style="width:100%" >
@@ -221,30 +221,28 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 								?>
 							</table>
                             <tr>
-                            <td style="text-align: center; width:268px;"> 
-                                                
-												<span class='paperarialbig'><b>Most Recent Captures:</b></span>
-							<br><br>
-							<table style='width:100%'>
-								<tr align='center'>
-									<th>City</th>
-									<th>By</th>
-								</tr>
-								<?php 
-									while($row=$caps->fetch_assoc())
+                                <td style="text-align: center; width:268px;"> 
+                                    <span class='paperarialbig'><b>Most Recent Captures:</b></span>
+							        <br><br>
+							        <table style='width:100%'>
+								        <tr align='center'>
+									        <th>City</th>
+									        <th>By</th>
+								        </tr>
+								            <?php 
+									            while($row=$caps->fetch_assoc())
 						 
-									If (($row['fullName'])=='GERMANY')
-									{
-										echo "<tr style='text-align: center;'><td>".$row['name']."</td><td style='color: red; text-align: center'><i>".$row['fullName']."</i></td></tr>"; 
-									}
-									else
-									{   echo "<tr><td style='text-align: center;'>".$row['name']."</td><td style='color: blue; text-align: center'><i>".$row['fullName']."</i></td></tr>";}
-								?>
-							</table>
+									            If (($row['fullName'])=='GERMANY')
+									            {
+										            echo "<tr style='text-align: center;'><td>".$row['name']."</td><td style='color: red; text-align: center'><i>".$row['fullName']."</i></td></tr>"; 
+									            }
+									            else
+									            {   echo "<tr><td style='text-align: center;'>".$row['name']."</td><td style='color: blue; text-align: center'><i>".$row['fullName']."</i></td></tr>";}
+								            ?>
+							        </table>
+						        </td>
+							</tr>
 						</td>
-										</tr>
-											</td>
-						
 					</tr>		    
 				</table>
             <!-- Poster @ R lower edge of map -->
@@ -323,11 +321,12 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 							<tr>
 								<td>
 									<table>
-										<tr align='center'>
+                                        <tr align='center'>
+
 <!-- Current AO's -->
 											<td>
-                            <?php echo $indexAxisStats1;	 ?>
-                        </td>
+                                                <?php echo $indexAxisStats1;	 ?>
+                                            </td>
 											</td>
 <!-- Recent Captured cities --> 
 											<td style="text-align: center; width:268px;"> 
