@@ -13,7 +13,14 @@ require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/casualty-processor.php');
 require(__DIR__ . '/../processors/campaign.php');
 require(__DIR__ . '/../processors/aocap.php');
-require(__DIR__ . '/../processors/webmap.php');
+
+/**
+ * Only need to include the webmap directives if it is set to active
+ */
+if($options['webmap']['active'])
+{
+	require(__DIR__ . '/../processors/webmap.php');
+}
 
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
@@ -41,8 +48,10 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
     <title>World@War Gazette</title>
 	<link rel='stylesheet' href='assets/css/gazette.css'>
 	<link rel="shortcut icon" href="assets/img/favicon.ico" />
+	<?php if($options['webmap']['active']) { ?>
 	<link rel="stylesheet" href="<?php echo $webmapEnv; ?>/Library/leaflet.css" />	
 	<script src="<?php echo $webmapEnv; ?>/Library/jquery-1.10.2.js"></script>
+	<?php } ?>
 </head>
 
 <body>
@@ -102,6 +111,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
             </div>
 <!-- map -->
             <div id="mapContainer">
+			<?php if($options['webmap']['active']) { ?>
 				<div id="map" style="width: 535px; height: 356px;"></div>
 				<script src="<?php echo $webmapEnv; ?>/Library/leaflet_v0.7.7.js"></script>
 				<script>
@@ -183,6 +193,9 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 				}).addTo(map);
 				</script>
 				<span id="mapText" class='paperwhite'>GAME MAP UPDATES EVERY 15 MINUTES - <a href='<?php echo $webmapEnv; ?>' style="color: yellow;" target="_blank">CLICK FOR FULL SIZE</a></span>
+			<?php } else { ?>
+				Webmap is disabled
+			<?php } ?>
             </div>
 <!-- German Story R side of map -->
             <div id="ao">

@@ -4,7 +4,11 @@
 * This is used in order to show the same Brigade Flags that the main WebMap is using.
 * It will also set the variable used to decide which environment it is.
 */
-require(__DIR__ . '/../DBconn.php');
+/**
+ *  require once is used here because otherwise, when this file is included in index.php, 
+ *  the DBConn is loaded *twice*, effectively resetting everything and causing potential issues
+ */
+require_once(__DIR__ . '/../DBconn.php'); 
 	
 if (isset($options) && isset($options['webmap-environment']) && $options['webmap-environment'] === 'live'){
 	$webmapEnv = "https://webmap.wwiionline.com";
@@ -14,8 +18,6 @@ if (isset($options) && isset($options['webmap-environment']) && $options['webmap
 
 // Get the latest WebMap update DateTime
 $datetime=$dbConnWebmap->query("SELECT datetime FROM captures ORDER BY datetime DESC LIMIT 1");
-$row=$datetime->fetch_assoc();
-$fileDt = date('Y-m-d_H-i', strtotime($row['datetime']));
-$fileDtPrev = date('Y-m-d_H-i', strtotime($row['datetime'] . " - 15 minutes"));
-
-?>
+$webmap_row=$datetime->fetch_assoc();
+$fileDt = date('Y-m-d_H-i', strtotime($webmap_row['datetime']));
+$fileDtPrev = date('Y-m-d_H-i', strtotime($webmap_row['datetime'] . " - 15 minutes"));

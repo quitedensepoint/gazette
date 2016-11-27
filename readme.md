@@ -91,7 +91,9 @@ The small WebMap that is on the Gazette is its own small version of the actual W
 
 The WebMap is environment specific, this is so that the proper data is pulled. While testing, if the data was soley pulled from the live server, the times would become offset and then no data would be pulled for the dev server. The environment setting in the DBconn.example.php will allow for configuration.
 
-> *'webmap-environment' => 'live'*
+Setting active to false will disable the webmap entirely - this is useful in development where you are addressing other issues and the webmap is interfering.
+
+> *'webmap' => ['active' => false, 'environment' => 'live']*
 
 ## Player Emails
 When a story that is system generated references the deeds of a specific player (the story is "player centric"), the system will attempt to generate an email that will go out to the player alerting them of their mention in the gazette. How the email is sent will depend on the settings specific in the options of the DBConn.php. See DBConn.example.php for the settings

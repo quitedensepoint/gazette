@@ -90,7 +90,10 @@ $options = [
 	],	
 	
 	// Set the Environment's to use for the WebMap URLs on the Main page. Options: dev / live
-	'webmap-environment' => 'live',
+	'webmap' => [
+		'active' => false,
+		'environment' => 'dev'
+	],
 
 	// Options for the player mailer (see Confluence Documentation)
 	'playerMail' => [
