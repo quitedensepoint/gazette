@@ -59,7 +59,7 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 <!-- Header: Allied casualties | Camp info | Axis causualties --> 
 		<div id='top' >
 			<img src='assets/img/header.gif'  id='headerMiddle'>
-			<span id="version">Version: 2.2</span>
+			<span id="version">Version: 2.3</span>
 <!-- Allied Deaths --> 
 			<table id='alliedDeaths'>
 				<tr>
