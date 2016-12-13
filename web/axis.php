@@ -31,7 +31,7 @@ $gpromo = file_get_contents(__DIR__ .'/../cache/playnow_axis_promotion.php');
         <div id='top'>
             <table id='infoBar'>
                 <tr>
-                    <td style="width: 33%; text-align: left;"><span class='papertimesmedium'>WHATS COMING NEXT</span></td>
+                    <td style="width: 33%; text-align: left;"><span class='papertimesmedium'><a href="http://www.battlegroundeurope.com/index.php/component/content/category/17-development-notes">WHAT'S COMING NEXT</a></span></td>
                     <td style="width: 33%; text-align: center;"><span class='papertimesmedium'><a href="/">READ THE FRONT PAGE</a></span></td>
                     <td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href='allied.php'>READ THE ALLIED SECTION</a></span></td>
                 </tr>
