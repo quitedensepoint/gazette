@@ -120,6 +120,7 @@ html, body {
 	position: absolute;
     width: 905px;
     top: 90px;
+	z-index: 1;
 }
 
 #infoBar {
