@@ -15,6 +15,11 @@ if (mysqli_connect_errno()){
     echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
 }
 
+$dbConnWWII = mysqli_connect("p:db_host","db_user","db_password","wwii");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to WWII database: " . mysqli_connect_error();
+}
+
 $dbConnWWIIOL = mysqli_connect("p:db_host","db_user","db_password","wwiionline");
 if (mysqli_connect_errno()){
     echo "Failed to connect to WWIIOnline database: " . mysqli_connect_error();
