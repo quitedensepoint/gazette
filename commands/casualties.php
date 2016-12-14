@@ -20,7 +20,7 @@ $gazetteDbHelper = new dbhelper($dbconn);
 $wwiiDbHelper = new dbhelper($dbConnWWII);
 
 /**
- * NOTE:: This script assumes that all dates in the database
+ * NOTE: This script assumes that all dates in the database
  * are Rat time (CST, or "America/Chicago")
  * 
  * The server must be set to the correct datetime for this to work
