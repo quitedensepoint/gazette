@@ -8,9 +8,6 @@
  * where:
  *	{report-only} will force the script to output the data to the commandline,
  *		rather than saving it to the database
-
- *  .e.g. php commands/casualties.php --report-only
- * 
  */
 
 require(__DIR__ . '/../DBconn.php');
@@ -45,10 +42,10 @@ $date = new DateTimeImmutable('now', $serverTimezone);
 $hourStart = $date->setTime($date->format('G'),0,0);
 
 /**
- * Gte the current campaign so that the casualty numbers can be recorded against it
+ * Get the current campaign so that the casualty numbers can be recorded against it
  */
 $campaignQuery = $gazetteDbHelper
-	->prepare("SELECT id, start_time FROM `campaigns` WHERE `status` = 'Running' LIMIT 1");
+	->prepare("SELECT `id`, `start_time` FROM `campaigns` WHERE `status` = 'Running' LIMIT 1");
 $campaignData = $gazetteDbHelper->getAsArray($campaignQuery);
 
 if(count($campaignData) == 0) {
@@ -60,7 +57,7 @@ $campaignStart = new DateTime($campaignData[0]['start_time'], $serverTimezone);
 
 $killsQuery = $wwiiDbHelper
 	->prepare("SELECT `victim_country` as `country_id`, `victim_category` as `branch_id`, count(`kill_id`) as `kill_count`"
-		. " FROM `kills` WHERE `kill_time` < ? GROUP BY `country_id`,`branch_id` ",
+		. " FROM `kills` WHERE `kill_time` < ? GROUP BY `country_id`,`branch_id`",
 		[$hourStart->format('Y-m-d H:i:s')]);
 $killsData = $wwiiDbHelper->getAsArray($killsQuery);		
 
@@ -76,7 +73,7 @@ if($reportOnly)
  * Go through the kills and push them out to the database
  */
 
-array_walk($killsData, function(&$kill) use($hourStart, $date, $campaignId,$campaignStart) {
+array_walk($killsData, function(&$kill) use($hourStart, $date, $campaignId, $campaignStart) {
 
 	$kill['campaign_id'] = intval($campaignId);
 	$kill['period_start'] = $campaignStart->format('Y-m-d H:i:s'); 
@@ -85,8 +82,8 @@ array_walk($killsData, function(&$kill) use($hourStart, $date, $campaignId,$camp
 	$kill['updated_at'] = $date->format('Y-m-d H:i:s');
 });
 
-$existingQuery = $gazetteDbHelper->getStatement("SELECT count(id) AS record_count FROM campaign_casualties"
-	. " WHERE period_start = ? AND period_end = ? AND campaign_id = ? AND branch_id = ? AND country_id = ? ");
+$existingQuery = $gazetteDbHelper->getStatement("SELECT count(`id`) AS `record_count` FROM `campaign_casualties`"
+	. " WHERE `period_start` = ? AND `period_end` = ? AND `campaign_id` = ? AND `branch_id` = ? AND `country_id` = ?");
 
 
 $killsCreate = $gazetteDbHelper->getStatement(
