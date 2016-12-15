@@ -206,11 +206,11 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 							<span class='paperarialbig'><b>Current<br>Attack Objectives:</b></span>
 							<br><br>
 							<b>Allied</b><br>
-							<table style="width:100%" >
+							<table style="width: 100%;" >
 								<?php 
-									while($row=$aoals->fetch_assoc()){
+									while($row = $aosAlliedData->fetch_assoc()){
 										echo "<tr><td style='width:50%; text-align:center;'>".$row['name']."</td>";
-										if(isset($row['alcon']) && $row['alcon']=='1'){
+										if(isset($row['alcon']) && $row['alcon'] == '1'){
 											echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";
 										}else{
 											echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";
@@ -221,11 +221,11 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 							<br>
 							<b>Axis</b>
 							<br>
-							<table style="width:100%">
+							<table style="width: 100%;">
 								<?php 
-									while($row=$aoaxs->fetch_assoc()){
+									while($row = $aosAxisData->fetch_assoc()){
 										echo "<tr><td style='width:50%; text-align:center; '>".$row['name']."</td>"; 
-										if(isset($row['axcon']) && $row['axcon']=='1'){
+										if(isset($row['axcon']) && $row['axcon'] == '1'){
 											echo "<td style='width: 50%; text-align: center; color:red;'><i>Contested</i></td></tr>";
 										}else{
 											echo "<td style='width: 50%; text-align: center;'>Not Contested</td></tr>";
@@ -237,20 +237,19 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
                                 <td style="text-align: center; width:268px;"> 
                                     <span class='paperarialbig'><b>Most Recent Captures:</b></span>
 							        <br><br>
-							        <table style='width:100%'>
+							        <table style='width: 100%;'>
 								        <tr align='center'>
 									        <th>City</th>
 									        <th>By</th>
 								        </tr>
 								            <?php 
-									            while($row=$caps->fetch_assoc())
-						 
-									            If (($row['fullName'])=='GERMANY')
-									            {
-										            echo "<tr style='text-align: center;'><td>".$row['name']."</td><td style='color: red; text-align: center'><i>".$row['fullName']."</i></td></tr>"; 
-									            }
-									            else
-									            {   echo "<tr><td style='text-align: center;'>".$row['name']."</td><td style='color: blue; text-align: center'><i>".$row['fullName']."</i></td></tr>";}
+									            while($row = $capsData->fetch_assoc()){
+													if(($row['fullName']) == 'GERMANY'){
+														echo "<tr style='text-align: center;'><td>".$row['name']."</td><td style='color: red; text-align: center;'><i>".$row['fullName']."</i></td></tr>"; 
+													}else{   
+														echo "<tr><td style='text-align: center;'>".$row['name']."</td><td style='color: blue; text-align: center;'><i>".$row['fullName']."</i></td></tr>";
+													}
+												}
 								            ?>
 							        </table>
 						        </td>
