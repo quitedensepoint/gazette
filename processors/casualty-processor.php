@@ -28,11 +28,11 @@ class CasualtyProcessor {
 		 */		
 		$casualties = [
 			'allied'	=>	['ground' => 0, 'air' => 0, 'sea' => 0],
-			'axis'		=>	['ground' => 0, 'air' => 0, 'sea' => 0]
+			'axis'	=>	['ground' => 0, 'air' => 0, 'sea' => 0]
 		];			
 		
 		$campaignQuery = $dbHelper
-			->prepare("SELECT id FROM `campaigns` WHERE `status` = 'Running' LIMIT 1");
+			->prepare("SELECT `id` FROM `campaigns` WHERE `status` = 'Running' LIMIT 1");
 		$campaignData = $dbHelper->getAsArray($campaignQuery);
 			
 		if(count($campaignData) == 0)
@@ -47,14 +47,12 @@ class CasualtyProcessor {
 		 * This will load all the latest casualty data along with the 
 		 * associated country records
 		 */
-		$casualtyQuery = $dbHelper->prepare("SELECT casualty.kill_count, casualty.branch_id, countries.side FROM campaign_casualties AS casualty INNER JOIN "
-			. " countries ON casualty.country_id = countries.country_id"
-			. " WHERE period_end = (SELECT MAX(period_end) FROM campaign_casualties WHERE campaign_id = ?) AND campaign_id = ?",
+		$casualtyQuery = $dbHelper->prepare("SELECT `casualty`.`kill_count`, `casualty`.`branch_id`, `countries`.`side` FROM `campaign_casualties` AS `casualty` INNER JOIN"
+			. " `countries` ON `casualty`.`country_id` = `countries`.`country_id`"
+			. " WHERE `period_end` = (SELECT MAX(`period_end`) FROM `campaign_casualties` WHERE `campaign_id` = ?) AND `campaign_id` = ?",
 			[$campaignId, $campaignId]);
 		
 		$casualtyData = $dbHelper->getAsArray($casualtyQuery);
-
-
 
 		foreach($casualtyData as $casualty)
 		{
