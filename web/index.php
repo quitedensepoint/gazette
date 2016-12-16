@@ -12,6 +12,7 @@ require(__DIR__ . '/../DBconn.php');
 require(__DIR__ . '/../include/dbhelper.php');
 require(__DIR__ . '/../processors/casualty-processor.php');
 require(__DIR__ . '/../processors/campaign.php');
+require(__DIR__ . '/../processors/game.php');
 require(__DIR__ . '/../processors/aocap.php');
 
 /**
@@ -24,6 +25,12 @@ if($options['webmap']['active'])
 
 $casualtyProcessor = new CasualtyProcessor($dbconn);
 $casualtyData = $casualtyProcessor->process();
+
+$gameVersionProcessor = new GameVersionProcessor($dbconnAuth);
+$gameVersionData = $gameVersionProcessor->process();
+
+$campaignInfoProcessor = new CampaignInfoProcessor($dbconn);
+$campaignInfoData = $campaignInfoProcessor->process();
 
 /**
  * Pull the generated reports from the file system. They were stored here as the 
@@ -91,8 +98,8 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
         <div id='info'>
             <table id='infoBar'>
                 <tr>
-				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: <a style="color: #cc3333;" href="http://www.battlegroundeurope.net/getting-started">1.35.6</a></span></td>
-					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign: <b>".$campRow['id']."</b> Day: <b>".$days->format('%a'); ?></b></span></td> 
+				    <td style="width: 33%; text-align: left;"><span class='papertimesmedium' style="color: #cc3333;">CURRENT VERSION: <a style="color: #cc3333;" href="http://www.battlegroundeurope.net/getting-started"><?php echo $gameVersionData; ?></a></span></td>
+					<td style="width: 33%; text-align: center;"><span class='papertimesmedium'><?php echo "Campaign: <b>".$campaignInfoData['campaignNumber']."</b> Day: <b>".$campaignInfoData['campaignDays']; ?></b></span></td> 
 					<td style="width: 33%; text-align: right;"><span class='papertimesmedium'><a href="allied.php">ALLIED Section</a> & <a href="axis.php">AXIS Section</a></span></td>
 			    </tr>
 		    </table>

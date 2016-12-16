@@ -1,26 +1,45 @@
 <?php
 /*
-* For captuing current campaign number and using the start date determining the number of days in the campaign. 
-* Also checks for current Version display
+* Created for capturing the current campaign number and using the start date for determining the number of days the campaign has been running
 *
-*
-*
-*
+* @author B2k / Updated Sniper62
 */
-require(__DIR__ . '/../DBconn.php');
+
+class CampaignInfoProcessor{
+
+	protected $dbConn;
 	
-// Delect the campaign that is currently running.  	
-$currcamp=$dbconn->query("SELECT `campaign_id` as id, start_time FROM `campaigns` WHERE `status`='Running'");
-$campRow=$currcamp->fetch_assoc();
+	public function __construct($dbConn){
+		
+		$this->dbConn = $dbConn;
+	}
+	
+	/**
+	 * Processes the campaign database entries for display on the screen
+	 * 
+	 * @return array
+	 */
+	public function process(){
+		$dbHelper = new dbhelper($this->dbConn);
+		
+		$campaignQuery = $dbHelper->prepare("SELECT `campaign_id`, `start_time` FROM `campaigns` WHERE `status` = 'Running'");
+		$campaignData = $dbHelper->getAsArray($campaignQuery);
+		
+		if(count($campaignData) == 0){
+			/** No campaign running, it must be intermission **/
+			$campaignInfo = ['campaignNumber'=>'Intermission', 'campaignDays'=>'0'];
+			
+			return $campaignInfo;
+		}
+		
+		$today = new DateTime("today");
+		$campaignStart = new DateTime($campaignData[0]['start_time']);
+		$campaignDays = $campaignStart->diff($today);
+		
+		$campaignInfo = ['campaignNumber'=>$campaignData[0]['campaign_id'], 'campaignDays'=>$campaignDays->format('%a')];
 
-// Find Current Version PC
-$vers=$dbconnAuth->query("SELECT MAX(maxClientVersion), platform FROM app_host_versions WHERE appID='1' AND platform='0' ");
-$ver=$vers->fetch_assoc();
-
-// date_default_timezone_set("America/Chicago");
-
- $today = new DateTime("today");
- $start = new DateTime($campRow['start_time']);
- $days = $start->diff($today);
+		return $campaignInfo;
+	}
+}
 
 ?>
