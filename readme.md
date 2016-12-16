@@ -1,4 +1,4 @@
-# World War II Online : Gazette
+# World War II Online: Gazette
 Manages the World War II Online Gazette application
 
 ## Dependencies
@@ -14,8 +14,21 @@ Use *composer install* as described below to install these dependencies.
 
 * Install composer from http://getcomposer.org
 * From your gazette command line, run *composer install*. This will install the dependencies as listed above. They will not otherwise interfere with the gazette.
-* Create a new file called dbConn.php in your application root. Use the example *dbConn.example.php* in the project root as a template.
-* Update the database connection strings in the dbConn.php file to match your environment.
+* Create a new file called DBconn.php in your application root. Use the example *DBconn.example.php* in the project root as a template.
+* Update the database connection strings in the DBconn.php file to match your environment.
+* Add the below VirtualHost to your Apache/Hosts setup
+
+```
+<VirtualHost _default_:80>
+	DocumentRoot "C:\path\to\your\Gazette\web"
+	ServerName gazette.dev
+
+	<Directory "C:\path\to\your\Gazette\web">
+		AllowOverride All 
+		Require all granted
+	</Directory>
+</VirtualHost>
+```
 
 ### Database modifications
 Database migrations are performed with the phinx library (http://phinx.org). As they were introduced during the project,
@@ -37,6 +50,7 @@ The application uses the monolog library for debug and runtime logs. Refer to th
 
 The logger will output information to the logs directory in the application root.
 
+
 ## Scripts
 ### Campaign Checker
 The campaign checked should be run via CRON job every *5* minutes. You can set this to a shorter time if necessary, but it should not be more than 5 minutes.
@@ -45,8 +59,8 @@ The campaign checked should be run via CRON job every *5* minutes. You can set t
 
 This will check the *wwiionline* and *community* databases and determine the current state of the game. It will update the gazette based on these values. It will additionally set all countries to inactive when a campaign ends, reactivate the initial countries (see the *is_active_initially* field) and activate additional countries as sorties appear for those countries in the main game DB.
 
-### Casualties calculation script
-Run a cron job at the start of every hour to call the following script. This will populate the casualties data for the Gazette top page
+### Casualties Calculation
+Run a CRON job at the start of every hour to call the following script. This will populate the casualties data for the Gazette front page.
 
 > *php commands/casualties.php*
 
@@ -63,28 +77,31 @@ To regenerate all expired stories and reset their lifetimes
 
 > *php commands/stories.php --generate=expired*
 
-To regenerate a story for single slot on a page
+To regenerate a story for single slot on a page.
 
 > *php commands/stories.php --generate={story_key}*
 
-Where *story_key* is the value in the story_key column in the stories table
+Where *story_key* is the value in the story_key column in the stories table.
 
 For the purposes of debugging, you can also perform the following options after the generate option
 
 > *php commands/stories.php --generate={story_key} --sourceid={sourcenum} --templateid={templatenum} --typeid={typeid} --force=true*
 
 Where {sourcenum} is the id of the row in the sources table in the gazette. This will be forced to be the text of the story for areas that are being generated.
-If you do an "all", all areas will hold this story, which will make it look weord
+If you do an "all", all areas will hold this story, which will make it look weird.
 
 {templatenum} will force the system to use the story template located in templates table. Be warned that this will produced stories with weird results if
-the template is not normally used against the source (see the template_sources table)
+the template is not normally used against the source (see the template_sources table).
 
 {typeid} will force the system to use the specific story type (e.g. Tactical Stat story) in the area for this story, if it is valid for that area.
 
 The force parameter will try to force a story to be generated, if even the data for the story is out of date. This is mainly to help developers generate output
 for player centric stories, if even if the source data is months old. This doesn't work across all story types yet.
 
-The processing logic for stories will be logged to the logs directory. Check the dbConn.example.php for the logging options for stories.
+The processing logic for stories will be logged to the logs directory. Check the DBconn.example.php for the logging options for stories.
+
+### Stats Update
+*This needs to be updated...*
 
 ## WebMap
 The small WebMap that is on the Gazette is its own small version of the actual WebMap. This means it has its own configuration but it still pulls the needed data from from the WebMap's libraries. 
@@ -96,7 +113,7 @@ Setting active to false will disable the webmap entirely - this is useful in dev
 > *'webmap' => ['active' => false, 'environment' => 'live']*
 
 ## Player Emails
-When a story that is system generated references the deeds of a specific player (the story is "player centric"), the system will attempt to generate an email that will go out to the player alerting them of their mention in the gazette. How the email is sent will depend on the settings specific in the options of the DBConn.php. See DBConn.example.php for the settings
+When a story that is system generated references the deeds of a specific player (the story is "player centric"), the system will attempt to generate an email that will go out to the player alerting them of their mention in the gazette. How the email is sent will depend on the settings specific in the options of the DBconn.php. See DBconn.example.php for the settings
 
 The handlers defined in the settings do different things.
 - Use *IgnoreHandler* when developing. This ensures that the code runs correctly without modification, but the system will ignore any requests to send an email.
@@ -106,5 +123,5 @@ The handlers defined in the settings do different things.
 For more information, see the documentation at http://at.playnet.com:8090/display/COMM/Gazette+Player+Emails
 
 ## Error Handling
-Ensure the config file (DBConn.example.php) for the options variable *error_handling* has the *show_errors* variable set to false. This will ensure the errors aren't shown in the "bombed out" screen. Set it to true for developing.
+Ensure the config file (DBconn.example.php) for the options variable *error_handling* has the *show_errors* variable set to false. This will ensure the errors aren't shown in the "bombed out" screen. Set it to true for developing.
 Errors are stored in "[project root]/logs/errors.log"
