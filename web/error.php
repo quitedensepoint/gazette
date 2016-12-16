@@ -75,7 +75,7 @@
 		<div class="error error-image">
 			<figure>
 				<img src="/assets/img/error.jpg" alt="World@War Offices">
-				<figcaption>World@War offices - we will rebuild!.</figcaption>
+				<figcaption>World@War offices - we will rebuild!</figcaption>
 			</figure>
 		</div>
 		
