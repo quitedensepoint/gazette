@@ -14,6 +14,7 @@ require(__DIR__ . '/../processors/casualty-processor.php');
 require(__DIR__ . '/../processors/campaign.php');
 require(__DIR__ . '/../processors/game.php');
 require(__DIR__ . '/../processors/aocap.php');
+require(__DIR__ . '/../processors/recentevents.php');
 
 /**
  * Only need to include the webmap directives if it is set to active
@@ -329,36 +330,29 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
             </div>
 <!-- Frames below the news -->
             <div id='belowNews'>
-            <table style='width: 537px'>
-				<tr>
-					<td>
-						<table style="width: 100%; cellspacing: 0; cellpadding: 0;">
-							<tr>
-								<td><hr width="90%"></td>
-							</tr>
-							 
-							<tr>
-								<td>
-									<table>
-                                        <tr align='center'>
+				<hr width="90%">
+				<br>
+				<?php
+					$recentEventsProcessor = new RecentEventsProcessor($dbConnWWIIOL);
+					$recentEventsData = $recentEventsProcessor->process();
 
-<!-- Current AO's -->
-											<td>
-                                                <?php echo $indexAxisStats1;	 ?>
-                                            </td>
-											</td>
-<!-- Recent Captured cities --> 
-											<td style="text-align: center; width:268px;"> 
-                                                <?php echo $indexGeneral2; ?>
-                                            </td>
-							</table>
-						</td>
-										</tr>
-
-									</table></div> 
-								</td>
-							</tr>
-						</table> 
+					echo "<div style=\"margin-left: 25px;\">";
+					foreach($recentEventsData as $recentEvent){
+						
+						if($recentEvent['contention'] == "Enter"){
+							echo "[".$recentEvent['date_time']."] <b>".$recentEvent['town']."</b> is under attack by <b>".$recentEvent['side']."</b> forces!<br>";
+						}elseif($recentEvent['contention'] == "End" && $recentEvent['took_ownership'] == "0"){
+							echo "[".$recentEvent['date_time']."] <b>".$recentEvent['town']."</b> has been regained by <b>".$recentEvent['side']."</b> forces.<br>";
+						}elseif($recentEvent['contention'] == "End" && $recentEvent['took_ownership'] == "1"){
+							echo "[".$recentEvent['date_time']."] <b>".$recentEvent['town']."</b> has been captured by <b>".$recentEvent['side']."</b> forces!<br>";
+						}
+					}
+					echo "</div>";
+				?>
+			</div> 
+				</td>
+				</tr>
+				</table> 
 					</td>
 				</tr>
             </table>  
