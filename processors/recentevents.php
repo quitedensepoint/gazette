@@ -4,12 +4,6 @@
 *
 * @author Sniper62
 */
-	
-// Select the campaign that is currently running
-// $currCampQuery = $dbconn->query("SELECT `campaign_id`, `start_time` FROM `campaigns` WHERE `status` = 'Running'");
-// $currCampData = $currCampQuery->fetch_assoc();
-// $currCampNum = $currCampData['campaign_id'];
-
 
 class RecentEventsProcessor{
 
@@ -31,10 +25,11 @@ class RecentEventsProcessor{
 		$recentEventsQuery = $dbHelper->prepare("
 																	SELECT
 																	  `wp`.`callsign` AS `callsign`,
-																	  FROM_UNIXTIME(`sc`.`started_at`) AS `date_time`,
+																	  FROM_UNIXTIME(`sc`.`started_at`) AS `time`,
 																	  `sf`.`name` AS `facility`,
 																	  `scp`.`name` AS `town`,
-																	  IF(`sc`.`cust_country` = '4','Axis','Allied') AS `side`,
+																	  IF(`sc`.`facil_country` = '4','Axis','Allied') AS `from_side`,
+																	  IF(`sc`.`cust_country` = '4','Axis','Allied') AS `to_side`,
 																	  `sc`.`contention`,
 																	  `sc`.`took_control`,
 																	  `sc`.`took_ownership`
@@ -47,10 +42,11 @@ class RecentEventsProcessor{
 																	INNER JOIN
 																	  `strat_cp` AS `scp` ON `sf`.`cp_oid` = `scp`.`cp_oid`
                                                                     WHERE 
-                                                                    	`sc`.`state` = '2' 
+                                                                    	`sc`.`state` = '2' AND
+																		`sc`.`contention` IN('Enter', 'End')
 																	ORDER BY
 																	  `sc`.`started_at` DESC
-                                                                    LIMIT 15");
+                                                                    LIMIT 5");
 		$recentEventsData = $dbHelper->getAsArray($recentEventsQuery);
 
 		/**
@@ -61,13 +57,11 @@ class RecentEventsProcessor{
 		 */
 		$serverTimezone = new DateTimeZone(date_default_timezone_get());
 
-		/**
-		* Update the row's datetime (yyyy-mm-dd hh:mm:ss) to just a time (hh:mm)
-		*/
+		// Update the row's datetime (yyyy-mm-dd hh:mm:ss) to just a time (hh:mm)
 		foreach($recentEventsData as $key => $value){
-			$recentEventTime = new DateTime($recentEventsData[$key]['date_time'], $serverTimezone);
-			$recentEventTime = $recentEventTime->format('H:i');
-			$recentEventsData[$key]['date_time'] = $recentEventTime;
+			$recentEventTime = new DateTime($recentEventsData[$key]['time'], $serverTimezone);
+			$recentEventTime = $recentEventTime->format('g:ia');
+			$recentEventsData[$key]['time'] = $recentEventTime;
 		}
 		
 		return $recentEventsData;
