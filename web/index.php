@@ -340,10 +340,10 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 						foreach($recentEventsData as $recentEvent){
 							$recentEventAttack = [
 								"[".$recentEvent['time']."] <b>".$recentEvent['town']."</b> is under attack by <b>".$recentEvent['to_side']."</b> forces!<br>", 
-								"Carrier pigeons from <b>".$recentEvent['town']."</b> bring news that the <b>".$recentEvent['to_side']."</b> forces have began to attack at <b>".$recentEvent['time']."</b> today.<br>",
+								"Carrier pigeons from <b>".$recentEvent['town']."</b> bring news that the <b>".$recentEvent['to_side']."</b> forces have begun to attack at <b>".$recentEvent['time']."</b> today.<br>",
 								"A reconnaissance aircraft from the <b>".$recentEvent['from_side']."</b> Air Force that returned at <b>".$recentEvent['time']."</b>, seem to show an <b>".$recentEvent['to_side']."</b> attack on <b>".$recentEvent['town']."</b> commencing.<br>",
-								"Escaping cilvilans from <b>".$recentEvent['town']."</b> have confirmed the <b>".$recentEvent['to_side']."</b> forces began attacking at <b>".$recentEvent['time']."</b>.<br>",
-								"Gunfire and explotions have been heard near <b>".$recentEvent['town']."</b> at <b>".$recentEvent['time']."</b>, indicating an <b>".$recentEvent['to_side']."</b> attack has began.<br>"
+								"Escaping civilians from <b>".$recentEvent['town']."</b> have confirmed the <b>".$recentEvent['to_side']."</b> forces began attacking at <b>".$recentEvent['time']."</b>.<br>",
+								"Gunfire and explosions have been heard near <b>".$recentEvent['town']."</b> at <b>".$recentEvent['time']."</b>, indicating an <b>".$recentEvent['to_side']."</b> attack has begun.<br>"
 							];
 							$recentEventRepell = [
 								"[".$recentEvent['time']."] <b>".$recentEvent['town']."</b> has been regained by <b>".$recentEvent['to_side']."</b> forces.<br>",
@@ -356,8 +356,8 @@ $indexGeneral2 = file_get_contents(__DIR__ .'/../cache/index_general2.php');
 								"[".$recentEvent['time']."] <b>".$recentEvent['town']."</b> has been captured by <b>".$recentEvent['to_side']."</b> forces!<br>",
 								"At ".$recentEvent['time']." today, returning <b>".$recentEvent['from_side']."</b> soldiers have confirmed the loss of <b>".$recentEvent['town']."</b> to the <b>".$recentEvent['to_side']."</b> forces.<br>",
 								"Today at <b>".$recentEvent['time']."</b> reports of the <b>".$recentEvent['to_side']."</b> control and ownership of <b>".$recentEvent['town']."</b> have been confirmed by a Gazette source.<br>",
-								"After an intence battle over <b>".$recentEvent['town']."</b>, the <b>".$recentEvent['to_side']."</b> forces have prevailed at <b>".$recentEvent['time']."</b>.<br>",
-								"The gain of <b>".$recentEvent['town']."</b> by the <b>".$recentEvent['to_side']."</b> forces, today at <b>".$recentEvent['time']."</b>, has reshapen the front lines once again.<br>"
+								"After an intence battle, over <b>".$recentEvent['town']."</b>, the <b>".$recentEvent['to_side']."</b> forces have prevailed at <b>".$recentEvent['time']."</b>.<br>",
+								"The gain of <b>".$recentEvent['town']."</b> by the <b>".$recentEvent['to_side']."</b> forces, today at <b>".$recentEvent['time']."</b>, has reshaped the front lines once again.<br>"
 							];
 							
 							if($recentEvent['contention'] == "Enter"){
