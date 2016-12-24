@@ -91,6 +91,15 @@ class StoryProcessor {
 	 */
 	private $options;
 	
+	/**
+	 * An array of playerids that have already received a notification via this instance
+	 * of the notifier. This is to prevent players from receiving multiple emails during
+	 * a single generation of a Gazette Edition
+	 * 
+	 * @var array
+	 */
+	private $currentRecipients = [];
+	
 	public function __construct(Logger $logger, NotificationManager $notificationManager, array $dbConnections = array()) 
 	{
 		$this->dbConnections = $dbConnections;
@@ -706,6 +715,15 @@ class StoryProcessor {
 	{
 		if($storyCreator->isPlayerCentric())
 		{
+			$this->logger->addWarning("Checking story for player " . $storyCreator->getProtagonistId());
+			
+			// If the player has already been sent a notification in this round, don't allow another
+			if($this->isAlreadyARecipient($storyCreator->getProtagonistId()))
+			{
+				$this->logger->addWarning("Player is already a recipient");
+				return;
+			}			
+			
 			// There is only a protagonist if the story is player centric, and we check to see if they
 			// are already unsubscribed
 			if(!$this->notificationManager->isPlayerUnsubscribed($storyCreator->getProtagonistId()))
@@ -723,6 +741,8 @@ class StoryProcessor {
 					// Not allowed to send a notification because of whatever factor (see function for reasons)
 					return;
 				}
+				
+				$this->markAsRecipientForThisRound($storyCreator->getProtagonistId());
 
 				$extraData = [
 					'assets_base_url' => $this->notificationManager->getHandler()->getOption('assets_base_url')
@@ -745,8 +765,28 @@ class StoryProcessor {
 				// Ensure we don't send another email for defined period of time
 				$this->notificationManager->updateLastSend($storyCreator->getProtagonistId());
 			}
-
 		}
+	}
+	
+	/**
+	 * Check to see if the player is already set to receive an email this round
+	 * @param integer $playerId
+	 * @return boolean
+	 */
+	private function isAlreadyARecipient($playerId)
+	{
+		return in_array($playerId, $this->currentRecipients);	
+	}
+	
+	/**
+	 * Mark a player as already scheduled to receive an email for this round
+	 * 
+	 * @param integer $playerId
+	 * @return void
+	 */
+	private function markAsRecipientForThisRound($playerId)
+	{
+		array_push($this->currentRecipients, $playerId);
 	}
 
 	
@@ -902,6 +942,16 @@ class StoryProcessor {
 		{
 			$this->logger->debug($storyContent);
 		}		
+	}
+	
+	/**
+	 * Retreive the ids of all the recipients that will receive an email
+	 * 
+	 * @return array
+	 */
+	public function getCurrentRecipients()
+	{
+		return $this->currentRecipients;
 	}
 
 }

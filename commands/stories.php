@@ -28,7 +28,7 @@ require(__DIR__ . '/../vendor/autoload.php');
 $loggingOptions =$options['storygenerator']['log'];
 $logger = new Logger("story-generator");
 $logger->setTimezone(new DateTimeZone($loggingOptions['timezone']));
-$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/story-generator.log', $loggingOptions['retention_days'], Logger::DEBUG));
+$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/../logs/story-generator.log', $loggingOptions['retention_days'], $loggingOptions['level']));
 
 if($loggingOptions['console'])
 {
@@ -150,7 +150,7 @@ if(isset($storyOptions['generate'])) {
 /**
  * Send out the player stories
  */
-$logger->info('Preparing to send Player Emails');
+$logger->info('Preparing to send Player Emails to ' . implode(",",$storyProcessor->getCurrentRecipients()));
 $notificationManager->getHandler()->send();
 $logger->info('Player Emails sending complete');
 
