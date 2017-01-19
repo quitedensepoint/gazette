@@ -116,7 +116,7 @@ class RestHandler implements HandlerInterface{
 		//$this->logger->debug("Request Data", $requestData);
 
 		try {
-			$result = $this->client->request('POST', '/sendPlayerEmail', $requestData);
+			$result = $this->client->request('POST', '/v1/sendPlayerEmail', $requestData);
 			
 			$this->logger->debug('Message successfully sent to API', ['data' => $result->getBody()->getContents()]);
 		}
