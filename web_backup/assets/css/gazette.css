@@ -1,0 +1,326 @@
+body, tr, td, p, li {
+	font-family: Times New Roman, Georgia, Times, serif;
+	font-size: 9pt;
+	color: #000000;
+	vertical-align: top;
+}
+
+html, body {
+	
+	background-attachment: fixed;
+	background-position: center;
+	background-color: black;
+	background-repeat: no-repeat;
+	margin: 0;
+}
+
+.paperdefault {
+	font-size: 8pt;
+	color: #000000 !important;
+    text-align: center;
+}
+
+.papertimesmedium {
+	font-size: 10pt;
+	color: #000000;
+}
+
+.papertimesbig {
+	font-size: 13pt;
+	color: #000000;
+    text-align: center;
+}
+
+.paperarialsmall {
+	font-size: 8pt;
+	color: #000000;
+}
+
+.paperarialmedium {
+	font-size: 10pt;
+	color: #000000;
+}
+
+.paperarialbig {
+	font-size: 13pt;
+	color: #000000;
+}
+
+.paperarialhuge {
+	font-size: 16pt;
+	color: #000000;
+}
+
+.paperheadline {
+	font-size: 35pt;
+	color: #000000;
+    text-transform: uppercase;
+}
+
+.paperhidden {
+	font-size: 8pt;
+	color: #000000;
+}
+
+.paperwhite {
+	background-color: #333333;
+	font-size: 8pt;
+	color: #FFFFFF;
+}
+
+/* RSS Feed */
+.contentpagetitle {
+	text-align: center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#version {
+	position: absolute;
+	top: 74px;
+    right: 195px;
+	font-size: 7pt;
+	background-color: transparent;
+	color: #cccccc;
+}
+
+#container {
+	height: 1100px;
+	width: 905px;
+	background-image: url("/assets/img/paper_tile.jpg");
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#top {
+	position: absolute;
+}
+
+#alliedDeaths {
+	position: absolute;
+	width: 150px;
+	top: 3px;
+	left: 5px;
+	border: 1px solid black;
+	font-size: 9pt;
+}
+
+#axisDeaths {
+	position: absolute;
+    width: 150px;
+    top: 3px;
+    right: 5px;
+    border: 1px solid black;
+    font-size: 9pt;
+}
+
+#info {
+	position: absolute;
+    width: 905px;
+    top: 90px;
+	z-index: 1;
+}
+
+#infoBar {
+    position: absolute;
+    width: 895px;
+    left: 5px;
+    border: 1px black solid;
+}
+
+#mainHeadline {
+    position: absolute;
+    top: 115px;
+    width: 905px;
+	text-align: center;
+}
+
+#topLeftStory {
+    position:relative;
+    top: 175px;
+	width: 172px;
+	text-align: center;
+	padding: 5px;
+}
+
+#middleTopLeftpic {
+    position: relative;
+    top: 175px;
+    width: 172px;
+    text-align: center;
+    padding: 5px;
+}
+
+#mapContainer {
+    position: absolute;
+    top: 175px;   
+	width: 516px; 
+    left: 185px;
+    
+}
+
+.mapCountryNames {
+	color: white;
+	opacity: 0.75;
+	font: bold 25px arial;
+	text-shadow: 2px 2px 0 #000,
+					   -1px -1px 0 #000,  
+						1px -1px 0 #000,
+					   -1px  1px 0 #000,
+						1px  1px 0 #000;
+}
+
+#mapText {
+	display: block; 
+	width: 535px; 
+	height: 15px;
+	text-align: center; 
+	padding-top: 3px;
+	margin-top: -3px;
+}
+
+#ao {
+    position: absolute;
+	width: 172px;
+    top: 175px;
+    left: 729px;
+	text-align: center;
+}
+
+#underNews {
+    position: absolute;
+	top: 555px;
+	width: 905px; 
+}
+
+#news {
+    position: absolute;
+	width: 535px;
+    top: 0px;
+	left: 185px;
+    border-right: 1px black solid;
+    border-left: 1px black solid;
+}
+
+#middleBottomLeftStory {
+    position: relative;
+	left: 5px;
+    top: 175px;
+	width: 172px;
+	text-align: center;
+	padding: 5px;
+}
+
+#middleBottomRightPic {
+    position: relative;
+    width: 170px;
+    text-align: center;
+    padding: 5px;
+    right: 5px;
+}
+
+#belowNews {
+    position: absolute;
+	width: 535px;
+    top: 205px;
+	left: 185px;
+    border-right: 1px black solid;
+    border-left: 1px black solid;
+}
+
+#bottomRightStory {
+    position: relative;
+    width: 172px;
+    text-align: center;
+    padding: 5px;
+    right: 5px;
+}
+
+#headerMiddle {
+	height: 90px;
+	width: 905px; 
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#mainBody {
+	position: relative;
+	top: 90px;
+	height: 80%;
+	color: black;
+}
+
+#override {
+    color: black !important;
+}
+
+#poster{
+	 height: 210px;
+	 display: block;
+	 margin-left: auto;
+	 margin-right: auto;
+     width:172px;
+}
+
+
+.mainheadline {
+  
+}
+
+.mainheadline h1 {
+    text-transform: uppercase;  
+    font-size:45px;
+    margin: 3px auto;
+    
+}
+
+.mainheadline .side,.enemy_side,.side_adj {
+    text-transform: uppercase; 
+}
+.story-detail {
+    
+}
+.story-detail h3 {
+    margin:3px 0;
+}
+.story-detail div {
+
+}
+.story-detail div p {
+    margin-bottom: 5px;
+}
+
+/** data styles **/
+.player, .side, .enemy_side {
+    text-transform: capitalize;
+}
+
+.player {     
+    font-weight: bold;
+}
+
+
+
+ #bottomLeft {
+    position:relative;
+    top: 305px;
+	width: 178px;
+	text-align: center;
+    vertical-align: top;
+	
+	padding: 5px;
+} 
+
+ #bottomRight {
+	position:relative;
+    left:720px;
+    top: 60px;
+    width: 178px;
+	text-align: center;
+    vertical-align: top;
+    padding: 5px;
+
+} 

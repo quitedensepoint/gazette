@@ -2,9 +2,9 @@
 /**
  * Call this script from the command line in the application root (where
  * DBconn) lives
- *   
+ *
  *	php commands/casualties.php --report-only
- * 
+ *
  * where:
  *	{report-only} will force the script to output the data to the commandline,
  *		rather than saving it to the database
@@ -22,7 +22,7 @@ $wwiiDbHelper = new dbhelper($dbConnWWII);
 /**
  * NOTE: This script assumes that all dates in the database
  * are Rat time (CST, or "America/Chicago")
- * 
+ *
  * The server must be set to the correct datetime for this to work
  */
 $serverTimezone = new DateTimeZone(date_default_timezone_get());
@@ -45,7 +45,7 @@ $hourStart = $date->setTime($date->format('G'),0,0);
  * Get the current campaign so that the casualty numbers can be recorded against it
  */
 $campaignQuery = $gazetteDbHelper
-	->prepare("SELECT `id`, `start_time` FROM `campaigns` WHERE `status` = 'Running' LIMIT 1");
+	->prepare("SELECT `campaign_id`, `start_time` FROM `campaigns` WHERE `status` = 'Running' LIMIT 1");
 $campaignData = $gazetteDbHelper->getAsArray($campaignQuery);
 
 if(count($campaignData) == 0) {
@@ -59,7 +59,7 @@ $killsQuery = $wwiiDbHelper
 	->prepare("SELECT `victim_country` as `country_id`, `victim_category` as `branch_id`, count(`kill_id`) as `kill_count`"
 		. " FROM `kills` WHERE `kill_time` < ? GROUP BY `country_id`,`branch_id`",
 		[$hourStart->format('Y-m-d H:i:s')]);
-$killsData = $wwiiDbHelper->getAsArray($killsQuery);		
+$killsData = $wwiiDbHelper->getAsArray($killsQuery);
 
 /**
  * If we have asked for a report only, push it out to the commandline
@@ -76,7 +76,7 @@ if($reportOnly)
 array_walk($killsData, function(&$kill) use($hourStart, $date, $campaignId, $campaignStart) {
 
 	$kill['campaign_id'] = intval($campaignId);
-	$kill['period_start'] = $campaignStart->format('Y-m-d H:i:s'); 
+	$kill['period_start'] = $campaignStart->format('Y-m-d H:i:s');
 	$kill['period_end'] = $hourStart->format('Y-m-d H:i:s'); // format as mysql compatible date
 	$kill['created_at'] = $date->format('Y-m-d H:i:s');
 	$kill['updated_at'] = $date->format('Y-m-d H:i:s');
@@ -94,19 +94,19 @@ foreach($killsData as $killData)
 {
 	$existingQuery->bind_param("ssiii", $killData['period_start'], $killData['period_end'],
 		$killData['campaign_id'], $killData['branch_id'],$killData['country_id']);
-	
+
 	$existingCount = null;
 	$existingQuery->bind_result($existingCount);
 	$existingQuery->execute();
 	$existingQuery->store_result();
 	$existingQuery->fetch();
-	
+
 	if($existingCount == 0)
 	{
 		echo "existing count > 0";
 		$killsCreate->bind_param("ssiiissi", $killData['created_at'], $killData['updated_at'], $killData['campaign_id'], $killData['branch_id'],
 		$killData['kill_count'], $killData['period_start'], $killData['period_end'],$killData['country_id']);
-	
+
 		if($killsCreate->execute() == false) {
 			echo $killsCreate->error;
 		}

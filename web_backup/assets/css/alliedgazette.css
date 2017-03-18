@@ -1,0 +1,284 @@
+body, tr, td, p, li {
+	font-family: Times New Roman, Georgia, Times, serif;
+	font-size: 9pt;
+	color: #000000;
+	vertical-align: top;
+}
+
+html, body {
+	background-attachment: fixed;
+	background-position: center;
+	background-color: black;
+	background-repeat: no-repeat;
+	margin: 0;
+}
+
+/* font classes */
+
+.paperdefault {
+	font-size: 8pt;
+	color: #000000 !important;
+    text-align: center;
+}
+
+.papertimesmedium {
+	font-size: 10pt;
+	color: #000000;
+}
+
+.papertimesbig {
+	font-size: 13pt;
+	color: #000000;
+    text-align: center;
+}
+.papertimeshuge {
+	font-size: 20pt;
+	color: #000000;
+    text-align: center;
+}
+
+.paperheadline {
+	font-size: 35pt;
+	color: #000000;
+    text-transform: uppercase;
+}
+
+.paperhidden {
+	font-size: 8pt;
+	color: #000000;
+}
+
+.paperwhite {
+	background-color: #333333;
+	font-size: 8pt;
+	color: #FFFFFF;
+}
+
+.clear {
+    clear:both;
+}
+
+#top {
+	position: absolute;
+    top: 0px;
+}
+
+/* Background Image */
+#container {
+	height: 1120px;
+	width: 905px;
+	background-image: url("/assets/img/paper_tile.jpg");
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#infoBar {
+    position: absolute;
+    top:5px;
+    width: 895px;
+    left: 5px;
+    border: 1px black solid;
+}
+
+#mainHeadline {
+    position: absolute;
+    top:27px;
+    width: 905px;
+    text-align: center;
+    
+}
+
+/* Gazette Image */
+#imagegazette {
+    position:relative;
+    left: 300px;
+    top:50px;
+    width:598px;
+   
+}
+
+/* L Side headline - "from desk of allied commander */
+#topLeft {
+    float:left;
+    width: 300px;
+	text-align: center;
+	padding: 5px;
+}
+
+/*Left outer Article*/
+#topLeftOuterStory {
+    position:relative;
+    width: 300px;
+    height:155px;
+    text-align: center;
+    padding: 5px;
+}
+
+#topLeftInnerStory {
+    position:relative;
+    left:311px;
+    top:-210px;
+    height:180px;
+    width: 170px;
+    text-align:center;
+    padding:5px;
+}
+
+/* production stories and units in field */
+#leader {
+    position:relative;
+    top:-381px;
+    left:520px;
+    width:375px;
+    height:610px;
+    text-align: center;
+    border: 1px solid black;
+}
+
+/*Within leader - queries for top player within 24 hours*/
+#dailyLeader {
+    position:relative;
+    top:-8px;
+    width: 125px;
+    height:465px;
+	text-align: right;
+    padding: 5px;
+}
+
+#dailyLeader > tr, th, td {
+    padding: 0px;
+}
+
+#catIDLeader {
+    position:relative;
+    top:-483px;
+    left:130px;
+    width: 95px;
+    height:465px;
+	text-align: center;
+    padding: 5px;
+}
+
+/*within leader queries for top player for campaign*/
+#campaignLeader {
+    position:relative;
+    top:-958px;
+    left:232px;
+	width: 130px;
+    height:465px;
+	text-align:left;
+    vertical-align:top;
+    padding: 5px;
+}
+
+#campaignLeader > tr, th, td {
+    padding: 0px;
+}
+
+#knowEnemy {
+    position:relative;
+    top: -760px;
+	width: 471px;
+    height:275px;
+	text-align: center;
+}
+
+#secondRightOuterStory {
+    position:relative;
+    top: -675px;
+    left:500px;
+	width: 400px;
+    height:160px;
+	text-align: center;
+    padding: 5px;
+}
+
+#unitsInField {
+    position:relative;
+    top: -900px;
+    left:5px;
+	width: 230px;
+    height:440px;
+	text-align: center;
+    border:1px black solid;
+}
+
+#frenchField {
+    position:relative;
+    top:-5px;
+    left:-10px;
+	width: 70px;
+    height:275px;
+    vertical-align:top;
+    text-align: right;
+    padding: 5px;
+    border-right:1px black solid;
+}
+
+#britField {
+    position:relative;
+    top:-290px;
+    left:65px;
+	width: 70px;
+    height:275px;
+	text-align: center;
+    vertical-align:top;
+    padding: 5px;
+    border-right:1px black solid;
+}
+
+#USField {
+    position:relative;
+    top:-575px;
+    left:143px;
+	width: 90px;
+    height:275px;
+	text-align: left;
+    vertical-align:top;
+    padding: 5px;
+}
+
+#bottomRightOuterStory {
+    position:relative;
+    top:-1460px;
+    left: 515px;
+	width: 375px;
+    text-align: center;
+    padding: 5px;
+}
+
+#bottomMiddle {
+    position:relative;
+    top:-1360px;
+    left:250px;
+	width: 250px;
+    height:350px;
+	padding: 5px;  
+}
+
+#bottomMidtop {
+    position:relative;
+}
+
+#botomMidBottom {
+    position:relative;
+}
+
+
+/** data styles **/
+.player, .side, .enemy_side {
+    text-transform: capitalize;
+}
+
+.player {     
+    font-weight: bold;
+}
+
+#version {
+    position: relative;
+    top: 45.6px;
+    left: 140px;
+    font-size: 6pt;
+    background-color: transparent;
+    color: #cccccc;
+}

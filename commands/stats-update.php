@@ -9,7 +9,40 @@ wwiionline.wwii_player = w
 */
 
 set_time_limit(1500);
-include '../DBconn.php';
+$dbconn = mysqli_connect("127.0.0.1:3306", "root", "changeme", "gazette");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Gazette database: " . mysqli_connect_error();
+}
+
+$dbConnWWII = mysqli_connect("127.0.0.1:3306","root","changeme","wwii");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to WWII database: " . mysqli_connect_error();
+}
+
+$dbConnWWIIOL = mysqli_connect("127.0.0.1:3306","root","changeme","wwiionline");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to WWIIOnline database: " . mysqli_connect_error();
+}
+
+$dbconnAuth = mysqli_connect("127.0.0.1:3306", "root", "changeme", "auth");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Auth database: " . mysqli_connect_error();
+}
+
+$dbConnToe = mysqli_connect("127.0.0.1:3306", "root", "changeme", "toe");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Toe database: " . mysqli_connect_error();
+}
+
+$dbConnCommunity = mysqli_connect("127.0.0.1:3306", "root", "changeme", "community");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Community database: " . mysqli_connect_error();
+}
+
+$dbConnWebmap = mysqli_connect("127.0.0.1:3306", "root", "changeme", "webmap");
+if (mysqli_connect_errno()){
+    echo "Failed to connect to the Webmap database: " . mysqli_connect_error();
+}
 ##################### ALLIED STORIES ############################
 /* Queries Pull Data for Allied side*/
 /* ALLIED STATS REDUCDED TO 1 LINE ARE ALL THOSE THAT ARE COMPLETELY DONE */
@@ -1261,12 +1294,14 @@ while ($row = $dallykills->fetch_assoc())
     {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,killscallsign,kills) VALUES ('1','day','".$row['callsign']."','".$row['kills']."')") or die ($dbconn->error.dallykills);  }
 
 /* MOST CAPTURES */
+/*
 while ($row = $allycaps->fetch_assoc())
     {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('1','camp','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.allycaps); }
+    */
 
 /* DAILY MOST CAPTURES */
-while ($row = $dallycaps->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('1','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.dallycaps);  }
+// while ($row = $dallycaps->fetch_assoc())
+//     {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('1','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.dallycaps);  }
 
 /* Top K/D */
 while ($row = $allykd->fetch_assoc())
@@ -1464,13 +1499,13 @@ while ($row = $axkills->fetch_assoc())
 while ($row = $daxkills->fetch_assoc())
     {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,killscallsign,kills) VALUES ('2','day','".$row['callsign']."','".$row['kills']."')") or die ($dbconn->error.killsinsert_LINE_);  }
 
-/* MOST CAPTURES */
-while ($row = $axcaps->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('2','camp','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capsinsert_LINE_); }
-
-/* DAILY MOST CAPTURES */
-while ($row = $daxcaps->fetch_assoc())
-    {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('2','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capsinsert_LINE_);  }
+// /* MOST CAPTURES */
+// while ($row = $axcaps->fetch_assoc())
+//     {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('2','camp','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capsinsert_LINE_); }
+//
+// /* DAILY MOST CAPTURES */
+// while ($row = $daxcaps->fetch_assoc())
+//     {mysqli_query($dbconn, "INSERT INTO scoring_top_players (side, period,capscallsign,caps) VALUES ('2','day','".$row['callsign']."','".$row['caps']."')") or die ($dbconn->error.capsinsert_LINE_);  }
 
 /* Top K/D */
 while ($row = $axkd->fetch_assoc())

@@ -1,5 +1,5 @@
 <?php
-include '../DBconn.php';
+require '..' . DIRECTORY_SEPARATOR .'DBconn.php';
 /* For total campaign summary */
 $gtkills =  mysqli_query($dbconn, "SELECT killscallsign, kills FROM scoring_top_players WHERE side ='2' AND period = 'camp' ORDER BY kills DESC LIMIT 1") or die ($dbconn->error.kills_LINE_);
 $gtcaps =  mysqli_query($dbconn, "SELECT capscallsign, caps FROM scoring_top_players WHERE side ='2' AND period = 'camp' ORDER BY caps DESC LIMIT 1") or die ($dbconn->error.cap_LINE_);
@@ -54,6 +54,3 @@ $gdtt =  mysqli_query($dbconn, "SELECT ttcallsign, ttpoints FROM scoring_top_pla
 $gdkrow =  mysqli_query($dbconn, "SELECT krowcallsign, krowpoints FROM scoring_top_players WHERE side ='2' AND period = 'day' ORDER BY krowpoints DESC LIMIT 1") or die ($dbconn->error.krow_LINE_);
 $gdcrow =  mysqli_query($dbconn, "SELECT crowcallsign, crowpoints FROM scoring_top_players WHERE side ='2' AND period = 'day' ORDER BY crowpoints DESC LIMIT 1") or die ($dbconn->error.tt_LINE_);
 ?>
-
-
-
